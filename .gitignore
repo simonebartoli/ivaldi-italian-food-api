@@ -1,0 +1,12 @@
+node_modules/
+yarn-error.log
+.env
+.nyc_output
+coverage
+build/
+logs
+*.log
+
+
+# Coverage directory used by tools like istanbul
+*.lcov
