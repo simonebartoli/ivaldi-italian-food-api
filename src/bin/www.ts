@@ -1,26 +1,18 @@
-import {ApolloServer, gql} from 'apollo-server-express';
+import "reflect-metadata"
+import {ApolloServer} from 'apollo-server-express';
 import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core';
 import express from 'express';
 import http from 'http';
 import cors from "cors"
 import cookieParser from "cookie-parser";
-
-
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
+import {buildSchema} from "type-graphql";
+import {UserResolvers} from "../schema/resolvers/userResolvers"
 
 async function startApolloServer() {
+  const schema = await buildSchema({
+    resolvers: [UserResolvers],
+  });
+
   const app = express();
   app.use(cookieParser())
   app.use(cors({
@@ -30,8 +22,7 @@ async function startApolloServer() {
 
   const httpServer = http.createServer(app);
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema,
     debug: false,
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
