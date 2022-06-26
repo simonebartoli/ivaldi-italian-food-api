@@ -6,11 +6,11 @@ import http from 'http';
 import cors from "cors"
 import cookieParser from "cookie-parser";
 import {buildSchema} from "type-graphql";
-import {UserResolvers} from "../schema/resolvers/userResolvers"
+import {formatError} from "../errors/formatError";
 
 async function startApolloServer() {
   const schema = await buildSchema({
-    resolvers: [UserResolvers],
+    resolvers: [process.cwd() + "/src/schema/resolvers/**/*.{ts,js}"],
   });
 
   const app = express();
@@ -24,6 +24,13 @@ async function startApolloServer() {
   const server = new ApolloServer({
     schema,
     debug: false,
+    formatError: (err) => formatError(err),
+    context: ({req, res}) => ({
+      req: req,
+      res: res
+    }),
+    csrfPrevention: true,
+    cache: "bounded",
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
     ],

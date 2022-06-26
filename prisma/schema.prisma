@@ -135,10 +135,12 @@ model receipts {
 }
 
 model refresh_tokens {
-  refresh_token_id Int   @id @default(autoincrement())
-  version          Int
-  user_id          Int
-  users            users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "fkrefresh_to114230")
+  token_id     Int            @id @default(autoincrement())
+  version      Int            @default(1)
+  user_id      Int
+  auth_level   String         @default("standard") @db.VarChar(63)
+  users        users          @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "fkrefresh_to114230")
+  access_token access_token[]
 }
 
 model shipping_addresses {
@@ -170,4 +172,13 @@ model users {
   orders         orders[]
   refresh_tokens refresh_tokens[]
   tokens         tokens[]
+}
+
+model access_token {
+  token_id         Int            @id(map: "access_token_pk")
+  ip               String?        @db.VarChar(64)
+  ua               String?        @db.VarChar(255)
+  refresh_token_id Int
+  level            String         @default("standard") @db.VarChar(63)
+  refresh_tokens   refresh_tokens @relation(fields: [refresh_token_id], references: [token_id], onDelete: Cascade, map: "access_token_refresh_tokens_token_id_fk")
 }
