@@ -1,0 +1,5 @@
+
+export enum INTERNAL_ERROR_ENUM {
+    KEYS_MISSING = "KEYS_MISSING",
+    DB_ERROR = "DB_ERROR"
+}

@@ -7,6 +7,8 @@ import cors from "cors"
 import cookieParser from "cookie-parser";
 import {buildSchema} from "type-graphql";
 import {formatError} from "../errors/formatError";
+import {setHttpPlugin} from "../plugins/sendResponse";
+import {Context} from "../schema/types/contextType";
 
 async function startApolloServer() {
   const schema = await buildSchema({
@@ -24,15 +26,26 @@ async function startApolloServer() {
   const server = new ApolloServer({
     schema,
     debug: false,
-    formatError: (err) => formatError(err),
     context: ({req, res}) => ({
       req: req,
       res: res
     }),
+    formatError: (err) => formatError(err),
+    formatResponse: (response, context) => {
+      if(response.errors?.[0]?.extensions?.["code"] === "AUTH_ERROR"){
+        const {res} = <Context> context.context
+        res.clearCookie("token", {
+          sameSite: "none",
+          secure: false
+        })
+      }
+      return null
+    },
     csrfPrevention: true,
     cache: "bounded",
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
+      setHttpPlugin
     ],
   });
 

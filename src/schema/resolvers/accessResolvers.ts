@@ -9,16 +9,23 @@ import {Context} from "../types/contextType";
 import {DateTime} from "luxon";
 import * as jose from 'jose'
 import * as fs from "fs";
-import {PrivateKeyType} from "../types/keyType";
-import {KeyLike} from "jose";
 import {RequireNotLogged} from "../custom-decorator/requireNotLogged";
+import {RequireValidRefreshToken} from "../custom-decorator/requireValidRefreshToken";
+import {TokenHeaderType, TokenPayloadType} from "../types/tokenType";
+import {
+    createRefreshToken,
+    findPrivateKey,
+    findPublicKeyUsingKID,
+    makeRandomToken,
+    updateRefreshToken
+} from "../lib/accessLib";
 
 @Resolver()
 export class AccessResolvers {
 
-    @Mutation(returns => AccessType)
+    @Mutation(returns => Boolean)
     @RequireNotLogged()
-    async loginWithPassword(@Arg("credentials") credentials: LoginWithPasswordInputs, @Ctx() ctx: Context): Promise<AccessType> {
+    async loginWithPassword(@Arg("credentials") credentials: LoginWithPasswordInputs, @Ctx() ctx: Context): Promise<boolean> {
         const {email, password} = credentials
         const user = await prisma.users.findFirst({
             where: {
@@ -31,18 +38,76 @@ export class AccessResolvers {
         if(!bcrypt.compareSync(password, user.password)){
             throw new DATA_ERROR("Credentials are invalid", DATA_ERROR_ENUM.INVALID_CREDENTIALS)
         }
-        await this.createRefreshToken(user.user_id, "standard", ctx)
-        return {
-            accessToken: "GOOD JOB"
-        }
+        await createRefreshToken(user.user_id, "standard", ctx)
+        return true
     }
 
     @Mutation(returns => AccessType)
-    async createPublicPrivateKeys(): Promise<AccessType>{
+    @RequireValidRefreshToken()
+    async createAccessTokenStandard(@Ctx() ctx: Context): Promise<AccessType>{
+        const {req} = ctx
+        const token = req.cookies.token
+        const refreshTokenPayload = <TokenPayloadType> jose.decodeJwt(token)
+        const refreshTokenHeader = <TokenHeaderType> jose.decodeProtectedHeader(token)
+
+        const accessTokenExp = DateTime.now().plus({minute: 15}).toSeconds()
+        const ip = req.socket.remoteAddress || req.ip
+        const ua = req.get('User-Agent')
+
+        const userID = refreshTokenPayload.id
+        const authLevel = refreshTokenHeader.auth_level
+        const refreshTokenVersion = refreshTokenHeader.version
+        const refreshTokenExp = refreshTokenPayload.exp
+        const refreshTokenID = refreshTokenHeader.token_id
+
+        await updateRefreshToken(
+            userID,
+            refreshTokenExp,
+            authLevel,
+            refreshTokenID,
+            refreshTokenVersion + 1,
+            ctx
+        )
+
+        const {kid, key} = await findPrivateKey()
+        const publicKey = await findPublicKeyUsingKID(kid)
+
+        const accessTokenDB = await prisma.access_token.create({
+            data: {
+                ip: ip,
+                ua: ua,
+                refresh_token_id: refreshTokenHeader.token_id
+            }
+        })
+
+        const accessTokenID = accessTokenDB.token_id
+        const accessTokenJWT = await new jose.SignJWT({
+            id: userID
+        })
+            .setExpirationTime(accessTokenExp)
+            .setProtectedHeader({
+                kid: kid,
+                ip: ip,
+                ua: ua,
+                auth_level: authLevel,
+                token_id: accessTokenID,
+                alg: "RS256"
+            })
+            .sign(key)
+
+        return {
+            accessToken: accessTokenJWT,
+            publicKey: publicKey
+        }
+    }
+
+
+    // @Mutation(returns => Boolean)
+    async createPublicPrivateKeys(): Promise<boolean>{
         const { publicKey, privateKey } = await jose.generateKeyPair('RS256')
         let privateJwk = await jose.exportJWK(privateKey)
         let publicJwk = await jose.exportJWK(publicKey)
-        const kid = this.makeRandomToken(16)
+        const kid = makeRandomToken(16)
 
         const publicJSON = [{
             kid: kid,
@@ -60,58 +125,7 @@ export class AccessResolvers {
         fs.writeFileSync(process.cwd() + "/keys/private-keys.json", JSON.stringify(privateJSON))
         fs.writeFileSync(process.cwd() + "/keys/public-keys.json", JSON.stringify(publicJSON))
 
-        return {
-            accessToken: "GOOD JOB"
-        }
+        return true
     }
 
-    async createRefreshToken(
-        id: number,
-        auth_level: string,
-        context: Context
-    ){
-        const {req, res} = context
-        const ip = req.socket.remoteAddress || req.ip
-        const UA = req.get('User-Agent')
-        const expiryDate = DateTime.now().plus({day: 7}).toSeconds()
-        let refreshToken: string = ""
-
-        let privateKeysFile: string = fs.readFileSync(process.cwd() + "/keys/private-keys.json").toString()
-        const privateKeys: PrivateKeyType[] = JSON.parse(privateKeysFile)
-
-        for(const privateKey of privateKeys){
-            const retired = privateKey.retired
-            if(DateTime.now() < DateTime.fromSeconds(retired)){
-                const keyLike = <KeyLike> await jose.importJWK(privateKey.content, "RS256")
-                refreshToken = await new jose.SignJWT({
-                    id: id
-                })
-                    .setExpirationTime(expiryDate)
-                    .setProtectedHeader({
-                        ip: ip.toString(),
-                        ua: UA,
-                        kid: privateKey.kid,
-                        auth_level: auth_level,
-                        alg: "RS256"
-                    })
-                    .sign(keyLike)
-            }
-        }
-        res.cookie("token", refreshToken, {
-            expires: DateTime.fromSeconds(expiryDate).toJSDate(),
-            secure: true,
-            sameSite: "none"
-        })
-    }
-
-    makeRandomToken(length: number) {
-        let result           = '';
-        const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const charactersLength = characters.length;
-        for (let i = 0; i < length; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
-        }
-        return result;
-    }
 }

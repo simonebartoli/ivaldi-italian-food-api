@@ -1,3 +1,5 @@
+import {KeyLike} from "jose";
+
 export type PublicKeyType = {
     kid: string
     expired: number
@@ -23,4 +25,9 @@ export type PrivateKeyType = {
         dq: string
         qi: string
     }
+}
+
+export type KeyObject = {
+    kid: string
+    key: KeyLike
 }

@@ -175,10 +175,10 @@ model users {
 }
 
 model access_token {
-  token_id         Int            @id(map: "access_token_pk")
+  token_id         Int            @id(map: "access_token_pk") @default(autoincrement())
   ip               String?        @db.VarChar(64)
   ua               String?        @db.VarChar(255)
   refresh_token_id Int
-  level            String         @default("standard") @db.VarChar(63)
+  auth_level       String         @default("standard") @db.VarChar(63)
   refresh_tokens   refresh_tokens @relation(fields: [refresh_token_id], references: [token_id], onDelete: Cascade, map: "access_token_refresh_tokens_token_id_fk")
 }

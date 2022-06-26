@@ -4,4 +4,7 @@ import {Field, ObjectType} from "type-graphql";
 export class AccessType {
     @Field()
     accessToken: string
+
+    @Field()
+    publicKey: string
 }

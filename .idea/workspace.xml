@@ -4,30 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="First Config with TypeGraphQL">
-      <change afterPath="$PROJECT_DIR$/nodemon.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/errors/FORMAT_ERROR.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/errors/formatError.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/custom-decorator/requireNotLogged.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/enums/FORMAT_ERROR_ENUM.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/loginWithPasswordInputs.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/tokenFieldResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/tokenResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/contextType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/graphql/accessType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/graphql/tokenType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/keyType.ts" afterDir="false" />
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Login pt1">
+      <change afterPath="$PROJECT_DIR$/src/errors/AUTH_ERROR.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/errors/INTERNAL_ERROR.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/plugins/sendResponse.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/custom-decorator/requireValidRefreshToken.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/enums/AUTH_ERROR_ENUM.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/tokenType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bin/www.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/www.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/errors/DATA_ERROR.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/inputs/userInputs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/userInputs.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/accessResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/userType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/graphql/userType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/errors/BAD_REQ_ERROR.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/errors/BAD_REQ_ERROR.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/custom-decorator/requireNotLogged.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/custom-decorator/requireNotLogged.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/contextType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/contextType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/accessType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/graphql/accessType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/keyType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/keyType.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +53,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/simon/Documents/Personal Project/ivaldi-italian-food-api&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/simon/Documents/Personal Project/ivaldi-italian-food-api/src/schema/enums&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -70,6 +65,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\enums" />
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\errors" />
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -89,7 +86,8 @@
       <workItem from="1656081370356" duration="20345000" />
       <workItem from="1656154982515" duration="10883000" />
       <workItem from="1656175011128" duration="14739000" />
-      <workItem from="1656242125942" duration="2567000" />
+      <workItem from="1656242125942" duration="18620000" />
+      <workItem from="1656272239869" duration="2198000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -105,7 +103,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656106856535</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Login pt1">
+      <created>1656246128145</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1656246128145</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -125,6 +130,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Configuration Ready" />
     <MESSAGE value="First Config with TypeGraphQL" />
-    <option name="LAST_COMMIT_MESSAGE" value="First Config with TypeGraphQL" />
+    <MESSAGE value="Login pt1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Login pt1" />
   </component>
 </project>
