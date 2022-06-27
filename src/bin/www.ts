@@ -26,9 +26,10 @@ async function startApolloServer() {
   const server = new ApolloServer({
     schema,
     debug: false,
-    context: ({req, res}) => ({
+    context: ({req, res}) : Context => ({
       req: req,
-      res: res
+      res: res,
+      id: null
     }),
     formatError: (err) => formatError(err),
     formatResponse: (response, context) => {

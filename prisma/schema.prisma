@@ -71,13 +71,14 @@ model items {
   name             String             @unique @db.VarChar(255)
   description      String             @db.VarChar(511)
   price            Float
-  vat              Int
+  vat_id           Int
   amount_available Int
-  price_unit       String?            @db.VarChar(255)
-  photo_loc        String?            @db.VarChar(255)
-  entry_date       DateTime           @db.Timestamp(6)
+  price_unit       String             @db.VarChar(255)
+  photo_loc        String             @db.VarChar(255)
+  entry_date       DateTime           @default(dbgenerated("(now())::timestamp without time zone")) @db.Timestamp(6)
   discount_id      Int?
   discounts        discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fkitems605249")
+  vat              vat                @relation(fields: [vat_id], references: [vat_id], map: "items_vat_vat_id_fk")
   bundles_items    bundles_items[]
   carts            carts[]
   list_items_items list_items_items[]
@@ -181,4 +182,10 @@ model access_token {
   refresh_token_id Int
   auth_level       String         @default("standard") @db.VarChar(63)
   refresh_tokens   refresh_tokens @relation(fields: [refresh_token_id], references: [token_id], onDelete: Cascade, map: "access_token_refresh_tokens_token_id_fk")
+}
+
+model vat {
+  vat_id     Int     @id(map: "vat_pk") @default(autoincrement())
+  percentage Float   @unique(map: "vat_percentage_uindex")
+  items      items[]
 }

@@ -1,17 +1,10 @@
 import {createParamDecorator} from "type-graphql";
-import {TokenPayloadType} from "../types/tokenType";
-import * as jose from "jose";
 import prisma from "../../db/prisma";
 import {User} from "../types/graphql/userType";
 
 export function UserInfo() {
     return createParamDecorator(async ({context}: any): Promise<User> => {
-        const {req} = context
-
-        const accessToken = req.headers.authorization.split(" ")[1]
-        const accessTokenPayload = <TokenPayloadType> jose.decodeJwt(accessToken)
-
-        const user_id = accessTokenPayload.id
+        const user_id = context.id
 
         const userDB = await prisma.users.findUnique({
             where: {
