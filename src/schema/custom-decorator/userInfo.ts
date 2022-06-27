@@ -8,7 +8,7 @@ export function UserInfo() {
     return createParamDecorator(async ({context}: any): Promise<User> => {
         const {req} = context
 
-        const accessToken = req.cookies.token
+        const accessToken = req.headers.authorization.split(" ")[1]
         const accessTokenPayload = <TokenPayloadType> jose.decodeJwt(accessToken)
 
         const user_id = accessTokenPayload.id

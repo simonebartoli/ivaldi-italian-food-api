@@ -1,6 +1,6 @@
 import {Field, InputType} from "type-graphql";
 import {User} from "../types/graphql/userType";
-import {IsDate, IsEmail, Length, MaxDate, MinDate} from "class-validator";
+import {IsDate, IsEmail, Length, Matches, MaxDate, MinDate} from "class-validator";
 import { DateTime } from "luxon";
 
 @InputType()
@@ -26,7 +26,7 @@ export class CreateNewUseInput implements Partial<User>{
 
     @Field()
     @Length(8, 32)
-    // @Contains("a-zA-Z")
-    // @Contains("/\\d/g")
+    @Matches(/[a-zA-Z]/g)
+    @Matches(/\d/g)
     password: string
 }

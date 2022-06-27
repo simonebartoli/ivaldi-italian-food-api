@@ -8,18 +8,23 @@ import bcrypt from "bcrypt"
 import {RequireValidAccessToken} from "../custom-decorator/requireValidAccessToken";
 import {UserInfo} from "../custom-decorator/userInfo";
 import {ChangeEmailInput} from "../inputs/changeEmailInput";
+import {ChangePasswordInput} from "../inputs/changePasswordInput";
+import {Logger} from "../custom-decorator/logger";
+import {TRIGGER_ENUM} from "../enums/TRIGGER_ENUM";
 
 @Resolver()
 export class UserResolvers {
 
     @Query(returns => User)
     @RequireValidAccessToken()
+    @Logger(TRIGGER_ENUM.VIEW_USER_INFO)
     getUserInfo(@UserInfo() user: User): User{
         return user
     }
 
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
+    @Logger(TRIGGER_ENUM.CHANGE_EMAIL)
     async changeEmail(@UserInfo() user: User, @Arg("data") inputData: ChangeEmailInput): Promise<true> {
         const {newEmail} = inputData
         const {user_id, email: originalEmail} = user
@@ -46,6 +51,23 @@ export class UserResolvers {
         return true
     }
 
+    @Mutation(returns => Boolean)
+    @RequireValidAccessToken()
+    @Logger(TRIGGER_ENUM.CHANGE_PASSWORD)
+    async changePassword(@UserInfo() user: User, @Arg("data") inputData: ChangePasswordInput): Promise<true>{
+        const {user_id} = user
+        const {newPassword} = inputData
+        const newPasswordHashed = bcrypt.hashSync(newPassword, 10)
+        await prisma.users.update({
+            where: {
+                user_id: user_id
+            },
+            data: {
+                password: newPasswordHashed
+            }
+        })
+        return true
+    }
 
     @Mutation(type => User)
     async createNewUser(@Arg("data") inputData: CreateNewUseInput): Promise<User>{
