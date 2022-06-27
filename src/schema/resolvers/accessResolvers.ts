@@ -11,11 +11,11 @@ import * as jose from 'jose'
 import * as fs from "fs";
 import {RequireNotLogged} from "../custom-decorator/requireNotLogged";
 import {RequireValidRefreshToken} from "../custom-decorator/requireValidRefreshToken";
-import {TokenHeaderType, TokenPayloadType} from "../types/tokenType";
+import {RefreshTokenHeaderType, TokenPayloadType} from "../types/tokenType";
 import {
     createRefreshToken,
     findPrivateKey,
-    findPublicKeyUsingKID,
+    findPublicKeyUsingKID_base64,
     makeRandomToken,
     updateRefreshToken
 } from "../lib/accessLib";
@@ -48,7 +48,7 @@ export class AccessResolvers {
         const {req} = ctx
         const token = req.cookies.token
         const refreshTokenPayload = <TokenPayloadType> jose.decodeJwt(token)
-        const refreshTokenHeader = <TokenHeaderType> jose.decodeProtectedHeader(token)
+        const refreshTokenHeader = <RefreshTokenHeaderType> jose.decodeProtectedHeader(token)
 
         const accessTokenExp = DateTime.now().plus({minute: 15}).toSeconds()
         const ip = req.socket.remoteAddress || req.ip
@@ -70,12 +70,12 @@ export class AccessResolvers {
         )
 
         const {kid, key} = await findPrivateKey()
-        const publicKey = await findPublicKeyUsingKID(kid)
+        const publicKey = await findPublicKeyUsingKID_base64(kid)
 
         const accessTokenDB = await prisma.access_token.create({
             data: {
-                ip: ip,
-                ua: ua,
+                ip: ip !== undefined ? ip : "Not Found",
+                ua: ua !== undefined ? ua : "Not Found",
                 refresh_token_id: refreshTokenHeader.token_id
             }
         })
@@ -87,8 +87,6 @@ export class AccessResolvers {
             .setExpirationTime(accessTokenExp)
             .setProtectedHeader({
                 kid: kid,
-                ip: ip,
-                ua: ua,
                 auth_level: authLevel,
                 token_id: accessTokenID,
                 alg: "RS256"

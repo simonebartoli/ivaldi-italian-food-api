@@ -4,7 +4,7 @@ import {IsDate, IsEmail, Length, MaxDate, MinDate} from "class-validator";
 import { DateTime } from "luxon";
 
 @InputType()
-export class CreateNewUseInputType implements Partial<User>{
+export class CreateNewUseInput implements Partial<User>{
     @Field()
     @Length(3, 24)
     name: string

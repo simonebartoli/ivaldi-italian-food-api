@@ -8,6 +8,8 @@ import {INTERNAL_ERROR_ENUM} from "../enums/INTERNAL_ERROR_ENUM";
 import {Buffer} from "buffer";
 import {Context} from "../types/contextType";
 import prisma from "../../db/prisma";
+import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
+import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
 
 export const findPrivateKey = async (): Promise<KeyObject> => {
     let privateKeysFile: string = fs.readFileSync(process.cwd() + "/keys/private-keys.json").toString()
@@ -27,7 +29,7 @@ export const findPrivateKey = async (): Promise<KeyObject> => {
     throw new INTERNAL_ERROR("No valid private keys", INTERNAL_ERROR_ENUM.KEYS_MISSING)
 }
 
-export const findPublicKeyUsingKID = async (kid: string) : Promise<string> => {
+export const findPublicKeyUsingKID_base64 = async (kid: string) : Promise<string> => {
     let publicKeysFile: string = fs.readFileSync(process.cwd() + "/keys/public-keys.json").toString()
     const publicKeys: PublicKeyType[] = JSON.parse(publicKeysFile)
     const publicKey = publicKeys.find((element) => element.kid === kid)
@@ -38,6 +40,14 @@ export const findPublicKeyUsingKID = async (kid: string) : Promise<string> => {
     return Buffer
         .from(await jose.exportSPKI(publicKeyFormatted), "utf-8")
         .toString("base64")
+}
+export const findPublicKeyUsingKID = async (kid: string) : Promise<KeyLike> => {
+    let publicKeysFile: string = fs.readFileSync(process.cwd() + "/keys/public-keys.json").toString()
+    const publicKeys: PublicKeyType[] = JSON.parse(publicKeysFile)
+    const publicKey = publicKeys.find((element) => element.kid === kid)
+    if(publicKey === undefined) throw new AUTH_ERROR("No valid kid", AUTH_ERROR_ENUM.TOKEN_FORGED)
+
+    return <KeyLike> await jose.importJWK(publicKey.content, "RS256")
 }
 
 export const createRefreshToken = async (id: number, auth_level: string, context: Context) => {
@@ -78,7 +88,6 @@ export const createRefreshToken = async (id: number, auth_level: string, context
         sameSite: "none"
     })
 }
-
 export const updateRefreshToken = async (userID: number, exp: number, authLevel: string, refreshTokenID: number, version: number, ctx: Context) =>{
     const {res} = ctx
     const {kid, key} = await findPrivateKey()
@@ -115,7 +124,6 @@ export const updateRefreshToken = async (userID: number, exp: number, authLevel:
         sameSite: "none"
     })
 }
-
 
 export const makeRandomToken = (length: number) => {
     let result           = '';

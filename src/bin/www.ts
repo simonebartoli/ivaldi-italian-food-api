@@ -32,7 +32,7 @@ async function startApolloServer() {
     }),
     formatError: (err) => formatError(err),
     formatResponse: (response, context) => {
-      if(response.errors?.[0]?.extensions?.["code"] === "AUTH_ERROR"){
+      if(response.errors?.[0]?.extensions?.["code"] === "AUTH_ERROR" && response.errors?.[0]?.extensions?.["destroy"]){
         const {res} = <Context> context.context
         res.clearCookie("token", {
           sameSite: "none",
