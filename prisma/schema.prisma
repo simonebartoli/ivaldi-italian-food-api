@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -67,37 +68,22 @@ model emails {
 }
 
 model items {
-  item_id          Int                @id @default(autoincrement())
-  name             String             @unique @db.VarChar(255)
-  description      String             @db.VarChar(511)
-  price            Float
-  vat_id           Int
-  amount_available Int
-  price_unit       String             @db.VarChar(255)
-  photo_loc        String             @db.VarChar(255)
-  entry_date       DateTime           @default(dbgenerated("(now())::timestamp without time zone")) @db.Timestamp(6)
-  discount_id      Int?
-  discounts        discounts?         @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fkitems605249")
-  vat              vat                @relation(fields: [vat_id], references: [vat_id], map: "items_vat_vat_id_fk")
-  bundles_items    bundles_items[]
-  carts            carts[]
-  list_items_items list_items_items[]
-}
-
-model list_items {
-  list_item_id     Int                @id @default(autoincrement())
-  category         String             @unique @db.VarChar(255)
-  notes            String?            @db.VarChar(511)
-  list_items_items list_items_items[]
-}
-
-model list_items_items {
-  list_item_id Int
-  item_id      Int
-  items        items      @relation(fields: [item_id], references: [item_id], onDelete: Cascade, map: "fklist_items683058")
-  list_items   list_items @relation(fields: [list_item_id], references: [list_item_id], onDelete: Cascade, map: "fklist_items450170")
-
-  @@id([list_item_id, item_id])
+  item_id              Int                    @id @default(autoincrement())
+  name                 String                 @unique @db.VarChar(255)
+  description          String                 @db.VarChar(511)
+  price                Float
+  vat_id               Int
+  amount_available     Int
+  price_unit           String                 @db.VarChar(255)
+  photo_loc            String                 @db.VarChar(255)
+  entry_date           DateTime               @default(dbgenerated("(now())::timestamp without time zone")) @db.Timestamp(6)
+  discount_id          Int?
+  discounts            discounts?             @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fkitems605249")
+  vat                  vat                    @relation(fields: [vat_id], references: [vat_id], map: "items_vat_vat_id_fk")
+  bundles_items        bundles_items[]
+  carts                carts[]
+  categories_items     categories_items[]
+  sub_categories_items sub_categories_items[]
 }
 
 model log_accesses {
@@ -188,4 +174,39 @@ model vat {
   vat_id     Int     @id(map: "vat_pk") @default(autoincrement())
   percentage Float   @unique(map: "vat_percentage_uindex")
   items      items[]
+}
+
+model categories {
+  category_id      Int                @id(map: "categories_pk") @default(autoincrement())
+  name             String             @unique(map: "categories_category_uindex") @db.VarChar(255)
+  notes            String?            @db.VarChar(511)
+  categories_items categories_items[]
+  sub_categories   sub_categories[]
+}
+
+model categories_items {
+  category_id Int
+  item_id     Int
+  categories  categories @relation(fields: [category_id], references: [category_id], onDelete: Cascade, map: "categories_items_categories_category_id_fk")
+  items       items      @relation(fields: [item_id], references: [item_id], onDelete: Cascade, map: "categories_items_items_item_id_fk")
+
+  @@id([category_id, item_id], map: "categories_items_pk")
+}
+
+model sub_categories {
+  sub_category_id      Int                    @id(map: "list_items_pkey") @default(autoincrement())
+  name                 String                 @unique(map: "list_items_category_key") @db.VarChar(255)
+  notes                String?                @db.VarChar(511)
+  category_id          Int
+  categories           categories             @relation(fields: [category_id], references: [category_id], map: "sub_categories_categories_category_id_fk")
+  sub_categories_items sub_categories_items[]
+}
+
+model sub_categories_items {
+  sub_category_id Int
+  item_id         Int
+  items           items          @relation(fields: [item_id], references: [item_id], onDelete: Cascade, map: "fklist_items683058")
+  sub_categories  sub_categories @relation(fields: [sub_category_id], references: [sub_category_id], onDelete: Cascade, map: "fklist_items450170")
+
+  @@id([sub_category_id, item_id], map: "sub_categories_items_pk")
 }

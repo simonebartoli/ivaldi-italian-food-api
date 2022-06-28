@@ -28,15 +28,12 @@ export class Item {
     @Field()
     entry_date: Date
 
-    @Field(type => Int)
-    vat_id: number
+    // @Field(type => [String])
+    // category?: string[] | null
 
-    @Field(type => Vat,{nullable: true})
-    vat?: Vat
-
-    @Field(type => Int, {nullable: true})
-    discount_id: number | null
+    @Field(type => Vat)
+    vat?: Vat | null
 
     @Field(type => Discount,{nullable: true})
-    discount?: Discount
+    discount?: Discount | null
 }

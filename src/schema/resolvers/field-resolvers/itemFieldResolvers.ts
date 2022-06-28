@@ -9,25 +9,30 @@ export class ItemFieldResolvers {
 
     @FieldResolver()
     async vat(@Root() item: Item): Promise<Vat>{
-        return await prisma.vat.findUnique({
-            where: {
-                vat_id: item.vat_id
-            },
-            rejectOnNotFound: true
-        })
+        const result: Vat[] = await prisma.$queryRaw`
+            SELECT vat.* FROM vat INNER JOIN items i on vat.vat_id = i.vat_id WHERE i.item_id = ${item.item_id}
+        `
+        return result[0]!
     }
 
     @FieldResolver()
     async discount(@Root() item: Item): Promise<Discount | null>{
-        if(item.discount_id === null){
-            return null
-        }
-        return await prisma.discounts.findUnique({
-            where: {
-                discount_id: item.discount_id
-            },
-            rejectOnNotFound: true
-        })
+        const result: Discount[] = await prisma.$queryRaw`
+            SELECT discounts.* FROM discounts INNER JOIN items i on discounts.discount_id = i.discount_id WHERE i.item_id = ${item.item_id}
+        `
+        return result.length === 0 ? null : result[0]!
     }
+
+    // @FieldResolver()
+    // async category(@Root() item: Item): Promise<string[]>{
+    //     const categories = await prisma.categories_items.findMany({
+    //         select: {
+    //             ca
+    //         }
+    //         where: {
+    //             item_id: item.item_id
+    //         }
+    //     })
+    // }
 
 }

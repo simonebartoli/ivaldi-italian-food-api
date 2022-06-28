@@ -8,11 +8,10 @@ export class TokenFieldResolvers {
 
     @FieldResolver()
     async user(@Root() token: Token): Promise<User>{
-        return await prisma.users.findUnique({
-            where: {
-                user_id: token.user_id
-            },
-            rejectOnNotFound: true
-        })
+        const result: User[] = await prisma.$queryRaw`
+            SELECT users.* FROM users INNER JOIN refresh_tokens rt on users.user_id = rt.user_id 
+            WHERE rt.token_id = ${token.token_id}
+        `
+        return result[0]!
     }
 }

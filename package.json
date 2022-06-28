@@ -8,6 +8,7 @@
     "prestart": "rimraf build && yarn run build",
     "start": "cross-env NODE_ENV=production node ./build/bin/www.js",
     "serve": "node ./build/src/bin/www.js",
+    "generate-data": "ts-node test-data/test-data-generator.ts",
     "test": "mocha -r ts-node/register test/**/*.test.ts",
     "test:coverage": "nyc npm run test"
   },

@@ -13,10 +13,7 @@ export class Token {
     @Field()
     expiry_datetime: Date
 
-    @Field(type => Int)
-    user_id: number
-
-    @Field(type => User, {nullable: true})
+    @Field(type => User)
     user?: User
 
 }
