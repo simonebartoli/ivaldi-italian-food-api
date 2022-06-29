@@ -1,0 +1,15 @@
+export type RefreshTokenHeaderType = {
+    version: number
+    kid: string
+    token_id: number
+    auth_level: string
+}
+export type AccessTokenHeaderType = {
+    kid: string
+    token_id: number
+    auth_level: string
+}
+export type TokenPayloadType = {
+    id: number
+    exp: number
+}

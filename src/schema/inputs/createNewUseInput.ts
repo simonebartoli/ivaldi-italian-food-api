@@ -1,5 +1,5 @@
 import {Field, InputType} from "type-graphql";
-import {User} from "../types/graphql/userType";
+import {User} from "../types/userType";
 import {IsDate, IsEmail, Length, Matches, MaxDate, MinDate} from "class-validator";
 import { DateTime } from "luxon";
 

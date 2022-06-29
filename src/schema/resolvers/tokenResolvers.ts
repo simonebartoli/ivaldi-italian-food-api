@@ -1,5 +1,5 @@
 import {Query, Resolver} from "type-graphql";
-import {Token} from "../types/graphql/tokenType";
+import {Token} from "../types/tokenType";
 import prisma from "../../db/prisma";
 
 @Resolver(of => Token)

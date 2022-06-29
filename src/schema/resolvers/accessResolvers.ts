@@ -1,17 +1,17 @@
 import {Arg, Ctx, Mutation, Resolver} from "type-graphql";
-import {AccessType} from "../types/graphql/accessType";
+import {AccessType} from "../types/accessType";
 import {LoginWithPasswordInputs} from "../inputs/loginWithPasswordInputs";
 import prisma from "../../db/prisma";
 import {DATA_ERROR} from "../../errors/DATA_ERROR";
 import {DATA_ERROR_ENUM} from "../enums/DATA_ERROR_ENUM";
 import bcrypt from "bcrypt";
-import {Context} from "../types/contextType";
+import {Context} from "../types/not-graphql/contextType";
 import {DateTime} from "luxon";
 import * as jose from 'jose'
 import * as fs from "fs";
 import {RequireNotLogged} from "../custom-decorator/requireNotLogged";
 import {RequireValidRefreshToken} from "../custom-decorator/requireValidRefreshToken";
-import {RefreshTokenHeaderType, TokenPayloadType} from "../types/tokenType";
+import {RefreshTokenHeaderType, TokenPayloadType} from "../types/not-graphql/tokenType";
 import {
     createRefreshToken,
     findPrivateKey,
@@ -89,7 +89,7 @@ export class AccessResolvers {
                 kid: kid,
                 auth_level: authLevel,
                 token_id: accessTokenID,
-                alg: "RS256"
+                alg: "EdDSA"
             })
             .sign(key)
 
@@ -102,7 +102,7 @@ export class AccessResolvers {
 
     // @Mutation(returns => Boolean)
     async createPublicPrivateKeys(): Promise<boolean>{
-        const { publicKey, privateKey } = await jose.generateKeyPair('RS256')
+        const { publicKey, privateKey } = await jose.generateKeyPair('EdDSA')
         let privateJwk = await jose.exportJWK(privateKey)
         let publicJwk = await jose.exportJWK(publicKey)
         const kid = makeRandomToken(16)

@@ -1,6 +1,6 @@
 import {createParamDecorator} from "type-graphql";
 import prisma from "../../db/prisma";
-import {User} from "../types/graphql/userType";
+import {User} from "../types/userType";
 
 export function UserInfo() {
     return createParamDecorator(async ({context}: any): Promise<User> => {

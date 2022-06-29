@@ -1,4 +1,4 @@
-import {KeyObject, PrivateKeyType, PublicKeyType} from "../types/keyType";
+import {KeyObject, PrivateKeyType, PublicKeyType} from "../types/not-graphql/keyType";
 import fs from "fs";
 import {DateTime} from "luxon";
 import * as jose from "jose";
@@ -6,7 +6,7 @@ import {KeyLike} from "jose";
 import {INTERNAL_ERROR} from "../../errors/INTERNAL_ERROR";
 import {INTERNAL_ERROR_ENUM} from "../enums/INTERNAL_ERROR_ENUM";
 import {Buffer} from "buffer";
-import {Context} from "../types/contextType";
+import {Context} from "../types/not-graphql/contextType";
 import prisma from "../../db/prisma";
 import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
 import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
@@ -19,7 +19,7 @@ export const findPrivateKey = async (): Promise<KeyObject> => {
         const retired = privateKey.retired
         if (DateTime.now() < DateTime.fromSeconds(retired)) {
             const kid = privateKey.kid
-            const selectedPrivateKey = <KeyLike>await jose.importJWK(privateKey.content, "RS256")
+            const selectedPrivateKey = <KeyLike>await jose.importJWK(privateKey.content, "EdDSA")
             return {
                 kid: kid,
                 key: selectedPrivateKey
@@ -78,7 +78,7 @@ export const createRefreshToken = async (id: number, auth_level: string, context
             auth_level: auth_level,
             version: 1,
             token_id: refreshTokenID,
-            alg: "RS256"
+            alg: "EdDSA"
         })
         .sign(key)
 
@@ -114,7 +114,7 @@ export const updateRefreshToken = async (userID: number, exp: number, authLevel:
             auth_level: authLevel,
             version: version,
             token_id: refreshTokenID,
-            alg: "RS256"
+            alg: "EdDSA"
         })
         .sign(key)
 

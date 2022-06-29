@@ -3,7 +3,7 @@ import {JWTPayload, JWTVerifyResult, ProtectedHeaderParameters} from "jose";
 import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
 import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
 import {DateTime} from "luxon";
-import {AccessTokenHeaderType, RefreshTokenHeaderType, TokenPayloadType} from "../types/tokenType";
+import {AccessTokenHeaderType, RefreshTokenHeaderType, TokenPayloadType} from "../types/not-graphql/tokenType";
 import {findPublicKeyUsingKID} from "./accessLib";
 import prisma from "../../db/prisma";
 import {INTERNAL_ERROR} from "../../errors/INTERNAL_ERROR";
@@ -60,7 +60,7 @@ const verifyToken = async (token: string, destroy: boolean): Promise<JWTVerifyRe
     }
     const publicKey = await findPublicKeyUsingKID(kid)
     try {
-        verifiedJWT = await jose.jwtVerify(token, publicKey)
+        verifiedJWT = await jose.jwtVerify(token, publicKey, {algorithms: ["EdDSA"]})
     } catch (e: any) {
         if (e.code === "ERR_JWT_EXPIRED") throw new AUTH_ERROR("Token expired", AUTH_ERROR_ENUM.TOKEN_EXPIRED, destroy)
         else throw new AUTH_ERROR("Token forged", AUTH_ERROR_ENUM.TOKEN_FORGED, destroy)

@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import {buildSchema} from "type-graphql";
 import {formatError} from "../errors/formatError";
 import {setHttpPlugin} from "../plugins/sendResponse";
-import {Context} from "../schema/types/contextType";
+import {Context} from "../schema/types/not-graphql/contextType";
 
 async function startApolloServer() {
   const schema = await buildSchema({

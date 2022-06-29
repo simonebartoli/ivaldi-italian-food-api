@@ -1,5 +1,5 @@
 import {Arg, Mutation, Query, Resolver} from "type-graphql";
-import {User} from "../types/graphql/userType";
+import {User} from "../types/userType";
 import prisma from "../../db/prisma";
 import {CreateNewUseInput} from "../inputs/createNewUseInput";
 import {DATA_ERROR} from "../../errors/DATA_ERROR";

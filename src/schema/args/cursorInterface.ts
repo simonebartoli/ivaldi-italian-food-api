@@ -1,7 +1,7 @@
 import {ArgsType, Field, Int} from "type-graphql";
 
 @ArgsType()
-export class GetItemsCursorArgs {
+export class CursorInterface {
     @Field(type => Int, {nullable: true})
     cursor?: number
 

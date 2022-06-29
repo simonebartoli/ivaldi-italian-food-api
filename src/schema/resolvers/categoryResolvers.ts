@@ -1,19 +1,19 @@
 import {Args, Query, Resolver} from "type-graphql";
 import prisma from "../../db/prisma";
-import {GetItemsPaginationArgs} from "../args/getItemsPaginationArgs";
-import {GetItemsCursorArgs} from "../args/getItemsCursorArgs";
-import {Category} from "../types/graphql/categoryType";
+import {PaginationInterface} from "../args/paginationInterface";
+import {CursorInterface} from "../args/cursorInterface";
+import {Category} from "../types/categoryType";
 
 @Resolver()
 export class CategoryResolvers {
 
     @Query(returns => [Category])
-    async getCategories(): Promise<Category[]>{
+    async getCategories_FULL(): Promise<Category[]>{
         return await prisma.categories.findMany()
     }
 
     @Query(returns => [Category])
-    async getCategories_pagination(@Args() {limit, offset}: GetItemsPaginationArgs): Promise<Category[]>{
+    async getCategories_pagination(@Args() {limit, offset}: PaginationInterface): Promise<Category[]>{
         return await prisma.categories.findMany({
             skip: offset,
             take: limit
@@ -21,7 +21,7 @@ export class CategoryResolvers {
     }
 
     @Query(returns => [Category])
-    async getCategories_cursor(@Args() {cursor, limit}: GetItemsCursorArgs): Promise<Category[]>{
+    async getCategories_cursor(@Args() {cursor, limit}: CursorInterface): Promise<Category[]>{
         if(cursor === undefined || cursor === null){
             return await prisma.categories.findMany({
                 take: limit

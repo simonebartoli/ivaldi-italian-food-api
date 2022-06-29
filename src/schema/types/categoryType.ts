@@ -1,4 +1,4 @@
-import {Field, Float, ID, Int, ObjectType} from "type-graphql";
+import {Field, ID, ObjectType} from "type-graphql";
 import {Item} from "./itemType";
 import {SubCategory} from "./subCategoryType";
 
@@ -14,8 +14,8 @@ export class Category {
     notes: string | null
 
     @Field(type => [SubCategory], {nullable: true})
-    sub_categories?: SubCategory[] | null
+    sub_categories?: SubCategory[]
 
     @Field(type => [Item], {nullable: true})
-    items?: Item[] | null
+    items?: Item[]
 }

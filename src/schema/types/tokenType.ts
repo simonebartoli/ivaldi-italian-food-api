@@ -1,15 +1,19 @@
-export type RefreshTokenHeaderType = {
-    version: number
-    kid: string
+import {Field, ID, ObjectType} from "type-graphql";
+import {User} from "./userType";
+
+@ObjectType()
+export class Token {
+
+    @Field(type => ID)
     token_id: number
-    auth_level: string
-}
-export type AccessTokenHeaderType = {
-    kid: string
-    token_id: number
-    auth_level: string
-}
-export type TokenPayloadType = {
-    id: number
-    exp: number
+
+    @Field()
+    secret: string
+
+    @Field()
+    expiry_datetime: Date
+
+    @Field(type => User)
+    user?: User
+
 }
