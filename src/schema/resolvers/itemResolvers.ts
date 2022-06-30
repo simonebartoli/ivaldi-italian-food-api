@@ -22,7 +22,7 @@ export class ItemResolvers {
                 amount_available: {
                     gte: outOfStock ? 0 : 1
                 },
-                price: {
+                price_total: {
                     gte: min,
                     lte: max
                 }
@@ -45,7 +45,7 @@ export class ItemResolvers {
                 amount_available: {
                     gte: outOfStock ? 0 : 1
                 },
-                price: {
+                price_total: {
                     gte: min,
                     lte: max
                 }
@@ -68,7 +68,7 @@ export class ItemResolvers {
                     amount_available: {
                         gte: outOfStock ? 0 : 1
                     },
-                    price: {
+                    price_total: {
                         gte: min,
                         lte: max
                     }
@@ -88,7 +88,7 @@ export class ItemResolvers {
                 amount_available: {
                     gte: outOfStock ? 0 : 1
                 },
-                price: {
+                price_total: {
                     gte: min,
                     lte: max
                 }

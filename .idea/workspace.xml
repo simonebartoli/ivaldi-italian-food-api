@@ -4,47 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Category + SubCategory + Foreign Key Fixed + Test Data Generated">
-      <change afterPath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/cartResolver.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/cartFieldResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/subCategoryFieldResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/userFieldResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/subCategoryResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/billingAddressType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/cartType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/categoryType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/tokenType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/shippingAddressType.ts" afterDir="false" />
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Items Filters + Address + Cart">
+      <change afterPath="$PROJECT_DIR$/src/schema/custom-decorator/cartInfo.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/addEntryToCartInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/removeEntryFromCartInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/lib/itemLib.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/archiveItemType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/archiveType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/orderType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/receiptType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test-data/orders.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keys/private-keys.json" beforeDir="false" afterPath="$PROJECT_DIR$/keys/private-keys.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keys/public-keys.json" beforeDir="false" afterPath="$PROJECT_DIR$/keys/public-keys.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bin/www.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/www.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/args/getItemsCursorArgs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/args/cursorInterface.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/args/getItemsPaginationArgs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/args/paginationInterface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/custom-decorator/logger.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/custom-decorator/logger.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/custom-decorator/requireValidAccessToken.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/custom-decorator/requireValidAccessToken.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/custom-decorator/userInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/custom-decorator/userInfo.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/inputs/createNewUseInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/createNewUseInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/lib/tokenVerificationLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/tokenVerificationLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/categoryResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/categoryResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/categoryFieldResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/categoryFieldResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/cartResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/cartResolver.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/itemFieldResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/itemFieldResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/tokenFieldResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/tokenFieldResolvers.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/tokenResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/tokenResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/contextType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/accessType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/accessType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/categoryType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/addressType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/discountType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/discountType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/itemType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/itemType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/subCategoryType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/subCategoryType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/tokenType.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/userType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/userType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/types/graphql/vatType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/vatType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/keyType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/keyType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/tokenType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/tokenType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/itemType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/itemType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-data/test-data-generator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test-data/test-data-generator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,34 +58,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/simon/Documents/Personal Project/ivaldi-italian-food-api/src/schema/resolvers/field-resolvers",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "C:\\Users\\simon\\Documents\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/simon/Documents/Personal Project/ivaldi-italian-food-api/src/schema/types&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\simon\\Documents\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\field-resolvers" />
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types" />
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\custom-decorator" />
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\field-resolvers" />
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\resolvers" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types\graphql" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\args" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types" />
@@ -128,7 +116,11 @@
       <workItem from="1656367911126" duration="1546000" />
       <workItem from="1656411614109" duration="5318000" />
       <workItem from="1656420645080" duration="22350000" />
-      <workItem from="1656498502279" duration="21568000" />
+      <workItem from="1656498502279" duration="26705000" />
+      <workItem from="1656541677546" duration="179000" />
+      <workItem from="1656586664221" duration="4481000" />
+      <workItem from="1656594171564" duration="4157000" />
+      <workItem from="1656605636683" duration="2722000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -186,7 +178,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656440720813</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Items Filters + Address + Cart">
+      <created>1656536186914</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1656536186914</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,6 +211,7 @@
     <MESSAGE value="Change Password + Log Accesses" />
     <MESSAGE value="Item Type Created" />
     <MESSAGE value="Category + SubCategory + Foreign Key Fixed + Test Data Generated" />
-    <option name="LAST_COMMIT_MESSAGE" value="Category + SubCategory + Foreign Key Fixed + Test Data Generated" />
+    <MESSAGE value="Items Filters + Address + Cart" />
+    <option name="LAST_COMMIT_MESSAGE" value="Items Filters + Address + Cart" />
   </component>
 </project>

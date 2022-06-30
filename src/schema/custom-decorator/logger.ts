@@ -6,7 +6,7 @@ import {TRIGGER_ENUM} from "../enums/TRIGGER_ENUM";
 export function Logger(trigger: TRIGGER_ENUM) {
     return createMethodDecorator(async ({context}: any, next) => {
         const {req} = context
-        const id = context.id
+        const id = context.user_id
         const datetime = DateTime.now().toJSDate()
         const ip = req.socket.remoteAddress || req.ip
 

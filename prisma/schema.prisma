@@ -12,7 +12,7 @@ model addresses {
   address_id         Int                 @id @default(autoincrement())
   city               String              @db.VarChar(255)
   first_address      String              @db.VarChar(255)
-  second_address     String              @db.VarChar(255)
+  second_address     String?             @db.VarChar(255)
   postcode           String              @db.VarChar(255)
   user_id            Int
   users              users               @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "fkaddresses857531")
@@ -23,6 +23,7 @@ model addresses {
 model billing_addresses {
   address_id Int       @id
   notes      String?   @db.VarChar(511)
+  country    String    @db.VarChar(255)
   addresses  addresses @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fkbilling_ad507106")
 }
 
@@ -71,7 +72,7 @@ model items {
   item_id              Int                    @id @default(autoincrement())
   name                 String                 @unique @db.VarChar(255)
   description          String                 @db.VarChar(511)
-  price                Float
+  price_total          Float
   vat_id               Int
   amount_available     Int
   price_unit           String                 @db.VarChar(255)
@@ -96,22 +97,20 @@ model log_accesses {
 }
 
 model orders {
-  order_id               Int        @id @default(autoincrement())
-  price_total            Float
-  shipping_cost          Float      @default(0)
-  price_no_shipping_cost Float
-  datetime               DateTime   @db.Timestamp(6)
-  archive                String
-  status                 String     @db.VarChar(255)
-  user_id                Int
-  users                  users      @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
-  receipts               receipts[]
+  order_id      Int        @id @default(autoincrement())
+  price_total   Float
+  shipping_cost Float      @default(0)
+  datetime      DateTime   @db.Timestamp(6)
+  archive       String
+  status        String     @db.VarChar(255)
+  user_id       Int
+  users         users      @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
+  receipts      receipts[]
 }
 
 model receipts {
   receipt_id     Int      @id @default(autoincrement())
   price_total    Float
-  price_no_vat   Float
   vat            Float
   datetime       DateTime @db.Timestamp(6)
   payment_method String   @db.VarChar(255)

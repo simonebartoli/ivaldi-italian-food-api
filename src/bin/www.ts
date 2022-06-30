@@ -29,7 +29,7 @@ async function startApolloServer() {
     context: ({req, res}) : Context => ({
       req: req,
       res: res,
-      id: null
+      user_id: null
     }),
     formatError: (err) => formatError(err),
     formatResponse: (response, context) => {

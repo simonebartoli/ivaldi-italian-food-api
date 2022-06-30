@@ -99,7 +99,7 @@ export const verifyExtraPropertyAccessToken = async (accessToken: TokenPayloadTy
 
     let result
     try{
-        result = await prisma.access_token.findUnique({
+        result = await prisma.access_token.findUniqueOrThrow({
             where: {
                 token_id: token_id
             },
@@ -111,8 +111,7 @@ export const verifyExtraPropertyAccessToken = async (accessToken: TokenPayloadTy
                         user_id: true
                     }
                 }
-            },
-            rejectOnNotFound: true
+            }
         })
     }catch (e: any){
         if(e.name === "NotFoundError") throw new AUTH_ERROR("Token has been destroyed for security reasons", AUTH_ERROR_ENUM.TOKEN_DESTROYED, false)

@@ -14,7 +14,7 @@ export class Item {
     description: string
 
     @Field(type => Float)
-    price: number
+    price_total: number
 
     @Field(type => Int)
     amount_available: number

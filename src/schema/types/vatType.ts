@@ -1,4 +1,4 @@
-import {Field, Float, ID, Int, ObjectType} from "type-graphql";
+import {Field, Float, ID, ObjectType} from "type-graphql";
 
 @ObjectType()
 export class Vat {
