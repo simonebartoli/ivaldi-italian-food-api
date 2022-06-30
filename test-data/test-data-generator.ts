@@ -1,7 +1,7 @@
 // import {addDiscountsToItems} from "./discounts_items";
 // import {addCategoriesSubCategoriesToItems} from "./categories_items";
 
-import {addOrders} from "./orders";
+// import {addOrders} from "./orders";
 
 function generateData () {
     // addDiscountsToItems()
@@ -10,9 +10,9 @@ function generateData () {
     // addCategoriesSubCategoriesToItems()
     //     .then(() => console.log("Categories Sub Categories Finished"))
     //     .catch((e) => console.log(e))
-    addOrders()
-        .then(() => console.log("Orders Finished"))
-        .catch((e) => console.log(e))
+    // addOrders()
+    //     .then(() => console.log("Orders Finished"))
+    //     .catch((e) => console.log(e))
 }
 
 generateData()

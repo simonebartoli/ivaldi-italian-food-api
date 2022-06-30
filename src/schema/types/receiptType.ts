@@ -12,13 +12,16 @@ export class Receipt {
     price_total: number
 
     @Field(type => Float)
-    vat: number
+    vat_total: number
 
     @Field()
     datetime: Date
 
     @Field()
     payment_method: string
+
+    @Field()
+    payment_account: string
 
     @Field()
     archive: ReceiptArchive

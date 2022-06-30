@@ -11,6 +11,9 @@ export class Address {
     @Field()
     first_address: string
 
+    @Field()
+    postcode: string
+
     @Field(type => String, {nullable: true})
     second_address: string | null
 

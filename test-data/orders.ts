@@ -13,6 +13,13 @@ export const addOrders = async () => {
     const MAX_AMOUNT = 4
     const MIN_SHIPPING_COST = 0
     const MAX_SHIPPING_COST = 5
+    const shippingAddress = {
+        first_address: "1 Yeo Street",
+        second_address: "Caspian Wharf 40",
+        postcode: "E3 3AE",
+        city: "London",
+        notes: null
+    }
 
     const users = await prisma.users.findMany()
     const items = await prisma.items.findMany({
@@ -32,13 +39,20 @@ export const addOrders = async () => {
                 const datetime = DateTime.now().toISO()
                 const userID = user.user_id
 
-                const statusProbability = Math.random()
-                const status =
-                    statusProbability < 1/2 ? "PENDING"
-                        : statusProbability >= 1/2 && statusProbability < 5/6 ? "DELIVERED" : "CANCELLED"
+                let statusProbability = Math.random()
+                const statusReceipt = statusProbability < 3/4 ? "COMPLETED" : "REFUNDED"
+                const payment_method = Math.random() < 1/2 ? "Debit Card" : "Paypal"
+                const payment_account = payment_method === "Debit Card" ? `XXXX XXXX XXXX ${Math.floor(Math.random() * 8999) + 1000}`
+                                                                        : "simone.bartoli01@gmail.com"
 
-                let archive: ArchiveItem[] = []
+                statusProbability = Math.random()
+                const statusOrder =
+                    statusProbability < 1/2 ? "PENDING"
+                        : statusReceipt === "COMPLETED" ? "DELIVERED" : "CANCELLED"
+
+                let archiveItem: ArchiveItem[] = []
                 let priceTotal: number = 0
+                let vatTotal: number = 0
 
                 for(let j = 0; j < itemNumberChosen; j++){
                     let itemChosen: Item & {vat: Vat}
@@ -48,7 +62,7 @@ export const addOrders = async () => {
                     itemsAlreadyUsed.push(itemChosen.item_id)
 
                     const amount = Math.floor(Math.random() * MAX_AMOUNT) + MIN_AMOUNT
-                    archive.push({
+                    archiveItem.push({
                         name: itemChosen.name,
                         amount: amount,
                         price_per_unit: itemChosen.price_total,
@@ -57,16 +71,40 @@ export const addOrders = async () => {
                         vat: itemChosen.vat.percentage
                     })
                     priceTotal += itemChosen.price_total * amount
+                    vatTotal += itemChosen.price_total * (itemChosen.vat.percentage / 100) * amount
                 }
 
-                await prisma.orders.create({
+                const archiveOrder = {
+                    shipping_address: shippingAddress,
+                    items: archiveItem
+                }
+                const archiveReceipt = {
+                    billing_address: shippingAddress,
+                    items: archiveItem
+                }
+
+                priceTotal += shippingCost
+                const result = await prisma.orders.create({
                     data: {
                         price_total: parseFloat(priceTotal.toFixed(2)),
                         shipping_cost: shippingCost,
                         datetime: datetime,
-                        status: status,
-                        archive: JSON.stringify(archive),
-                        user_id: userID
+                        status: statusOrder,
+                        archive: JSON.stringify(archiveOrder),
+                        user_id: userID,
+                        vat_total: parseFloat(vatTotal.toFixed(2))
+                    }
+                })
+                await prisma.receipts.create({
+                    data: {
+                        price_total: parseFloat(priceTotal.toFixed(2)),
+                        vat_total: parseFloat(vatTotal.toFixed(2)),
+                        datetime: datetime,
+                        status: statusReceipt,
+                        payment_method: payment_method,
+                        payment_account: payment_account,
+                        archive: JSON.stringify(archiveReceipt),
+                        order_id: result.order_id
                     }
                 })
             }

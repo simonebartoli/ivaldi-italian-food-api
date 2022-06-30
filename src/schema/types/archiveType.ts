@@ -6,7 +6,7 @@ import {ArchiveItem} from "./archiveItemType";
 @ObjectType()
 class Archive {
     @Field(type => [ArchiveItem])
-    item: ArchiveItem[]
+    items: ArchiveItem[]
 }
 
 @ObjectType()

@@ -104,20 +104,22 @@ model orders {
   archive       String
   status        String     @db.VarChar(255)
   user_id       Int
+  vat_total     Float
   users         users      @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
   receipts      receipts[]
 }
 
 model receipts {
-  receipt_id     Int      @id @default(autoincrement())
-  price_total    Float
-  vat            Float
-  datetime       DateTime @db.Timestamp(6)
-  payment_method String   @db.VarChar(255)
-  archive        String
-  status         String   @db.VarChar(255)
-  order_id       Int
-  orders         orders   @relation(fields: [order_id], references: [order_id], map: "fkreceipts115011")
+  receipt_id      Int      @id @default(autoincrement())
+  price_total     Float
+  vat_total       Float
+  datetime        DateTime @db.Timestamp(6)
+  payment_method  String   @db.VarChar(255)
+  archive         String
+  status          String   @db.VarChar(255)
+  order_id        Int
+  payment_account String   @db.VarChar(255)
+  orders          orders   @relation(fields: [order_id], references: [order_id], map: "fkreceipts115011")
 }
 
 model refresh_tokens {

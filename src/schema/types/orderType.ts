@@ -14,6 +14,9 @@ export class Order {
     @Field(type => Float)
     shipping_cost: number
 
+    @Field(type => Float)
+    vat_total: number
+
     @Field()
     datetime: Date
 
