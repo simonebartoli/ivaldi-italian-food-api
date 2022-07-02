@@ -4,6 +4,9 @@ import {Discount} from "./discountType";
 
 @ObjectType()
 export class Item {
+    @Field(type => Float, {nullable: true})
+    importance?: number
+
     @Field(type => ID)
     item_id: number
 

@@ -3,6 +3,8 @@
 
 // import {addOrders} from "./orders";
 
+import {addKeywordsToItem} from "./keywords";
+
 function generateData () {
     // addDiscountsToItems()
     //     .then(() => console.log("Discount Items Finished"))
@@ -13,6 +15,9 @@ function generateData () {
     // addOrders()
     //     .then(() => console.log("Orders Finished"))
     //     .catch((e) => console.log(e))
+    addKeywordsToItem()
+        .then(() => console.log("Keywords Finished"))
+        .catch((e) => console.log(e))
 }
 
 generateData()

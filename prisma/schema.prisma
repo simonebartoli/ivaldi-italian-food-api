@@ -84,6 +84,7 @@ model items {
   bundles_items        bundles_items[]
   carts                carts[]
   categories_items     categories_items[]
+  keywords             keywords[]
   sub_categories_items sub_categories_items[]
 }
 
@@ -137,29 +138,23 @@ model shipping_addresses {
   addresses  addresses @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fkshipping_a233077")
 }
 
-model tokens {
-  token_id        Int      @id @default(autoincrement())
-  secret          String   @unique @db.VarChar(511)
-  expiry_datetime DateTime @db.Timestamp(6)
-  user_id         Int
-  users           users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "fktokens874970")
-}
-
 model users {
-  user_id        Int              @id @default(autoincrement())
-  name           String           @db.VarChar(255)
-  surname        String           @db.VarChar(255)
-  dob            DateTime         @db.Date
-  email          String           @unique @db.VarChar(255)
-  password       String           @db.VarChar(511)
-  role           String           @default("client") @db.VarChar(255)
-  addresses      addresses[]
-  carts          carts[]
-  emails         emails[]
-  log_accesses   log_accesses[]
-  orders         orders[]
-  refresh_tokens refresh_tokens[]
-  tokens         tokens[]
+  user_id         Int              @id @default(autoincrement())
+  name            String           @db.VarChar(255)
+  surname         String           @db.VarChar(255)
+  dob             DateTime         @db.Date
+  email           String?          @unique @db.VarChar(255)
+  password        String           @db.VarChar(511)
+  role            String           @default("client") @db.VarChar(255)
+  email_to_verify String?          @unique(map: "users_email_to_verify_uindex") @db.VarChar(255)
+  entry_date      DateTime         @default(now()) @db.Timestamptz(6)
+  addresses       addresses[]
+  carts           carts[]
+  emails          emails[]
+  log_accesses    log_accesses[]
+  orders          orders[]
+  recover_tokens  recover_tokens[]
+  refresh_tokens  refresh_tokens[]
 }
 
 model access_token {
@@ -210,4 +205,20 @@ model sub_categories_items {
   sub_categories  sub_categories @relation(fields: [sub_category_id], references: [sub_category_id], onDelete: Cascade, map: "fklist_items450170")
 
   @@id([sub_category_id, item_id], map: "sub_categories_items_pk")
+}
+
+model recover_tokens {
+  token_id Int    @id(map: "tokens_pkey") @default(autoincrement())
+  secret   String @unique(map: "tokens_secret_key") @db.VarChar(511)
+  user_id  Int
+  status   String @default("PENDING") @db.VarChar(63)
+  users    users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "fktokens874970")
+}
+
+model keywords {
+  keyword String @db.VarChar(63)
+  item_id Int
+  items   items  @relation(fields: [item_id], references: [item_id], onDelete: Cascade, map: "keywords_items_item_id_fk")
+
+  @@id([keyword, item_id], map: "keywords_pk")
 }

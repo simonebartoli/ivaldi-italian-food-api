@@ -1,23 +1,31 @@
-import {Args, Query, Resolver} from "type-graphql";
+import {Args, Ctx, Query, Resolver} from "type-graphql";
 import prisma from "../../db/prisma";
 import {Item} from "../types/itemType";
 import {PaginationInterface} from "../args/paginationInterface";
 import {CursorInterface} from "../args/cursorInterface";
 import {GetItemsArgs} from "../args/getItemsArgs";
+import {searchProducts, SearchResult} from "../lib/searchLib";
+import {Context} from "../types/not-graphql/contextType";
 
 @Resolver()
 export class ItemResolvers {
 
     @Query(returns => [Item])
-    async getItems_FULL(@Args() options: GetItemsArgs): Promise<Item[]>{
+    async getItems_FULL(@Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
         const {discountOnly = false, priceRange, outOfStock = false, filter} = options
-        const {categories} = filter || {} // TO DO
+        const {categories, keywords} = filter || {} // TO DO
         const {max, min} = priceRange || {}
 
-        return await prisma.items.findMany({
+        let products: SearchResult | undefined = keywords !== undefined ? await searchProducts(keywords, ctx) : undefined
+        const productsID = products !== undefined ? [...products.keys()] : undefined
+
+        const result = await prisma.items.findMany({
             where: {
                 NOT: {
                     discount_id: !discountOnly ? undefined : null
+                },
+                item_id: {
+                  in: productsID
                 },
                 amount_available: {
                     gte: outOfStock ? 0 : 1
@@ -26,6 +34,12 @@ export class ItemResolvers {
                     gte: min,
                     lte: max
                 }
+            }
+        })
+        return result.map((element) => {
+            return {
+                ...element,
+                importance: products?.get(element.item_id)
             }
         })
     }

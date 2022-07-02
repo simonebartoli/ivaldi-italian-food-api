@@ -3,11 +3,17 @@ import {JWTPayload, JWTVerifyResult, ProtectedHeaderParameters} from "jose";
 import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
 import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
 import {DateTime} from "luxon";
-import {AccessTokenHeaderType, RefreshTokenHeaderType, TokenPayloadType} from "../types/not-graphql/tokenType";
+import {
+    AccessTokenHeaderType, RecoverTokenHeaderType,
+    RecoverTokenPayloadType,
+    RefreshTokenHeaderType,
+    TokenPayloadType
+} from "../types/not-graphql/tokenType";
 import {findPublicKeyUsingKID} from "./accessLib";
 import prisma from "../../db/prisma";
 import {INTERNAL_ERROR} from "../../errors/INTERNAL_ERROR";
 import {INTERNAL_ERROR_ENUM} from "../enums/INTERNAL_ERROR_ENUM";
+import {Context} from "../types/not-graphql/contextType";
 
 export const verifySignAccessToken = async (token: string): Promise<TokenPayloadType & AccessTokenHeaderType> => {
     const jwtVerified = await verifyToken(token, false)
@@ -32,6 +38,18 @@ export const verifySignRefreshToken = async (token: string): Promise<TokenPayloa
         token_id: header.token_id,
         auth_level: header.auth_level,
         version: header.version,
+    }
+}
+export const verifySignRecoverToken = async (token: string): Promise<RecoverTokenPayloadType & RecoverTokenHeaderType> => {
+    const jwtVerified = await verifyToken(token, true)
+    const payload = <RecoverTokenPayloadType>jwtVerified.payload
+    const header = jwtVerified.protectedHeader as unknown as RecoverTokenHeaderType
+    return {
+        id: payload.id,
+        exp: payload.exp,
+        kid: header.kid,
+        token_id: header.token_id,
+        email_to_verify: payload.email_to_verify
     }
 }
 const verifyToken = async (token: string, destroy: boolean): Promise<JWTVerifyResult> => {
@@ -133,5 +151,21 @@ export const verifyExtraPropertyAccessToken = async (accessToken: TokenPayloadTy
     if(ua !== "Not Found" && uaReq !== ua) {
         await prisma.access_token.delete({where: {token_id: token_id}})
         throw new AUTH_ERROR("User Agent not corresponding", AUTH_ERROR_ENUM.UA_NOT_CORRESPONDING, false)
+    }
+}
+export const verifyExtraPropertyRecoverToken = async (recoverToken: RecoverTokenPayloadType & RecoverTokenHeaderType, context: Context) => {
+    const {token_id, id} = recoverToken
+    const result = await prisma.recover_tokens.findFirst({
+        where: {
+            token_id: token_id,
+            user_id: id
+        }
+    })
+    if(result === null){
+        context.res.clearCookie("recover_token")
+        throw new AUTH_ERROR("Token Not Existing", AUTH_ERROR_ENUM.TOKEN_INVALID)
+    }
+    if(result.status === "PENDING"){
+        throw new AUTH_ERROR("Token Not Authorized", AUTH_ERROR_ENUM.TOKEN_INVALID)
     }
 }

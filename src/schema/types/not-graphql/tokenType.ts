@@ -4,6 +4,10 @@ export type RefreshTokenHeaderType = {
     token_id: number
     auth_level: string
 }
+export type RecoverTokenHeaderType = {
+    kid: string
+    token_id: number
+}
 export type AccessTokenHeaderType = {
     kid: string
     token_id: number
@@ -11,5 +15,10 @@ export type AccessTokenHeaderType = {
 }
 export type TokenPayloadType = {
     id: number
+    exp: number
+}
+export type RecoverTokenPayloadType = {
+    id: number
+    email_to_verify: boolean
     exp: number
 }

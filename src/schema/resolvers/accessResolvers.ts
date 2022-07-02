@@ -13,12 +13,18 @@ import {RequireNotLogged} from "../custom-decorator/requireNotLogged";
 import {RequireValidRefreshToken} from "../custom-decorator/requireValidRefreshToken";
 import {RefreshTokenHeaderType, TokenPayloadType} from "../types/not-graphql/tokenType";
 import {
+    createRecoverToken,
     createRefreshToken,
     findPrivateKey,
     findPublicKeyUsingKID_base64,
     makeRandomToken,
     updateRefreshToken
 } from "../lib/accessLib";
+import {LoginWithoutPasswordInputs} from "../inputs/loginWithoutPasswordInputs";
+import {RequireValidRecoverToken} from "../custom-decorator/requireValidRecoverToken";
+import {ChangeRecoverTokenStatusInputs} from "../inputs/changeRecoverTokenStatusInputs";
+import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
+import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
 
 @Resolver()
 export class AccessResolvers {
@@ -29,7 +35,14 @@ export class AccessResolvers {
         const {email, password} = credentials
         const user = await prisma.users.findFirst({
             where: {
-                email: email.toLowerCase()
+                OR: [
+                    {
+                        email: email.toLowerCase(),
+                    },
+                    {
+                        email_to_verify: email.toLowerCase()
+                    }
+                ]
             }
         })
         if(user === null){
@@ -38,7 +51,64 @@ export class AccessResolvers {
         if(!bcrypt.compareSync(password, user.password)){
             throw new DATA_ERROR("Credentials are invalid", DATA_ERROR_ENUM.INVALID_CREDENTIALS)
         }
+        if(user.email === null){
+            const {user_id, email_to_verify} = user
+            await createRecoverToken(user_id, email_to_verify !== null, ctx)
+            throw new DATA_ERROR("Email Not Verified", DATA_ERROR_ENUM.EMAIL_NOT_VERIFIED)
+        }
         await createRefreshToken(user.user_id, "standard", ctx)
+        return true
+    }
+
+    @Mutation(returns => Boolean)
+    @RequireNotLogged()
+    async loginWithoutPassword(@Arg("credentials") credentials: LoginWithoutPasswordInputs, @Ctx() ctx: Context): Promise<boolean> {
+        const {email} = credentials
+        const result = await prisma.users.findFirst({
+            where: {
+                OR: [
+                    {
+                        email: email
+                    },
+                    {
+                        email_to_verify: email
+                    }
+                ]
+            }
+        })
+        if(result === null){
+            throw new DATA_ERROR("Email Not Existing", DATA_ERROR_ENUM.INVALID_CREDENTIALS)
+        }
+        const {user_id, email_to_verify} = result
+        await createRecoverToken(result.user_id, email_to_verify !== null, ctx)
+
+        return true
+    }
+
+    @Mutation(returns => Boolean)
+    @RequireNotLogged()
+    @RequireValidRecoverToken()
+    async checkRecoverTokenStatus(@Ctx() ctx: Context){
+        const {user_id} = ctx
+        await createRefreshToken(user_id!, "standard", ctx)
+        return true
+    }
+
+    @Mutation(returns => Boolean)
+    @RequireNotLogged()
+    async changeStatusRecoverToken(@Arg("secret") {secret}: ChangeRecoverTokenStatusInputs, @Ctx() ctx: Context){
+        try{
+            await prisma.recover_tokens.update({
+                where: {
+                    secret: secret
+                },
+                data: {
+                    status: "AUTHORIZED"
+                }
+            })
+        }catch (e){
+            throw new AUTH_ERROR("Token not found", AUTH_ERROR_ENUM.SECRET_INVALID)
+        }
         return true
     }
 
@@ -98,6 +168,8 @@ export class AccessResolvers {
             publicKey: publicKey
         }
     }
+
+
 
 
     // @Mutation(returns => Boolean)

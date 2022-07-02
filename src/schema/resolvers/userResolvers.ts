@@ -1,7 +1,7 @@
-import {Arg, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import {User} from "../types/userType";
 import prisma from "../../db/prisma";
-import {CreateNewUseInput} from "../inputs/createNewUseInput";
+import {CreateNewUserInput} from "../inputs/createNewUserInput";
 import {DATA_ERROR} from "../../errors/DATA_ERROR";
 import {DATA_ERROR_ENUM} from "../enums/DATA_ERROR_ENUM";
 import bcrypt from "bcrypt"
@@ -11,6 +11,9 @@ import {ChangeEmailInput} from "../inputs/changeEmailInput";
 import {ChangePasswordInput} from "../inputs/changePasswordInput";
 import {Logger} from "../custom-decorator/logger";
 import {TRIGGER_ENUM} from "../enums/TRIGGER_ENUM";
+import {DateTime} from "luxon";
+import {createRecoverToken} from "../lib/accessLib";
+import {Context} from "../types/not-graphql/contextType";
 
 @Resolver()
 export class UserResolvers {
@@ -69,25 +72,57 @@ export class UserResolvers {
         return true
     }
 
-    @Mutation(type => User)
-    async createNewUser(@Arg("data") inputData: CreateNewUseInput): Promise<User>{
+    @Mutation(type => Boolean)
+    async createNewUser(@Arg("data") inputData: CreateNewUserInput, @Ctx() ctx: Context): Promise<boolean>{
+        const name = inputData.name.charAt(0).toUpperCase() + inputData.name.toLowerCase().substring(1)
+        const surname = inputData.surname.charAt(0).toUpperCase() + inputData.surname.toLowerCase().substring(1)
+        const dob = inputData.dob
+        const email = inputData.email.toLowerCase()
+
         const emailExisting = await prisma.users.findFirst({
             where: {
-                email: inputData.email
+                OR: [
+                    {
+                        email: email
+                    },
+                    {
+                        email_to_verify: email
+                    }
+                ]
             }
         })
         if(emailExisting !== null){
-            throw new DATA_ERROR("Email Already Used", DATA_ERROR_ENUM.EMAIL_ALREADY_USED)
+            if(emailExisting.email !== null)
+                throw new DATA_ERROR("Email Already Used", DATA_ERROR_ENUM.EMAIL_ALREADY_USED)
+            else{
+                const entryDate = DateTime.fromJSDate(emailExisting.entry_date)
+                const entryDatePlusHour = entryDate.plus({hour: 1})
+                if(DateTime.now() < entryDatePlusHour){
+                    throw new DATA_ERROR("Email Already Used", DATA_ERROR_ENUM.EMAIL_ALREADY_USED)
+                }else{
+                    await prisma.users.delete({
+                        where: {
+                            email_to_verify: email
+                        }
+                    })
+                }
+            }
         }
 
         const hashedPassword = bcrypt.hashSync(inputData.password, 10)
-        return await prisma.users.create({
+        const result = await prisma.users.create({
             data: {
-                ...inputData,
-                email: inputData.email.toLowerCase(),
+                name: name,
+                surname: surname,
+                dob: dob,
+                email: null,
+                email_to_verify: email,
                 password: hashedPassword
             }
         })
+        const {user_id, email_to_verify} = result
+        await createRecoverToken(user_id, email_to_verify !== null, ctx)
+        return true
     }
 
 }

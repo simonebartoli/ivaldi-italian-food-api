@@ -14,8 +14,11 @@ export class User {
     @Field()
     surname: string
 
-    @Field()
-    email: string
+    @Field(type => String, {nullable: true})
+    email: string | null
+
+    @Field(type => String, {nullable: true})
+    email_to_verify: string | null
 
     @Field()
     dob: Date

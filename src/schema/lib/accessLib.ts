@@ -125,6 +125,38 @@ export const updateRefreshToken = async (userID: number, exp: number, authLevel:
     })
 }
 
+
+export const createRecoverToken = async (user_id: number, email_to_verify: boolean, ctx: Context) => {
+    const {res} = ctx
+    const token = makeRandomToken(64)
+    const exp = DateTime.now().plus({hour: 1})
+    const result = await prisma.recover_tokens.create({
+        data: {
+            secret: token,
+            user_id: user_id
+        }
+    })
+    const {token_id} = result
+    const {kid, key} = await findPrivateKey()
+    const recoverToken = await new jose.SignJWT({
+        id: user_id,
+        email_to_verify: email_to_verify
+    })
+        .setExpirationTime(exp.toSeconds())
+        .setProtectedHeader({
+            kid: kid,
+            token_id: token_id,
+            alg: "EdDSA"
+        })
+        .sign(key)
+    res.cookie("recover_token", recoverToken, {
+        expires: exp.toJSDate(),
+        secure: false,
+        sameSite: "none"
+    })
+
+}
+
 export const makeRandomToken = (length: number) => {
     let result           = '';
     const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

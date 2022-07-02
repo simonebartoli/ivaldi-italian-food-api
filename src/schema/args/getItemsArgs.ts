@@ -2,11 +2,11 @@ import {ArgsType, Field, Float, InputType} from "type-graphql";
 
 @InputType()
 class Filter{
-    @Field(type => [String])
-    keywords: string[]
+    @Field(type => String, {nullable: true})
+    keywords?: string
 
-    @Field(type => [String])
-    categories: string[]
+    @Field(type => String, {nullable: true})
+    categories?: string
 }
 
 @InputType()

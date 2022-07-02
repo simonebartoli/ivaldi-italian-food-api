@@ -17,6 +17,7 @@ export function UserInfo() {
             name: userDB.name,
             surname: userDB.surname,
             email: userDB.email,
+            email_to_verify: userDB.email_to_verify,
             dob: userDB.dob,
             role: userDB.role
         };
