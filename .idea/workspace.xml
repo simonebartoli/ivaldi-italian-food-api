@@ -4,36 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Receipt Data Generated + Fetch Receipt OK + Fetch Order OK">
-      <change afterPath="$PROJECT_DIR$/csv/keywords.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bin/InitRedis.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/db/redis.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/custom-decorator/requireValidRecoverToken.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/changeRecoverTokenStatusInputs.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/loginWithoutPasswordInputs.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test-data/keywords.ts" afterDir="false" />
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Keyword Search pt1 + Redis Implementation + Verification Email + Login Without Password">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bin/www.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/www.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/custom-decorator/userInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/custom-decorator/userInfo.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/AUTH_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/AUTH_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/inputs/createNewUseInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/createNewUserInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/tokenVerificationLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/tokenVerificationLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/tokenResolvers.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/itemType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/itemType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/not-graphql/tokenType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/tokenType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/userType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/userType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-data/test-data-generator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test-data/test-data-generator.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -133,7 +108,9 @@
       <workItem from="1656678866248" duration="8449000" />
       <workItem from="1656782458886" duration="3509000" />
       <workItem from="1656786914562" duration="8306000" />
-      <workItem from="1656795584225" duration="1222000" />
+      <workItem from="1656795584225" duration="3311000" />
+      <workItem from="1656846454247" duration="172000" />
+      <workItem from="1656846817416" duration="2993000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -212,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656620571964</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Keyword Search pt1 + Redis Implementation + Verification Email + Login Without Password">
+      <created>1656797396182</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1656797396182</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -241,6 +225,7 @@
     <MESSAGE value="Items Filters + Address + Cart" />
     <MESSAGE value="Cart Finished + Update Prisma 4 + Order &amp; Receipt types + Order Data Generated" />
     <MESSAGE value="Receipt Data Generated + Fetch Receipt OK + Fetch Order OK" />
-    <option name="LAST_COMMIT_MESSAGE" value="Receipt Data Generated + Fetch Receipt OK + Fetch Order OK" />
+    <MESSAGE value="Keyword Search pt1 + Redis Implementation + Verification Email + Login Without Password" />
+    <option name="LAST_COMMIT_MESSAGE" value="Keyword Search pt1 + Redis Implementation + Verification Email + Login Without Password" />
   </component>
 </project>

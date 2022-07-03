@@ -45,9 +45,13 @@ export class ItemResolvers {
     }
 
     @Query(returns => [Item])
-    async getItems_pagination(@Args() {limit, offset}: PaginationInterface, @Args() options: GetItemsArgs): Promise<Item[]>{
-        const {discountOnly = false, priceRange, outOfStock = false} = options
+    async getItems_pagination(@Args() {limit, offset}: PaginationInterface, @Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
+        const {discountOnly = false, priceRange, outOfStock = false, filter} = options
+        const {categories, keywords} = filter || {} // TO DO
         const {max, min} = priceRange || {}
+
+        let products: SearchResult | undefined = keywords !== undefined ? await searchProducts(keywords, ctx) : undefined
+        const productsID = products !== undefined ? [...products.keys()] : undefined
 
         return await prisma.items.findMany({
             skip: offset,
@@ -55,6 +59,9 @@ export class ItemResolvers {
             where: {
                 NOT: {
                     discount_id: !discountOnly ? undefined : null
+                },
+                item_id: {
+                    in: productsID
                 },
                 amount_available: {
                     gte: outOfStock ? 0 : 1
@@ -68,9 +75,13 @@ export class ItemResolvers {
     }
 
     @Query(returns => [Item])
-    async getItems_cursor(@Args() {cursor, limit}: CursorInterface, @Args() options: GetItemsArgs): Promise<Item[]>{
-        const {discountOnly = false, priceRange, outOfStock = false} = options
+    async getItems_cursor(@Args() {cursor, limit}: CursorInterface, @Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
+        const {discountOnly = false, priceRange, outOfStock = false, filter} = options
+        const {categories, keywords} = filter || {} // TO DO
         const {max, min} = priceRange || {}
+
+        let products: SearchResult | undefined = keywords !== undefined ? await searchProducts(keywords, ctx) : undefined
+        const productsID = products !== undefined ? [...products.keys()] : undefined
 
         if(cursor === undefined || cursor === null){
             return await prisma.items.findMany({
@@ -78,6 +89,9 @@ export class ItemResolvers {
                 where: {
                     NOT: {
                         discount_id: !discountOnly ? undefined : null
+                    },
+                    item_id: {
+                        in: productsID
                     },
                     amount_available: {
                         gte: outOfStock ? 0 : 1

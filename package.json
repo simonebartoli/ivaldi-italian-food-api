@@ -23,6 +23,7 @@
     "debug": "~2.6.9",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "fastest-levenshtein": "^1.0.12",
     "graphql": "15.7.2",
     "graphql-fields": "^2.0.3",
     "graphql-scalars": "^1.17.0",
