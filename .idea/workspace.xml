@@ -4,11 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Keyword Search pt1 + Redis Implementation + Verification Email + Login Without Password">
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Keyword Search pt2">
+      <change afterPath="$PROJECT_DIR$/emails-template/src/images/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/emails-template/src/templates/email-confirmation.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/emails-template/src/templates/verification.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bin/settings.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/errors/PAYMENT_ERROR.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/enums/PAYMENT_ERROR_ENUM.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/confirmCardPaymentIntentInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/paymentResolvers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/paymentIntentType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/paymentMethodType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test-data/payment_intent.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bin/www.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/www.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/custom-decorator/requireValidRecoverToken.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/custom-decorator/requireValidRecoverToken.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/custom-decorator/userInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/custom-decorator/userInfo.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/userType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/userType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-data/test-data-generator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test-data/test-data-generator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,34 +56,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/simon/Documents/Personal Project/ivaldi-italian-food-api/src/schema/inputs&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\simon\\Documents\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/simon/Documents/Personal Project/ivaldi-italian-food-api/src/schema/enums",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "C:\\Users\\simon\\Documents\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\custom-decorator" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\resolvers" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\field-resolvers" />
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\enums" />
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\errors" />
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types" />
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\emails-template\src\templates" />
+      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\emails-template\src\images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types" />
@@ -75,6 +95,23 @@
     <key name="es6.move.members.recent.items">
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\lib\tokenVerificationLib.ts" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="generate-data" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="generate-data" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.generate-data" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -110,7 +147,10 @@
       <workItem from="1656786914562" duration="8306000" />
       <workItem from="1656795584225" duration="3311000" />
       <workItem from="1656846454247" duration="172000" />
-      <workItem from="1656846817416" duration="2993000" />
+      <workItem from="1656846817416" duration="12802000" />
+      <workItem from="1656956649453" duration="2543000" />
+      <workItem from="1657017030004" duration="3174000" />
+      <workItem from="1657038322296" duration="9140000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -196,7 +236,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656797396182</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Keyword Search pt2">
+      <created>1656849936556</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1656849936556</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,6 +273,7 @@
     <MESSAGE value="Cart Finished + Update Prisma 4 + Order &amp; Receipt types + Order Data Generated" />
     <MESSAGE value="Receipt Data Generated + Fetch Receipt OK + Fetch Order OK" />
     <MESSAGE value="Keyword Search pt1 + Redis Implementation + Verification Email + Login Without Password" />
-    <option name="LAST_COMMIT_MESSAGE" value="Keyword Search pt1 + Redis Implementation + Verification Email + Login Without Password" />
+    <MESSAGE value="Keyword Search pt2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Keyword Search pt2" />
   </component>
 </project>

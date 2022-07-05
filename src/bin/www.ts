@@ -11,6 +11,10 @@ import {setHttpPlugin} from "../plugins/sendResponse";
 import {Context} from "../schema/types/not-graphql/contextType";
 import {initRedis} from "./InitRedis";
 import {redisClient} from "../db/redis";
+import Stripe from "stripe";
+import {STRIPE_SECRET_KEY} from "./settings";
+
+const stripe = new Stripe(STRIPE_SECRET_KEY, {apiVersion: '2020-08-27'})
 
 async function startApolloServer() {
   redisClient.on('error', (err) => console.log('Redis Client Error', err));
@@ -37,7 +41,8 @@ async function startApolloServer() {
       req: req,
       res: res,
       redis: redisClient,
-      user_id: null
+      user_id: null,
+      stripe: stripe
     }),
     formatError: (err) => formatError(err),
     formatResponse: (response, context) => {

@@ -3,7 +3,8 @@
 
 // import {addOrders} from "./orders";
 
-import {addKeywordsToItem} from "./keywords";
+// import {addKeywordsToItem} from "./keywords";
+// import {createPaymentIntent} from "./payment_intent";
 
 function generateData () {
     // addDiscountsToItems()
@@ -15,9 +16,12 @@ function generateData () {
     // addOrders()
     //     .then(() => console.log("Orders Finished"))
     //     .catch((e) => console.log(e))
-    addKeywordsToItem()
-        .then(() => console.log("Keywords Finished"))
-        .catch((e) => console.log(e))
+    // addKeywordsToItem()
+    //     .then(() => console.log("Keywords Finished"))
+    //     .catch((e) => console.log(e))
+    // createPaymentIntent()
+    //     .then(() => console.log("Payment Intent Finished"))
+    //     .catch((e) => console.log(e))
 }
 
 generateData()

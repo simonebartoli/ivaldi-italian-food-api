@@ -98,16 +98,18 @@ model log_accesses {
 }
 
 model orders {
-  order_id      Int        @id @default(autoincrement())
-  price_total   Float
-  shipping_cost Float      @default(0)
-  datetime      DateTime   @db.Timestamp(6)
-  archive       String
-  status        String     @db.VarChar(255)
-  user_id       Int
-  vat_total     Float
-  users         users      @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
-  receipts      receipts[]
+  order_id        Int               @id @default(autoincrement())
+  price_total     Float
+  shipping_cost   Float             @default(0)
+  datetime        DateTime          @db.Timestamp(6)
+  archive         String
+  status          String            @db.VarChar(255)
+  user_id         Int
+  vat_total       Float
+  phone_number    String            @default("+44 77 2309 3701") @db.VarChar(63)
+  users           users             @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
+  orders_delivery orders_delivery[]
+  receipts        receipts[]
 }
 
 model receipts {
@@ -139,22 +141,23 @@ model shipping_addresses {
 }
 
 model users {
-  user_id         Int              @id @default(autoincrement())
-  name            String           @db.VarChar(255)
-  surname         String           @db.VarChar(255)
-  dob             DateTime         @db.Date
-  email           String?          @unique @db.VarChar(255)
-  password        String           @db.VarChar(511)
-  role            String           @default("client") @db.VarChar(255)
-  email_to_verify String?          @unique(map: "users_email_to_verify_uindex") @db.VarChar(255)
-  entry_date      DateTime         @default(now()) @db.Timestamptz(6)
-  addresses       addresses[]
-  carts           carts[]
-  emails          emails[]
-  log_accesses    log_accesses[]
-  orders          orders[]
-  recover_tokens  recover_tokens[]
-  refresh_tokens  refresh_tokens[]
+  user_id            Int              @id @default(autoincrement())
+  name               String           @db.VarChar(255)
+  surname            String           @db.VarChar(255)
+  dob                DateTime         @db.Date
+  email              String?          @unique @db.VarChar(255)
+  password           String           @db.VarChar(511)
+  role               String           @default("client") @db.VarChar(255)
+  email_to_verify    String?          @unique(map: "users_email_to_verify_uindex") @db.VarChar(255)
+  entry_date         DateTime         @default(now()) @db.Timestamptz(6)
+  stripe_customer_id String?          @unique(map: "users_stripe_customer_id_uindex") @db.VarChar(255)
+  addresses          addresses[]
+  carts              carts[]
+  emails             emails[]
+  log_accesses       log_accesses[]
+  orders             orders[]
+  recover_tokens     recover_tokens[]
+  refresh_tokens     refresh_tokens[]
 }
 
 model access_token {
@@ -221,4 +224,12 @@ model keywords {
   items   items  @relation(fields: [item_id], references: [item_id], onDelete: Cascade, map: "keywords_items_item_id_fk")
 
   @@id([keyword, item_id], map: "keywords_pk")
+}
+
+model orders_delivery {
+  order_delivery_id Int       @id(map: "orders_delivery_pk") @default(autoincrement())
+  suggested         String?   @db.VarChar(255)
+  actual            DateTime? @unique(map: "orders_delivery_actual_uindex") @db.Timestamptz(6)
+  order_id          Int
+  orders            orders    @relation(fields: [order_id], references: [order_id], onDelete: Cascade, map: "orders_delivery_orders_order_id_fk")
 }

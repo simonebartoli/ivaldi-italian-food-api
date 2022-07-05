@@ -58,6 +58,7 @@ export const searchProducts = async (keywordsString: string, ctx: Context): Prom
                 for(const keyToCheck of keysToCheck) {
                     if(distance(keywordNotFound, keyToCheck) <= 2){
                         await redis.SADD(`keyword_alias@${keywordNotFound}`, keyToCheck)
+                        await redis.EXPIRE(`keyword_alias@${keywordNotFound}`, 3600)
                         keywordsAlias.push(keyToCheck)
                     }
                 }

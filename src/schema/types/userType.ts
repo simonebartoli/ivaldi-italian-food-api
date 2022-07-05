@@ -26,6 +26,9 @@ export class User {
     @Field()
     role: string
 
+    @Field(type => String, {nullable: true})
+    stripe_customer_id: string | null
+
     @Field(type => [BillingAddress], {nullable: true})
     billing_addresses?: BillingAddress[]
 

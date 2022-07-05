@@ -19,7 +19,8 @@ export function UserInfo() {
             email: userDB.email,
             email_to_verify: userDB.email_to_verify,
             dob: userDB.dob,
-            role: userDB.role
+            role: userDB.role,
+            stripe_customer_id: userDB.stripe_customer_id
         };
     });
 }
