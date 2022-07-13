@@ -6,6 +6,7 @@ coverage
 build/
 logs
 *.log
+emails-template
 
 
 # Coverage directory used by tools like istanbul
