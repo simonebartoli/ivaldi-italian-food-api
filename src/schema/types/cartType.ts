@@ -10,5 +10,5 @@ export class Cart {
     item?: Item
 
     @Field(type => Int)
-    item_id?: number
+    item_id: number
 }

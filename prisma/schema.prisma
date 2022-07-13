@@ -211,11 +211,14 @@ model sub_categories_items {
 }
 
 model recover_tokens {
-  token_id Int    @id(map: "tokens_pkey") @default(autoincrement())
-  secret   String @unique(map: "tokens_secret_key") @db.VarChar(511)
+  token_id Int      @id(map: "tokens_pkey") @default(autoincrement())
+  secret   String   @unique(map: "tokens_secret_key") @db.VarChar(511)
   user_id  Int
-  status   String @default("PENDING") @db.VarChar(63)
-  users    users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "fktokens874970")
+  status   String   @default("PENDING") @db.VarChar(63)
+  expiry   DateTime @default(now()) @db.Timestamptz(6)
+  users    users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "fktokens874970")
+
+  @@unique([secret, expiry], map: "recover_tokens_pk")
 }
 
 model keywords {

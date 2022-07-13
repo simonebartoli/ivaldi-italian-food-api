@@ -12,7 +12,7 @@ import {ChangePasswordInput} from "../inputs/changePasswordInput";
 import {Logger} from "../custom-decorator/logger";
 import {TRIGGER_ENUM} from "../enums/TRIGGER_ENUM";
 import {DateTime} from "luxon";
-import {createRecoverToken} from "../lib/accessLib";
+import {createRecoverToken, makeRandomToken} from "../lib/accessLib";
 import {Context} from "../types/not-graphql/contextType";
 
 @Resolver()
@@ -72,8 +72,8 @@ export class UserResolvers {
         return true
     }
 
-    @Mutation(type => Boolean)
-    async createNewUser(@Arg("data") inputData: CreateNewUserInput, @Ctx() ctx: Context): Promise<boolean>{
+    @Mutation(type => String)
+    async createNewUser(@Arg("data") inputData: CreateNewUserInput, @Ctx() ctx: Context): Promise<string>{
         const name = inputData.name.charAt(0).toUpperCase() + inputData.name.toLowerCase().substring(1)
         const surname = inputData.surname.charAt(0).toUpperCase() + inputData.surname.toLowerCase().substring(1)
         const dob = inputData.dob
@@ -122,7 +122,7 @@ export class UserResolvers {
         })
         const {user_id, email_to_verify} = result
         await createRecoverToken(user_id, email_to_verify !== null, ctx)
-        return true
+        return makeRandomToken(6)
     }
 
 }

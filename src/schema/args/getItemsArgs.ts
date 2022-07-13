@@ -1,15 +1,6 @@
 import {ArgsType, Field, Float, InputType} from "type-graphql";
 
 @InputType()
-class Filter{
-    @Field(type => String, {nullable: true})
-    keywords?: string
-
-    @Field(type => String, {nullable: true})
-    categories?: string
-}
-
-@InputType()
 class Price{
     @Field(type => Float)
     min: number
@@ -29,6 +20,6 @@ export class GetItemsArgs {
     @Field(type => Price, {nullable: true})
     priceRange?: Price
 
-    @Field(type => Filter, {nullable: true})
-    filter?: Filter
+    @Field(type => String, {nullable: true})
+    keywords?: string
 }

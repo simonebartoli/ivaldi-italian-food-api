@@ -24,7 +24,7 @@ export class Order {
     archive: OrderArchive
 
     @Field(type => String)
-    status: "DELIVERED" | "CANCELLED" | "PENDING"
+    status: "DELIVERED" | "CANCELLED" | "PENDING" | "REFUNDED"
 
     @Field(type => User)
     user?: User

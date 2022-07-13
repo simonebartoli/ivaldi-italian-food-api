@@ -1,4 +1,4 @@
-import {Args, Ctx, Query, Resolver} from "type-graphql";
+import {Arg, Args, Ctx, Int, Query, Resolver} from "type-graphql";
 import prisma from "../../db/prisma";
 import {Item} from "../types/itemType";
 import {PaginationInterface} from "../args/paginationInterface";
@@ -6,14 +6,27 @@ import {CursorInterface} from "../args/cursorInterface";
 import {GetItemsArgs} from "../args/getItemsArgs";
 import {searchProducts, SearchResult} from "../lib/searchLib";
 import {Context} from "../types/not-graphql/contextType";
+import {DATA_ERROR} from "../../errors/DATA_ERROR";
+import {DATA_ERROR_ENUM} from "../enums/DATA_ERROR_ENUM";
 
 @Resolver()
 export class ItemResolvers {
 
+    @Query(returns => Item)
+    async getItem(@Arg("id", type => Int) id: number): Promise<Item> {
+        const result = await prisma.items.findUnique({
+            where: {
+                item_id: id
+            }
+        })
+        if(result === null) throw new DATA_ERROR("Item Not Existing", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+        return result
+    }
+
+
     @Query(returns => [Item])
     async getItems_FULL(@Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
-        const {discountOnly = false, priceRange, outOfStock = false, filter} = options
-        const {categories, keywords} = filter || {} // TO DO
+        const {discountOnly = false, priceRange, outOfStock = false, keywords} = options
         const {max, min} = priceRange || {}
 
         let products: SearchResult | undefined = keywords !== undefined ? await searchProducts(keywords, ctx) : undefined
@@ -46,8 +59,7 @@ export class ItemResolvers {
 
     @Query(returns => [Item])
     async getItems_pagination(@Args() {limit, offset}: PaginationInterface, @Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
-        const {discountOnly = false, priceRange, outOfStock = false, filter} = options
-        const {categories, keywords} = filter || {} // TO DO
+        const {discountOnly = false, priceRange, outOfStock = false, keywords} = options
         const {max, min} = priceRange || {}
 
         let products: SearchResult | undefined = keywords !== undefined ? await searchProducts(keywords, ctx) : undefined
@@ -76,8 +88,7 @@ export class ItemResolvers {
 
     @Query(returns => [Item])
     async getItems_cursor(@Args() {cursor, limit}: CursorInterface, @Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
-        const {discountOnly = false, priceRange, outOfStock = false, filter} = options
-        const {categories, keywords} = filter || {} // TO DO
+        const {discountOnly = false, priceRange, outOfStock = false, keywords} = options
         const {max, min} = priceRange || {}
 
         let products: SearchResult | undefined = keywords !== undefined ? await searchProducts(keywords, ctx) : undefined

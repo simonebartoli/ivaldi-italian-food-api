@@ -35,7 +35,7 @@ export const findPublicKeyUsingKID_base64 = async (kid: string) : Promise<string
     const publicKey = publicKeys.find((element) => element.kid === kid)
     if(publicKey === undefined) throw new INTERNAL_ERROR("No valid public keys", INTERNAL_ERROR_ENUM.KEYS_MISSING)
 
-    const publicKeyFormatted = <KeyLike> await jose.importJWK(publicKey.content, "RS256")
+    const publicKeyFormatted = <KeyLike> await jose.importJWK(publicKey.content, "EdDSA")
 
     return Buffer
         .from(await jose.exportSPKI(publicKeyFormatted), "utf-8")
@@ -47,7 +47,7 @@ export const findPublicKeyUsingKID = async (kid: string) : Promise<KeyLike> => {
     const publicKey = publicKeys.find((element) => element.kid === kid)
     if(publicKey === undefined) throw new AUTH_ERROR("No valid kid", AUTH_ERROR_ENUM.TOKEN_FORGED)
 
-    return <KeyLike> await jose.importJWK(publicKey.content, "RS256")
+    return <KeyLike> await jose.importJWK(publicKey.content, "EdDSA")
 }
 
 export const createRefreshToken = async (id: number, auth_level: string, context: Context) => {
@@ -85,6 +85,7 @@ export const createRefreshToken = async (id: number, auth_level: string, context
     res.cookie("token", refreshToken, {
         expires: DateTime.fromSeconds(expiryDate).toJSDate(),
         secure: false,
+        httpOnly: true,
         sameSite: "none"
     })
 }
@@ -121,7 +122,8 @@ export const updateRefreshToken = async (userID: number, exp: number, authLevel:
     res.cookie("token", refreshToken, {
         expires: DateTime.fromSeconds(exp).toJSDate(),
         secure: false,
-        sameSite: "none"
+        sameSite: "none",
+        httpOnly: true
     })
 }
 
@@ -129,11 +131,13 @@ export const updateRefreshToken = async (userID: number, exp: number, authLevel:
 export const createRecoverToken = async (user_id: number, email_to_verify: boolean, ctx: Context) => {
     const {res} = ctx
     const token = makeRandomToken(64)
+    const urlToClick = `http://localhost:3000/verify?secret=${token}`
     const exp = DateTime.now().plus({hour: 1})
     const result = await prisma.recover_tokens.create({
         data: {
             secret: token,
-            user_id: user_id
+            user_id: user_id,
+            expiry: exp.toISO()
         }
     })
     const {token_id} = result
@@ -152,9 +156,10 @@ export const createRecoverToken = async (user_id: number, email_to_verify: boole
     res.cookie("recover_token", recoverToken, {
         expires: exp.toJSDate(),
         secure: false,
-        sameSite: "none"
+        sameSite: "none",
+        httpOnly: true
     })
-
+    console.log(urlToClick)
 }
 
 export const makeRandomToken = (length: number) => {

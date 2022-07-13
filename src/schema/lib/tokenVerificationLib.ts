@@ -166,6 +166,6 @@ export const verifyExtraPropertyRecoverToken = async (recoverToken: RecoverToken
         throw new AUTH_ERROR("Token Not Existing", AUTH_ERROR_ENUM.TOKEN_INVALID)
     }
     if(result.status === "PENDING"){
-        throw new AUTH_ERROR("Token Not Authorized", AUTH_ERROR_ENUM.TOKEN_INVALID)
+        throw new AUTH_ERROR("Token Not Authorized", AUTH_ERROR_ENUM.TOKEN_NOT_AUTHORIZED)
     }
 }

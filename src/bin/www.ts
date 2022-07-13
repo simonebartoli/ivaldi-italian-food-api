@@ -13,24 +13,28 @@ import {initRedis} from "./InitRedis";
 import {redisClient} from "../db/redis";
 import Stripe from "stripe";
 import {STRIPE_SECRET_KEY} from "./settings";
-
-const stripe = new Stripe(STRIPE_SECRET_KEY, {apiVersion: '2020-08-27'})
+import {webhookRouter} from "../webhooks/webhook";
 
 async function startApolloServer() {
-  redisClient.on('error', (err) => console.log('Redis Client Error', err));
-  await redisClient.connect();
-
-  await initRedis(redisClient)
+  const stripe = new Stripe(STRIPE_SECRET_KEY, {apiVersion: '2020-08-27'})
+  try{
+    // redisClient.on('error', (err) => console.log('Redis Client Error', err));
+    await redisClient.connect();
+    await initRedis(redisClient)
+  }catch (e) {
+    console.log(e)
+  }
 
   const schema = await buildSchema({
-    resolvers: [process.cwd() + "/src/schema/resolvers/**/*.{ts,js}"],
+    resolvers: [process.cwd() + (process.env["NODE_ENV"] === "production" ? "/build/src/schema/resolvers/**/*.{ts,js}" : "/src/schema/resolvers/**/*.{ts,js}")],
   });
   const app = express();
   app.use(cookieParser())
   app.use(cors({
-    origin: "https://studio.apollographql.com",
+    origin: "http://localhost:3000",
     credentials: true
   }))
+  // app.use(webhookRouter)
 
   const httpServer = http.createServer(app);
 

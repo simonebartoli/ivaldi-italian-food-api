@@ -1,4 +1,4 @@
-import {Arg, Ctx, Mutation, Resolver} from "type-graphql";
+import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import {AccessType} from "../types/accessType";
 import {LoginWithPasswordInputs} from "../inputs/loginWithPasswordInputs";
 import prisma from "../../db/prisma";
@@ -54,15 +54,17 @@ export class AccessResolvers {
         if(user.email === null){
             const {user_id, email_to_verify} = user
             await createRecoverToken(user_id, email_to_verify !== null, ctx)
-            throw new DATA_ERROR("Email Not Verified", DATA_ERROR_ENUM.EMAIL_NOT_VERIFIED)
+            throw new DATA_ERROR("Email Not Verified",
+                DATA_ERROR_ENUM.EMAIL_NOT_VERIFIED,
+                {sixDigitCode: makeRandomToken(6)})
         }
         await createRefreshToken(user.user_id, "standard", ctx)
         return true
     }
 
-    @Mutation(returns => Boolean)
+    @Mutation(returns => String)
     @RequireNotLogged()
-    async loginWithoutPassword(@Arg("credentials") credentials: LoginWithoutPasswordInputs, @Ctx() ctx: Context): Promise<boolean> {
+    async loginWithoutPassword(@Arg("data") credentials: LoginWithoutPasswordInputs, @Ctx() ctx: Context): Promise<string> {
         const {email} = credentials
         const result = await prisma.users.findFirst({
             where: {
@@ -79,9 +81,16 @@ export class AccessResolvers {
         if(result === null){
             throw new DATA_ERROR("Email Not Existing", DATA_ERROR_ENUM.INVALID_CREDENTIALS)
         }
-        const {user_id, email_to_verify} = result
+        const {email_to_verify} = result
         await createRecoverToken(result.user_id, email_to_verify !== null, ctx)
 
+        return makeRandomToken(6)
+    }
+
+
+    @Mutation(returns => Boolean)
+    logout(@Ctx() ctx: Context): boolean {
+        ctx.res.clearCookie("token")
         return true
     }
 
@@ -96,18 +105,27 @@ export class AccessResolvers {
 
     @Mutation(returns => Boolean)
     @RequireNotLogged()
-    async changeStatusRecoverToken(@Arg("secret") {secret}: ChangeRecoverTokenStatusInputs, @Ctx() ctx: Context){
+    async changeStatusRecoverToken(@Arg("data") {secret}: ChangeRecoverTokenStatusInputs, @Ctx() ctx: Context){
+        const now = DateTime.now().toJSDate()
         try{
+            const result = await prisma.recover_tokens.findFirstOrThrow({
+                where: {
+                    secret: secret,
+                    expiry: {
+                        gt: now
+                    }
+                }
+            })
             await prisma.recover_tokens.update({
                 where: {
-                    secret: secret
+                    token_id: result.token_id
                 },
                 data: {
                     status: "AUTHORIZED"
                 }
             })
         }catch (e){
-            throw new AUTH_ERROR("Token not found", AUTH_ERROR_ENUM.SECRET_INVALID)
+            throw new AUTH_ERROR("Token not found", AUTH_ERROR_ENUM.SECRET_INVALID, false)
         }
         return true
     }
@@ -120,7 +138,7 @@ export class AccessResolvers {
         const refreshTokenPayload = <TokenPayloadType> jose.decodeJwt(token)
         const refreshTokenHeader = <RefreshTokenHeaderType> jose.decodeProtectedHeader(token)
 
-        const accessTokenExp = DateTime.now().plus({minute: 15}).toSeconds()
+        const accessTokenExp = DateTime.now().plus({second: 15}).toSeconds() //CHANGE HERE
         const ip = req.socket.remoteAddress || req.ip
         const ua = req.get('User-Agent')
 
@@ -141,6 +159,12 @@ export class AccessResolvers {
 
         const {kid, key} = await findPrivateKey()
         const publicKey = await findPublicKeyUsingKID_base64(kid)
+
+        await prisma.access_token.deleteMany({
+            where: {
+                refresh_token_id: refreshTokenHeader.token_id
+            }
+        })
 
         const accessTokenDB = await prisma.access_token.create({
             data: {
@@ -169,7 +193,33 @@ export class AccessResolvers {
         }
     }
 
-
+    @Query(returns => Boolean)
+    async checkExistingEmail(@Arg("email") email: string): Promise<boolean> {
+        const result = await prisma.users.findFirst({
+            where: {
+                OR: [
+                    {
+                        email: email
+                    },
+                    {
+                        email_to_verify: email
+                    }
+                ]
+            }
+        })
+        if(result !== null){
+            if(result.email !== null)
+                throw new DATA_ERROR("Email Already Used", DATA_ERROR_ENUM.EMAIL_ALREADY_USED)
+            else{
+                const entryDate = DateTime.fromJSDate(result.entry_date)
+                const entryDatePlusHour = entryDate.plus({hour: 1})
+                if(DateTime.now() < entryDatePlusHour){
+                    throw new DATA_ERROR("Email Already Used", DATA_ERROR_ENUM.EMAIL_ALREADY_USED)
+                }
+            }
+        }
+        return true
+    }
 
 
     // @Mutation(returns => Boolean)
