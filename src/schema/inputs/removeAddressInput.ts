@@ -1,7 +1,7 @@
 import {Field, InputType, Int} from "type-graphql";
 
 @InputType()
-export class RemoveEntryFromCartInput {
+export class RemoveAddressInput {
     @Field(type => Int)
-    item_id: number
+    address_id: number
 }

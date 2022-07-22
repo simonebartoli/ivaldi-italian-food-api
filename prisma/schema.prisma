@@ -15,6 +15,8 @@ model addresses {
   second_address     String?             @db.VarChar(255)
   postcode           String              @db.VarChar(255)
   user_id            Int
+  coordinates        String?             @db.VarChar(255)
+  notes              String?             @db.VarChar(255)
   users              users               @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "fkaddresses857531")
   billing_addresses  billing_addresses?
   shipping_addresses shipping_addresses?
@@ -22,7 +24,6 @@ model addresses {
 
 model billing_addresses {
   address_id Int       @id
-  notes      String?   @db.VarChar(511)
   country    String    @db.VarChar(255)
   addresses  addresses @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fkbilling_ad507106")
 }
@@ -136,7 +137,6 @@ model refresh_tokens {
 
 model shipping_addresses {
   address_id Int       @id
-  notes      String?   @db.VarChar(511)
   addresses  addresses @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "fkshipping_a233077")
 }
 

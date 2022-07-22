@@ -1,5 +1,5 @@
-import {ArgsType, Field, InputType, Int} from "type-graphql";
-import {IsInt, IsPositive, Min} from "class-validator";
+import {Field, InputType, Int} from "type-graphql";
+import {IsInt, Min} from "class-validator";
 
 @InputType()
 export class ItemCart {
@@ -10,6 +10,5 @@ export class ItemCart {
 
     @Field(type => Int)
     @IsInt()
-    @Min(0)
     amount: number
 }

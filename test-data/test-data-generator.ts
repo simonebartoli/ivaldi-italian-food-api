@@ -6,6 +6,8 @@
 // import {addKeywordsToItem} from "./keywords";
 // import {createPaymentIntent} from "./payment_intent";
 
+// import {addCategoriesSubCategoriesToRedis} from "./categories_items";
+
 function generateData () {
     // addDiscountsToItems()
     //     .then(() => console.log("Discount Items Finished"))
@@ -21,6 +23,9 @@ function generateData () {
     //     .catch((e) => console.log(e))
     // createPaymentIntent()
     //     .then(() => console.log("Payment Intent Finished"))
+    //     .catch((e) => console.log(e))
+    // addCategoriesSubCategoriesToRedis()
+    //     .then(() => console.log("Categories Item Finished"))
     //     .catch((e) => console.log(e))
 }
 

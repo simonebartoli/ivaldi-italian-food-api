@@ -88,6 +88,5 @@ export const searchProducts = async (keywordsString: string, ctx: Context): Prom
         }
     })
     console.timeEnd("FUNCTION")
-
     return items
 }

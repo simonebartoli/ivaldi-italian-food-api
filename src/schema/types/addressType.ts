@@ -17,4 +17,10 @@ export class Address {
     @Field(type => String, {nullable: true})
     second_address: string | null
 
+    @Field(type => String, {nullable: true})
+    coordinates: string | null
+
+    @Field(type => String, {nullable: true})
+    notes: string | null
+
 }

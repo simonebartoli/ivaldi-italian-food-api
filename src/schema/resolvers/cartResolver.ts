@@ -1,4 +1,4 @@
-import {Arg, Args, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import {Cart} from "../types/cartType";
 import {RequireValidAccessToken} from "../custom-decorator/requireValidAccessToken";
 import prisma from "../../db/prisma";
@@ -89,7 +89,6 @@ export class CartResolver {
     async addNewRecord(@Ctx() ctx: Context, @CartInfo() cart: Cart[], @Arg("data") inputData: AddEntryToCartInput): Promise<boolean> {
         const {user_id} = ctx
         const {item_id, amount} = inputData
-        await verifyItemAvailability(amount, await verifyItemExisting(item_id))
         const result = await prisma.carts.findUnique({
             where: {
                 user_id_item_id: {
@@ -98,7 +97,8 @@ export class CartResolver {
                 }
             }
         })
-        if(result === null)
+        if(result === null) {
+            await verifyItemAvailability(amount, await verifyItemExisting(item_id))
             await prisma.carts.create({
                 data: {
                     item_id: item_id,
@@ -106,20 +106,34 @@ export class CartResolver {
                     amount: amount
                 }
             })
-        else
-            await prisma.carts.update({
-                where: {
-                    user_id_item_id: {
-                        item_id: item_id,
-                        user_id: user_id!
+        }
+        else {
+            await verifyItemAvailability(amount+result.amount, await verifyItemExisting(item_id))
+            if(amount + result.amount <= 0){
+                await prisma.carts.delete({
+                    where: {
+                        user_id_item_id: {
+                            item_id: item_id,
+                            user_id: user_id!
+                        }
                     }
-                },
-                data: {
-                    amount: {
-                        increment: amount
+                })
+            }else{
+                await prisma.carts.update({
+                    where: {
+                        user_id_item_id: {
+                            item_id: item_id,
+                            user_id: user_id!
+                        }
+                    },
+                    data: {
+                        amount: {
+                            increment: amount
+                        }
                     }
-                }
-            })
+                })
+            }
+        }
 
         return true
     }
@@ -129,36 +143,20 @@ export class CartResolver {
     @RequireValidAccessToken()
     async removeRecord(@Ctx() ctx: Context, @CartInfo() cart: Cart[], @Arg("data") inputData: RemoveEntryFromCartInput): Promise<boolean> {
         const {user_id} = ctx
-        const {item_id, amount} = inputData
+        const {item_id} = inputData
         const cartItem = cart.find((element) => element.item_id === item_id)
         if(cartItem === undefined){
             throw new DATA_ERROR("This item does not exist in your cart", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
         }
 
-        if(amount === undefined || amount === null || amount >= cartItem.amount){
-            await prisma.carts.delete({
-                where: {
-                    user_id_item_id: {
-                        item_id: item_id,
-                        user_id: user_id!
-                    }
+        await prisma.carts.delete({
+            where: {
+                user_id_item_id: {
+                    item_id: item_id,
+                    user_id: user_id!
                 }
-            })
-        }else{
-            await prisma.carts.update({
-                where: {
-                    user_id_item_id: {
-                        item_id: item_id,
-                        user_id: user_id!
-                    }
-                },
-                data: {
-                    amount: {
-                        decrement: amount
-                    }
-                }
-            })
-        }
+            }
+        })
 
         return true
     }
@@ -174,26 +172,31 @@ export class CartResolver {
         }
 
         for(const inputDataElement of inputData){
-            if(!cartExistingMap.has(inputDataElement.item_id)){
-                await prisma.carts.create({
-                    data: {
-                        item_id: inputDataElement.item_id,
-                        amount: inputDataElement.amount,
-                        user_id: ctx.user_id!
-                    }
-                })
-            }else{
-                await prisma.carts.update({
-                    where: {
-                        user_id_item_id: {
+            try{
+                await verifyItemAvailability(inputDataElement.amount, await verifyItemExisting(inputDataElement.item_id))
+                if(!cartExistingMap.has(inputDataElement.item_id)){
+                    await prisma.carts.create({
+                        data: {
                             item_id: inputDataElement.item_id,
+                            amount: inputDataElement.amount,
                             user_id: ctx.user_id!
                         }
-                    },
-                    data: {
-                        amount: inputDataElement.amount,
-                    }
-                })
+                    })
+                }else{
+                    await prisma.carts.update({
+                        where: {
+                            user_id_item_id: {
+                                item_id: inputDataElement.item_id,
+                                user_id: ctx.user_id!
+                            }
+                        },
+                        data: {
+                            amount: inputDataElement.amount,
+                        }
+                    })
+                }
+            }catch (e) {
+                continue
             }
         }
         return true

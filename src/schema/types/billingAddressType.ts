@@ -5,7 +5,4 @@ import {Address} from "./addressType";
 export class BillingAddress extends Address{
     @Field()
     country: string
-
-    @Field(type => String, {nullable: true})
-    notes: string | null
 }

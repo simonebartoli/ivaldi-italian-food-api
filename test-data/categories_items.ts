@@ -1,4 +1,5 @@
 import prisma from "../src/db/prisma";
+import {redisClient} from "../src/db/redis";
 
 export const addCategoriesSubCategoriesToItems = async () => {
     const items = await prisma.items.findMany({select: {item_id: true}})
@@ -62,4 +63,78 @@ export const addCategoriesSubCategoriesToItems = async () => {
 
         }
     })
+}
+
+
+export const addCategoriesSubCategoriesToRedis = async () => {
+    let categoryFinal: {
+        name: string
+        id: number[]
+    }[] = []
+
+    const itemCategories = await prisma.categories.findMany({
+        select: {
+            name: true,
+            sub_categories: {
+              select: {
+                  sub_categories_items: {
+                      select: {
+                          item_id: true
+                      }
+                  }
+              }
+            },
+            categories_items: {
+                select: {
+                    item_id: true
+                }
+            }
+        }
+    })
+
+    const itemSubCategories = await prisma.sub_categories.findMany({
+        select: {
+            name: true,
+            sub_categories_items: {
+                select: {
+                    item_id: true
+                }
+            }
+        }
+    })
+
+    for(const element of itemCategories) {
+        const finalID: number[] = []
+        for(const subElement of element.categories_items){
+            finalID.push(subElement.item_id)
+        }
+        for(const subElement of element.sub_categories){
+            for(const subSubElement of subElement.sub_categories_items){
+                finalID.push(subSubElement.item_id)
+            }
+        }
+        categoryFinal.push({
+            name: element.name,
+            id: finalID
+        })
+    }
+
+    for(const element of itemSubCategories){
+        const finalID: number[] = []
+
+        for(const subElement of element.sub_categories_items){
+            finalID.push(subElement.item_id)
+        }
+        categoryFinal.push({
+            name: element.name,
+            id: finalID
+        })
+    }
+    await redisClient.connect()
+    for(const element of categoryFinal){
+        for(const subElement of element.id){
+            await redisClient.SADD(element.name, subElement.toString())
+        }
+    }
+    console.log(categoryFinal)
 }

@@ -15,6 +15,7 @@ export class UserFieldResolvers implements ResolverInterface<User> {
             FROM addresses a
             INNER JOIN shipping_addresses sa on a.address_id = sa.address_id
             WHERE a.user_id = ${user.user_id}
+            ORDER BY a.address_id DESC 
         `
     }
 
@@ -23,8 +24,9 @@ export class UserFieldResolvers implements ResolverInterface<User> {
         return await prisma.$queryRaw`
             SELECT a.*, ba.*
             FROM addresses a
-            INNER JOIN shipping_addresses ba on a.address_id = ba.address_id
+            INNER JOIN billing_addresses ba on a.address_id = ba.address_id
             WHERE a.user_id = ${user.user_id}
+            ORDER BY a.address_id DESC 
         `
     }
 

@@ -20,6 +20,9 @@ export class GetItemsArgs {
     @Field(type => Price, {nullable: true})
     priceRange?: Price
 
+    @Field(type => String)
+    keywords: string
+
     @Field(type => String, {nullable: true})
-    keywords?: string
+    order?: "Most Relevant" | "Price Ascending" | "Price Descending" | "Higher Discounts"
 }
