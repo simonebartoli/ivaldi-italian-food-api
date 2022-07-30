@@ -15,6 +15,8 @@ import Stripe from "stripe";
 import {STRIPE_SECRET_KEY} from "./settings";
 import {webhookRouter} from "../webhooks/webhook";
 
+const orderTimeout = new Map<string, ReturnType<typeof setTimeout>>()
+
 async function startApolloServer() {
   const stripe = new Stripe(STRIPE_SECRET_KEY, {apiVersion: '2020-08-27'})
   try{
@@ -34,7 +36,7 @@ async function startApolloServer() {
     origin: "http://localhost:3000",
     credentials: true
   }))
-  // app.use(webhookRouter)
+  app.use(webhookRouter)
 
   const httpServer = http.createServer(app);
 
@@ -46,7 +48,8 @@ async function startApolloServer() {
       res: res,
       redis: redisClient,
       user_id: null,
-      stripe: stripe
+      stripe: stripe,
+      orderTimeout
     }),
     formatError: (err) => formatError(err),
     formatResponse: (response, context) => {

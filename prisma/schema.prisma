@@ -85,6 +85,7 @@ model items {
   bundles_items        bundles_items[]
   carts                carts[]
   categories_items     categories_items[]
+  items_hold           items_hold[]
   keywords             keywords[]
   sub_categories_items sub_categories_items[]
 }
@@ -99,7 +100,7 @@ model log_accesses {
 }
 
 model orders {
-  order_id        Int               @id @default(autoincrement())
+  order_id        String            @id @db.VarChar
   price_total     Float
   shipping_cost   Float             @default(0)
   datetime        DateTime          @db.Timestamp(6)
@@ -108,22 +109,10 @@ model orders {
   user_id         Int
   vat_total       Float
   phone_number    String            @default("+44 77 2309 3701") @db.VarChar(63)
+  reference       String            @unique(map: "orders_reference_uindex") @db.VarChar
   users           users             @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
   orders_delivery orders_delivery[]
-  receipts        receipts[]
-}
-
-model receipts {
-  receipt_id      Int      @id @default(autoincrement())
-  price_total     Float
-  vat_total       Float
-  datetime        DateTime @db.Timestamp(6)
-  payment_method  String   @db.VarChar(255)
-  archive         String
-  status          String   @db.VarChar(255)
-  order_id        Int
-  payment_account String   @db.VarChar(255)
-  orders          orders   @relation(fields: [order_id], references: [order_id], map: "fkreceipts115011")
+  payment_methods payment_methods?
 }
 
 model refresh_tokens {
@@ -233,6 +222,29 @@ model orders_delivery {
   order_delivery_id Int       @id(map: "orders_delivery_pk") @default(autoincrement())
   suggested         String?   @db.VarChar(255)
   actual            DateTime? @unique(map: "orders_delivery_actual_uindex") @db.Timestamptz(6)
-  order_id          Int
+  order_id          String    @db.VarChar
   orders            orders    @relation(fields: [order_id], references: [order_id], onDelete: Cascade, map: "orders_delivery_orders_order_id_fk")
+}
+
+model payment_intents {
+  payment_intent_id String   @id(map: "payment_intents_pk") @db.VarChar(255)
+  hash              String   @unique(map: "payment_intents_hash_uindex") @db.VarChar(255)
+  expiry_datetime   DateTime @db.Timestamptz(6)
+}
+
+model items_hold {
+  payment_intent_id String   @db.VarChar
+  item_id           Int
+  amount            Int
+  expiry_datetime   DateTime @db.Timestamptz(6)
+  items             items    @relation(fields: [item_id], references: [item_id], map: "items_hold_items_item_id_fk")
+
+  @@id([payment_intent_id, item_id], map: "items_hold_pk")
+}
+
+model payment_methods {
+  reference String @id(map: "payment_methods_pk") @db.VarChar
+  type      String @db.VarChar
+  account   String @db.VarChar
+  orders    orders @relation(fields: [reference], references: [reference], onDelete: Cascade, map: "payment_methods_orders_reference_fk")
 }

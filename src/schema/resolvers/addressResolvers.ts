@@ -1,4 +1,4 @@
-import {Arg, Ctx, Mutation, Resolver} from "type-graphql";
+import {Arg, Ctx, Int, Mutation, Resolver} from "type-graphql";
 import prisma from "../../db/prisma";
 import {RequireValidAccessToken} from "../custom-decorator/requireValidAccessToken";
 import {Context} from "../types/not-graphql/contextType";
@@ -10,6 +10,8 @@ import {EditAddressInput} from "../inputs/editAddressInput";
 import {DATA_ERROR} from "../../errors/DATA_ERROR";
 import {DATA_ERROR_ENUM} from "../enums/DATA_ERROR_ENUM";
 import {RemoveAddressInput} from "../inputs/removeAddressInput";
+import {TranslateAddressInput} from "../inputs/translateAddressInput";
+import {ADDRESS_TYPE_ENUM} from "../enums/ADDRESS_TYPE_ENUM";
 
 @Resolver()
 export class AddressResolvers {
@@ -39,55 +41,44 @@ export class AddressResolvers {
     }
 
 
-    @Mutation(returns => Boolean)
+    @Mutation(returns => Int)
     @RequireValidAccessToken()
-    async addNewAddress(@Ctx() ctx: Context, @Arg("data") inputData: AddAddressInput): Promise<true> {
+    async addNewAddress(@Ctx() ctx: Context, @Arg("data") inputData: AddAddressInput): Promise<number> {
         const {user_id} = ctx
         const {first_address, second_address, postcode, city, country, notes, type} = inputData
         const coordinates = await this.getCoordinates(first_address, second_address, postcode, city)
 
         try{
+            const result = await prisma.addresses.create({
+                data: {
+                    first_address: first_address,
+                    second_address: second_address,
+                    postcode: postcode,
+                    city: city,
+                    notes: notes,
+                    coordinates: coordinates,
+                    user_id: user_id!,
+                }
+            })
             if(type === "SHIPPING"){
-                const result = await prisma.addresses.create({
-                    data: {
-                        first_address: first_address,
-                        second_address: second_address,
-                        postcode: postcode,
-                        city: city,
-                        notes: notes,
-                        coordinates: coordinates,
-                        user_id: user_id!,
-                    }
-                })
                 await prisma.shipping_addresses.create({
                     data: {
                         address_id: result.address_id
                     }
                 })
+                return result.address_id
             }else{
-                const result = await prisma.addresses.create({
-                    data: {
-                        first_address: first_address,
-                        second_address: second_address,
-                        postcode: postcode,
-                        city: city,
-                        notes: notes,
-                        coordinates: coordinates,
-                        user_id: user_id!,
-                    }
-                })
                 await prisma.billing_addresses.create({
                     data: {
                         address_id: result.address_id,
                         country: country
                     }
                 })
+                return result.address_id
             }
         }catch (e) {
             throw new INTERNAL_ERROR("DB Problem", INTERNAL_ERROR_ENUM.DB_ERROR)
         }
-
-        return true
     }
 
 
@@ -201,6 +192,39 @@ export class AddressResolvers {
                     address_id: address_id,
                 }
             })
+        }catch (e) {
+            console.log(e)
+            throw new INTERNAL_ERROR("DB Problem", INTERNAL_ERROR_ENUM.DB_ERROR)
+        }
+        return true
+    }
+
+    @Mutation(returns => Boolean)
+    @RequireValidAccessToken()
+    async translateAddress(@Ctx() ctx: Context, @Arg("data") inputData: TranslateAddressInput): Promise<true>{
+        const {address_id, destination} = inputData
+        const {user_id} = ctx
+
+        try{
+            await prisma.addresses.findFirst({
+                where: {
+                    address_id: address_id,
+                    user_id: user_id!
+                }
+            })
+        }catch (e) {
+            throw new DATA_ERROR("Address Not Found", DATA_ERROR_ENUM.ADDRESS_NOT_EXISTING)
+        }
+
+        try{
+            if(destination === ADDRESS_TYPE_ENUM.BILLING){
+                await prisma.billing_addresses.create({
+                    data: {
+                        address_id: address_id,
+                        country: "United Kingdom"
+                    }
+                })
+            }
         }catch (e) {
             console.log(e)
             throw new INTERNAL_ERROR("DB Problem", INTERNAL_ERROR_ENUM.DB_ERROR)

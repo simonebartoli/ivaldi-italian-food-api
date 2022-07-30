@@ -8,11 +8,8 @@ export class PaymentIntent{
     @Field()
     client_secret: string
 
-    @Field()
-    customer: string
-
-    @Field(type => String)
-    setup_future_usage: "on_session" | "off_session"
+    @Field(type => String, {nullable: true})
+    customer: string | null
 
     @Field()
     status: string
@@ -22,9 +19,6 @@ export class PaymentIntent{
 
     @Field()
     currency: string
-
-    @Field(type => String, {nullable: true})
-    payment_method: string | null
 
     @Field(type => Int)
     created: number

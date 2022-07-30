@@ -8,4 +8,5 @@ export type Context = {
     user_id: number | null,
     redis: redisType
     stripe: Stripe
+    orderTimeout: Map<string, ReturnType<typeof setTimeout>>
 }

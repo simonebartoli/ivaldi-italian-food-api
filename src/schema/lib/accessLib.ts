@@ -10,6 +10,7 @@ import {Context} from "../types/not-graphql/contextType";
 import prisma from "../../db/prisma";
 import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
 import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
+import {COOKIE_SECURE} from "../../bin/settings";
 
 export const findPrivateKey = async (): Promise<KeyObject> => {
     let privateKeysFile: string = fs.readFileSync(process.cwd() + "/keys/private-keys.json").toString()
@@ -84,7 +85,7 @@ export const createRefreshToken = async (id: number, auth_level: string, context
 
     res.cookie("token", refreshToken, {
         expires: DateTime.fromSeconds(expiryDate).toJSDate(),
-        secure: false,
+        secure: COOKIE_SECURE === "true",
         httpOnly: true,
         sameSite: "none"
     })
@@ -121,7 +122,7 @@ export const updateRefreshToken = async (userID: number, exp: number, authLevel:
 
     res.cookie("token", refreshToken, {
         expires: DateTime.fromSeconds(exp).toJSDate(),
-        secure: false,
+        secure: COOKIE_SECURE === "true",
         sameSite: "none",
         httpOnly: true
     })
@@ -155,7 +156,7 @@ export const createRecoverToken = async (user_id: number, email_to_verify: boole
         .sign(key)
     res.cookie("recover_token", recoverToken, {
         expires: exp.toJSDate(),
-        secure: false,
+        secure: COOKIE_SECURE === "true",
         sameSite: "none",
         httpOnly: true
     })
