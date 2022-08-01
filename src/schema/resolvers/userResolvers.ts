@@ -28,7 +28,7 @@ export class UserResolvers {
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
     @Logger(TRIGGER_ENUM.CHANGE_EMAIL)
-    async changeEmail(@UserInfo() user: User, @Arg("data") inputData: ChangeEmailInput): Promise<true> {
+    async changeEmail(@Ctx() ctx: Context, @UserInfo() user: User, @Arg("data") inputData: ChangeEmailInput): Promise<true> {
         const {newEmail} = inputData
         const {user_id, email: originalEmail} = user
 
@@ -42,6 +42,9 @@ export class UserResolvers {
         if(emailAlreadyExisting !== null){
             throw new DATA_ERROR("Email has already been used", DATA_ERROR_ENUM.EMAIL_ALREADY_USED)
         }
+        await ctx.stripe.customers.update(user.stripe_customer_id!, {
+            email: newEmail
+        })
         await prisma.users.update({
             where: {
                 user_id: user_id

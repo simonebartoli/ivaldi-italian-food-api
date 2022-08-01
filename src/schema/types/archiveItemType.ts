@@ -2,6 +2,8 @@ import {Field, Float, Int, ObjectType} from "type-graphql";
 
 @ObjectType()
 export class ArchiveItem {
+    @Field()
+    item_id: number
 
     @Field()
     name: string
@@ -11,6 +13,9 @@ export class ArchiveItem {
 
     @Field(type => Float)
     price_per_unit: number
+
+    @Field()
+    photo_loc: string
 
     @Field()
     price_unit: string

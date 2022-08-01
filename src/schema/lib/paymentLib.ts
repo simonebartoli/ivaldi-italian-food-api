@@ -24,6 +24,7 @@ export type OrderArchiveType = {
         price_per_unit: number
         price_unit: string
         price_total: number
+        photo_loc: string
         vat: number
     }[]
 }
@@ -151,6 +152,7 @@ export const createArchive = (data: CreateOrderArchiveType) => {
                 price_per_unit: element.price_total,
                 price_unit: element.price_unit,
                 price_total: Number((element.price_total * cartFormatted.get(element.item_id)!).toFixed(2)),
+                photo_loc: element.photo_loc,
                 vat: element.vat.percentage
             }
         }))
@@ -198,5 +200,53 @@ export const cancelOrdersPaymentIntents = async (ctx: Context, payment_intent_id
         })
 
         for(const element of result) await stripe.paymentIntents.cancel(element.order_id)
+    }
+}
+export const changeItemsAvailability = async (order_id: string, actionType: "SUBTRACT" | "REVERT") => {
+    const archive = JSON.parse((await prisma.orders.findUniqueOrThrow({
+        where: {
+            order_id: order_id
+        }
+    })).archive) as OrderArchiveType
+    const items = archive.items.map((element) => {
+        return {
+            item_id: element.item_id,
+            amount: element.amount
+        }
+    })
+    if(actionType === "SUBTRACT"){
+        try{
+            await prisma.$transaction(async (prisma) => {
+                for(const item of items){
+                    await prisma.items.update({
+                        data: {
+                            amount_available: {
+                                decrement: item.amount
+                            }
+                        },
+                        where: {
+                            item_id: item.item_id
+                        }
+                    })
+                }
+            })
+        }catch (e) {
+            throw new DATA_ERROR("Items Not Available", DATA_ERROR_ENUM.AMOUNT_NOT_AVAILABLE)
+        }
+    }else {
+        await prisma.$transaction(async (prisma) => {
+            for(const item of items){
+                await prisma.items.update({
+                    data: {
+                        amount_available: {
+                            increment: item.amount
+                        }
+                    },
+                    where: {
+                        item_id: item.item_id
+                    }
+                })
+            }
+        })
     }
 }

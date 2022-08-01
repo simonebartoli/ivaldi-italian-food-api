@@ -1,12 +1,13 @@
 import {Field, Float, ID, ObjectType} from "type-graphql";
 import {User} from "./userType";
-import {OrderArchive} from "./archiveType";
+import {Archive} from "./archiveType";
+import {ORDER_STATUS_ENUM} from "../enums/ORDER_STATUS_ENUM";
 
 @ObjectType()
 export class Order {
 
     @Field(type => ID)
-    order_id: number
+    order_id: string
 
     @Field(type => Float)
     price_total: number
@@ -21,10 +22,13 @@ export class Order {
     datetime: Date
 
     @Field()
-    archive: OrderArchive
+    archive: Archive
 
-    @Field(type => String)
-    status: "DELIVERED" | "CANCELLED" | "PENDING" | "REFUNDED"
+    @Field(type => ORDER_STATUS_ENUM)
+    status: ORDER_STATUS_ENUM
+
+    @Field()
+    reference: string
 
     @Field(type => User)
     user?: User

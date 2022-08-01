@@ -17,4 +17,5 @@ export class OrderFieldResolvers implements ResolverInterface<Order>{
         `
         return result[0]
     }
+
 }
