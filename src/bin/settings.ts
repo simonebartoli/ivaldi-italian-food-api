@@ -5,3 +5,30 @@ export const WEBHOOK_SECRET_KEY = process.env["WEBHOOK_SECRET_KEY"] as string
 
 export const PAYPAL_CLIENT_ID = process.env["PAYPAL_CLIENT_ID"] as string
 export const PAYPAL_SECRET = process.env["PAYPAL_SECRET"] as string
+
+export const PDF_FONTS = {
+    Courier: {
+        normal: 'Courier',
+        bold: 'Courier-Bold',
+        italics: 'Courier-Oblique',
+        bolditalics: 'Courier-BoldOblique'
+    },
+    Helvetica: {
+        normal: 'Helvetica',
+        bold: 'Helvetica-Bold',
+        italics: 'Helvetica-Oblique',
+        bolditalics: 'Helvetica-BoldOblique'
+    },
+    Times: {
+        normal: 'Times-Roman',
+        bold: 'Times-Bold',
+        italics: 'Times-Italic',
+        bolditalics: 'Times-BoldItalic'
+    },
+    Symbol: {
+        normal: 'Symbol'
+    },
+    ZapfDingbats: {
+        normal: 'ZapfDingbats'
+    }
+};

@@ -110,9 +110,11 @@ model orders {
   vat_total       Float
   phone_number    String            @default("+44 77 2309 3701") @db.VarChar(63)
   reference       String            @unique(map: "orders_reference_uindex") @db.VarChar
+  receipt_number  Int               @default(autoincrement())
   users           users             @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
   orders_delivery orders_delivery[]
   payment_methods payment_methods?
+  refunds         refunds[]
 }
 
 model refresh_tokens {
@@ -247,4 +249,15 @@ model payment_methods {
   type      String @db.VarChar
   account   String @db.VarChar
   orders    orders @relation(fields: [reference], references: [reference], onDelete: Cascade, map: "payment_methods_orders_reference_fk")
+}
+
+model refunds {
+  refund_id Int      @id(map: "refunds_pk")
+  archive   String   @db.VarChar
+  order_ref String   @db.VarChar
+  notes     String   @db.VarChar
+  datetime  DateTime @db.Timestamptz(6)
+  orders    orders   @relation(fields: [order_ref], references: [reference], map: "refunds_orders_reference_fk")
+
+  @@unique([datetime, order_ref], map: "refunds_pk_2")
 }

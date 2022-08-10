@@ -1,7 +1,8 @@
-import {Field, Float, ID, ObjectType} from "type-graphql";
+import {Field, Float, ID, Int, ObjectType} from "type-graphql";
 import {User} from "./userType";
 import {Archive} from "./archiveType";
 import {ORDER_STATUS_ENUM} from "../enums/ORDER_STATUS_ENUM";
+import {PaymentMethodDB} from "./paymentMethodDBType";
 
 @ObjectType()
 export class Order {
@@ -29,6 +30,12 @@ export class Order {
 
     @Field()
     reference: string
+
+    @Field(type => Int)
+    receipt_number: number
+
+    @Field(type => PaymentMethodDB, {nullable: true})
+    payment_method?: PaymentMethodDB | null
 
     @Field(type => User)
     user?: User

@@ -1,28 +1,16 @@
-import {Field, ID, Int, ObjectType} from "type-graphql";
+import {Field, ObjectType} from "type-graphql";
 
 @ObjectType()
-export class PaymentMethod{
-    @Field(type => ID)
-    id: string
-
+export class PaymentMethod {
     @Field()
-    fingerprint: string
-
-    @Field()
-    brand: string
-
-    @Field(type => Int)
-    exp_month: number
-
-    @Field(type => Int)
-    exp_year: number
+    payment_method_id: string
 
     @Field()
     last4: string
 
-    @Field(type => String)
-    customer: string
+    @Field()
+    exp_date: string
 
-    @Field(type => Int)
-    created: number
+    @Field()
+    brand: string
 }

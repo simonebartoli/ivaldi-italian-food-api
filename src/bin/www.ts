@@ -12,10 +12,11 @@ import {Context} from "../schema/types/not-graphql/contextType";
 import {initRedis} from "./InitRedis";
 import {redisClient} from "../db/redis";
 import Stripe from "stripe";
-import {STRIPE_SECRET_KEY} from "./settings";
+import {PDF_FONTS, STRIPE_SECRET_KEY} from "./settings";
 import {webhookRouter} from "../webhooks/webhook";
+import PdfPrinter from "pdfmake"
 
-const orderTimeout = new Map<string, ReturnType<typeof setTimeout>>()
+const PdfGenerator = new PdfPrinter(PDF_FONTS)
 
 async function startApolloServer() {
   const stripe = new Stripe(STRIPE_SECRET_KEY, {apiVersion: '2020-08-27'})
@@ -36,6 +37,7 @@ async function startApolloServer() {
     origin: "http://localhost:3000",
     credentials: true
   }))
+  app.use(express.static("receipts-pdf"))
   app.use(webhookRouter)
 
   const httpServer = http.createServer(app);
@@ -49,7 +51,7 @@ async function startApolloServer() {
       redis: redisClient,
       user_id: null,
       stripe: stripe,
-      orderTimeout
+      PdfGenerator: PdfGenerator
     }),
     formatError: (err) => formatError(err),
     formatResponse: (response, context) => {

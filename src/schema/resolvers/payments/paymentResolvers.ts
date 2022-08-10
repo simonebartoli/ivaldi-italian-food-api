@@ -1,10 +1,9 @@
-import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, Ctx, Mutation, Resolver} from "type-graphql";
 import {PaymentIntent} from "../../types/paymentIntentType";
 import {RequireValidAccessToken} from "../../custom-decorator/requireValidAccessToken";
 import {UserInfo} from "../../custom-decorator/userInfo";
 import {User} from "../../types/userType";
 import {Context} from "../../types/not-graphql/contextType";
-import {PaymentMethod} from "../../types/paymentMethodType";
 import {INTERNAL_ERROR} from "../../../errors/INTERNAL_ERROR";
 import {INTERNAL_ERROR_ENUM} from "../../enums/INTERNAL_ERROR_ENUM";
 import {CartInfo} from "../../custom-decorator/cartInfo";
@@ -12,7 +11,8 @@ import {Cart} from "../../types/cartType";
 import {CreatePaymentIntentInput} from "../../inputs/createPaymentIntentInput";
 import {
     calculateTotal,
-    cancelOrdersPaymentIntents, changeItemsAvailability,
+    cancelOrdersPaymentIntents,
+    changeItemsAvailability,
     createArchive,
     verifyBillingAddress,
     verifyShippingAddress
@@ -26,32 +26,34 @@ import {ORDER_STATUS_ENUM} from "../../enums/ORDER_STATUS_ENUM";
 import {DateTime} from "luxon";
 import {v4 as uuidv4} from "uuid";
 import {AddPaymentMethodToPaymentIntentInput} from "../../inputs/addPaymentMethodToPaymentIntentInput";
+import {ConfirmPaymentInput} from "../../inputs/confirmPaymentInput";
+import {CreateCVCTokenInput} from "../../inputs/createCVCTokenInput";
 
 @Resolver()
 export class PaymentResolvers {
 
-    @Mutation(returns => PaymentIntent)
-    @RequireValidAccessToken()
-    async createNewPaymentIntent(@UserInfo() user: User, @Ctx() ctx: Context): Promise<PaymentIntent>{
-        const testAmount = 100 // 1 GBP
-        const result = await ctx.stripe.paymentIntents.create({
-            amount: testAmount,
-            currency: "gbp",
-            payment_method_types: ["card"],
-            customer: user.stripe_customer_id as string,
-            setup_future_usage: "on_session"
-        })
-
-        return {
-            id: result.id,
-            created: result.created,
-            amount: result.amount,
-            client_secret: result.client_secret as string,
-            currency: result.currency,
-            status: result.status,
-            customer: result.customer as string,
-        }
-    }
+    // @Mutation(returns => PaymentIntent)
+    // @RequireValidAccessToken()
+    // async createNewPaymentIntent(@UserInfo() user: User, @Ctx() ctx: Context): Promise<PaymentIntent>{
+    //     const testAmount = 100 // 1 GBP
+    //     const result = await ctx.stripe.paymentIntents.create({
+    //         amount: testAmount,
+    //         currency: "gbp",
+    //         payment_method_types: ["card"],
+    //         customer: user.stripe_customer_id as string,
+    //         setup_future_usage: "on_session"
+    //     })
+    //
+    //     return {
+    //         id: result.id,
+    //         created: result.created,
+    //         amount: result.amount,
+    //         client_secret: result.client_secret as string,
+    //         currency: result.currency,
+    //         status: result.status,
+    //         customer: result.customer as string,
+    //     }
+    // }
 
     @Mutation(returns => PaymentIntent)
     @RequireValidAccessToken()
@@ -61,7 +63,7 @@ export class PaymentResolvers {
         await verifyShippingAddress(shipping_address, user_id!)
         await verifyBillingAddress(billing_address, user_id!)
         const {total} = await calculateTotal(cart)
-        const hashToCheck = hash([shipping_address, billing_address, {cart: Array.from(cart.entries())}, {user_id: user_id}, {total: total}, {phone_number: phone_number}])
+        const hashToCheck = hash([shipping_address, billing_address, {cart: Array.from(cart.entries())}, {user_id: user_id, total: total, phone_number: phone_number, delivery_suggested: delivery_suggested}])
         const resultHash = await prisma.payment_intents.findFirst({
             where: {
                 hash: hashToCheck
@@ -83,6 +85,7 @@ export class PaymentResolvers {
                 customer: user.stripe_customer_id ? user.stripe_customer_id : undefined,
                 payment_method_types: ["card"],
                 setup_future_usage: undefined,
+                use_stripe_sdk: true,
                 shipping: {
                     name: `${user.name} ${user.surname}`,
                     address: {
@@ -197,7 +200,7 @@ export class PaymentResolvers {
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
     async addPaymentMethodToPaymentIntent(@Ctx() ctx: Context, @Arg("data") inputData: AddPaymentMethodToPaymentIntentInput) {
-        const {payment_intent_id, payment_method_id, save_card} = inputData
+        const {payment_intent_id, payment_method_id, save_card, cvc} = inputData
         try{
             const result = await ctx.stripe.paymentIntents.retrieve(payment_intent_id)
             if(result.status === "canceled" || result.status === "succeeded" || result.status === "processing") throw new Error()
@@ -208,24 +211,36 @@ export class PaymentResolvers {
         try{
             await ctx.stripe.paymentIntents.update(payment_intent_id, {
                 payment_method: payment_method_id,
-                setup_future_usage: save_card ? "on_session" : null
+                setup_future_usage: save_card ? "on_session" : undefined
             })
         }catch (e) {
             throw new DATA_ERROR("Payment Method Not Valid", DATA_ERROR_ENUM.PAYMENT_METHOD_NOT_VALID)
         }
 
-        await this.confirmPayment(ctx, payment_intent_id)
+        await this.confirmPayment(ctx,
+            {
+                payment_intent_id: payment_intent_id,
+                cvc: cvc
+            })
         return true
     }
 
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
-    async confirmPayment(@Ctx() ctx: Context, @Arg("payment_intent_id") payment_intent_id: string){
+    async confirmPayment(@Ctx() ctx: Context, @Arg("data") inputData: ConfirmPaymentInput){
+        const {payment_intent_id, cvc} = inputData
+
         await changeItemsAvailability(payment_intent_id, "SUBTRACT")
 
         let result
         try{
-            result = await ctx.stripe.paymentIntents.confirm(payment_intent_id)
+            result = await ctx.stripe.paymentIntents.confirm(payment_intent_id, {
+               payment_method_options: {
+                   card: {
+                       cvc_token: cvc
+                   }
+               }
+            })
         }catch (e) {
             await changeItemsAvailability(payment_intent_id, "REVERT")
             throw new DATA_ERROR((e as Error).message, DATA_ERROR_ENUM.PAYMENT_METHOD_NOT_VALID)
@@ -242,6 +257,21 @@ export class PaymentResolvers {
         return true
     }
 
+    @Mutation(returns => String)
+    @RequireValidAccessToken()
+    async createCVCToken(@Ctx() ctx: Context, @Arg("data") inputData: CreateCVCTokenInput){
+        const {cvc} = inputData
+        try{
+            const resultObject = await ctx.stripe.tokens.create({
+                cvc_update: {
+                    cvc: cvc
+                }
+            })
+            return  resultObject.id
+        }catch (e) {
+            throw new INTERNAL_ERROR("There is a problem with the payment provider.", INTERNAL_ERROR_ENUM.PAYMENT_PROVIDER_ERROR)
+        }
+    }
 
     /*
         DANGEROUS | CAN CREATE A BACKDOOR TO MALICIOUS USERS
@@ -345,31 +375,4 @@ export class PaymentResolvers {
     //     return true
     // }
 
-    @Query(returns => [PaymentMethod])
-    @RequireValidAccessToken()
-    async getPaymentMethod(@UserInfo() user: User, @Ctx() ctx: Context): Promise<PaymentMethod[]> {
-        if (user.stripe_customer_id !== null) {
-            const result = await ctx.stripe.customers.listPaymentMethods(
-                user.stripe_customer_id,
-                {type: "card"}
-            )
-            const resultFormatted: PaymentMethod[] = []
-            for(const element of result.data){
-                if(element.card?.wallet === null && element.card !== undefined){
-                    resultFormatted.push(<PaymentMethod>{
-                        id: element.id,
-                        fingerprint: element.card.fingerprint,
-                        created: element.created,
-                        customer: element.customer,
-                        brand: element.card.brand,
-                        exp_month: element.card.exp_month,
-                        exp_year: element.card.exp_year,
-                        last4: element.card.last4
-                    })
-                }
-            }
-            return resultFormatted
-        }
-        throw new INTERNAL_ERROR("Generic Error in Payment", INTERNAL_ERROR_ENUM.PAYMENT_ERROR)
-    }
 }

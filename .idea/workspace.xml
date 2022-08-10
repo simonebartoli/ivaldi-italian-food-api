@@ -4,27 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Order CARD pt1">
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/addPaymentMethodToPaymentIntentInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/archiveFieldResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paypal-api.ts" afterDir="false" />
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Payment with Card Saved + Receipt PDF pt1">
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/confirmPaymentInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createCVCTokenInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createRetrievePdfInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/lib/receiptsLib.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/lib/refundsLib.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/paymentMethodResolver.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/pdfResolvers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/paymentMethodDBType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bin/settings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/settings.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/ORDER_STATUS_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/ORDER_STATUS_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bin/www.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/www.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/inputs/addPaymentMethodToPaymentIntentInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/addPaymentMethodToPaymentIntentInput.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/orderFieldResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/orderFieldResolvers.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/paymentResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/receiptResolver.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/archiveItemType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/archiveItemType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/archiveType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/archiveType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/types/orderType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/orderType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/receiptType.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/webhooks/webhook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/webhooks/webhook.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/paymentMethodType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/paymentMethodType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +60,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/Personal Project/ivaldi-italian-food-api/src/schema/resolvers/field-resolvers",
+    "last_opened_file_path": "E:/Personal Project/viadiscampo-loading",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -69,23 +73,26 @@
   "keyToStringList": {
     "DatabaseDriversLRU": [
       "postgresql"
+    ],
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JSON"
     ]
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\field-resolvers" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\images" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\field-resolvers" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\types" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\enums" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\receipts-pdf" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\payments" />
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types\not-graphql" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types\graphql" />
     </key>
     <key name="es6.move.members.recent.items">
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\lib\tokenVerificationLib.ts" />
@@ -191,7 +198,21 @@
       <workItem from="1659267228734" duration="10315000" />
       <workItem from="1659302544293" duration="1226000" />
       <workItem from="1659350895415" duration="10732000" />
-      <workItem from="1659375159012" duration="4965000" />
+      <workItem from="1659375159012" duration="5495000" />
+      <workItem from="1659454033914" duration="1664000" />
+      <workItem from="1659458484798" duration="3191000" />
+      <workItem from="1659603918430" duration="7724000" />
+      <workItem from="1659689984452" duration="5882000" />
+      <workItem from="1659722537505" duration="6096000" />
+      <workItem from="1659792434452" duration="5435000" />
+      <workItem from="1659823167940" duration="4806000" />
+      <workItem from="1659866579721" duration="1551000" />
+      <workItem from="1659868729691" duration="354000" />
+      <workItem from="1659869087973" duration="3011000" />
+      <workItem from="1659900132913" duration="4248000" />
+      <workItem from="1659955688149" duration="1065000" />
+      <workItem from="1659983989657" duration="628000" />
+      <workItem from="1660122801348" duration="4910000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -319,7 +340,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659213869383</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Order CARD pt2 + Order Page + DB Update">
+      <created>1659384027048</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1659384027048</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -355,7 +383,9 @@
     <MESSAGE value="DB Update" />
     <MESSAGE value="Address Resolvers + DB Updates (address) + Cart Update" />
     <MESSAGE value="Order CARD pt1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Order CARD pt1" />
+    <MESSAGE value="Order CARD pt2 + Order Page + DB Update" />
+    <MESSAGE value="Payment with Card Saved + Receipt PDF pt1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Payment with Card Saved + Receipt PDF pt1" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

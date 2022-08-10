@@ -22,6 +22,9 @@ export class OrderResolver {
                         in: ["REQUIRES_PAYMENT", "CANCELLED"]
                     }
                 }
+            },
+            orderBy: {
+                datetime: "desc"
             }
         })
         return result.map((element) => {

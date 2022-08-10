@@ -1,6 +1,7 @@
 import express from "express";
 import {redisType} from "../../../db/redis";
 import Stripe from "stripe";
+import PdfPrinter from "pdfmake";
 
 export type Context = {
     req: express.Request,
@@ -8,5 +9,5 @@ export type Context = {
     user_id: number | null,
     redis: redisType
     stripe: Stripe
-    orderTimeout: Map<string, ReturnType<typeof setTimeout>>
+    PdfGenerator: PdfPrinter
 }
