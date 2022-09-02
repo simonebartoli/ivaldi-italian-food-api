@@ -111,6 +111,7 @@ model orders {
   phone_number    String            @default("+44 77 2309 3701") @db.VarChar(63)
   reference       String            @unique(map: "orders_reference_uindex") @db.VarChar
   receipt_number  Int               @default(autoincrement())
+  type            String            @db.VarChar
   users           users             @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
   orders_delivery orders_delivery[]
   payment_methods payment_methods?
@@ -252,7 +253,7 @@ model payment_methods {
 }
 
 model refunds {
-  refund_id Int      @id(map: "refunds_pk")
+  refund_id Int      @id(map: "refunds_pk") @default(autoincrement())
   archive   String   @db.VarChar
   order_ref String   @db.VarChar
   notes     String   @db.VarChar
@@ -260,4 +261,22 @@ model refunds {
   orders    orders   @relation(fields: [order_ref], references: [reference], map: "refunds_orders_reference_fk")
 
   @@unique([datetime, order_ref], map: "refunds_pk_2")
+}
+
+model contact {
+  contact_id   Int    @id(map: "contact_pk") @default(autoincrement())
+  name         String @db.VarChar(63)
+  surname      String @db.VarChar(63)
+  email        String @db.VarChar(255)
+  phone_number String @db.VarChar(31)
+  message      String @db.VarChar(1023)
+  status       String @default("RECEIVED") @db.VarChar(31)
+}
+
+model holidays {
+  start_date DateTime @db.Timestamptz(6)
+  end_date   DateTime @db.Timestamptz(6)
+  reason     String?  @db.VarChar
+
+  @@id([start_date, end_date], map: "holidays_pk")
 }

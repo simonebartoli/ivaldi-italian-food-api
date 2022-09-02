@@ -60,7 +60,6 @@ const handlePaymentSucceeded = async (event: Stripe.Event) => {
             }
         })
         await prisma.items_hold.deleteMany({where: {payment_intent_id: paymentIntentID}})
-        await prisma.carts.deleteMany({where: {user_id: user_id}})
         await prisma.payment_methods.create({
             data: {
                 reference: result.reference,

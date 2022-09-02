@@ -8,6 +8,8 @@
 
 // import {addCategoriesSubCategoriesToRedis} from "./categories_items";
 
+// import {createPublicPrivateKeys} from "./key-rotation";
+
 function generateData () {
     // addDiscountsToItems()
     //     .then(() => console.log("Discount Items Finished"))
@@ -26,6 +28,10 @@ function generateData () {
     //     .catch((e) => console.log(e))
     // addCategoriesSubCategoriesToRedis()
     //     .then(() => console.log("Categories Item Finished"))
+    //     .catch((e) => console.log(e))
+
+    // createPublicPrivateKeys()
+    //     .then(() => console.log("Key Rotation Finished"))
     //     .catch((e) => console.log(e))
 }
 

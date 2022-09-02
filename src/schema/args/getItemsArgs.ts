@@ -2,11 +2,11 @@ import {ArgsType, Field, Float, InputType} from "type-graphql";
 
 @InputType()
 class Price{
-    @Field(type => Float)
-    min: number
+    @Field(type => Float, {nullable: true})
+    min?: number
 
-    @Field(type => Float)
-    max: number
+    @Field(type => Float, {nullable: true})
+    max?: number
 }
 
 @ArgsType()

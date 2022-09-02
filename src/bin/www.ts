@@ -9,14 +9,15 @@ import {buildSchema} from "type-graphql";
 import {formatError} from "../errors/formatError";
 import {setHttpPlugin} from "../plugins/sendResponse";
 import {Context} from "../schema/types/not-graphql/contextType";
-import {initRedis} from "./InitRedis";
+import {initRedis} from "./init-redis";
 import {redisClient} from "../db/redis";
 import Stripe from "stripe";
 import {PDF_FONTS, STRIPE_SECRET_KEY} from "./settings";
-import {webhookRouter} from "../webhooks/webhook";
 import PdfPrinter from "pdfmake"
+import {initKeyRotation} from "./init-key-rotation";
 
 const PdfGenerator = new PdfPrinter(PDF_FONTS)
+initKeyRotation()
 
 async function startApolloServer() {
   const stripe = new Stripe(STRIPE_SECRET_KEY, {apiVersion: '2020-08-27'})
@@ -32,13 +33,13 @@ async function startApolloServer() {
     resolvers: [process.cwd() + (process.env["NODE_ENV"] === "production" ? "/build/src/schema/resolvers/**/*.{ts,js}" : "/src/schema/resolvers/**/*.{ts,js}")],
   });
   const app = express();
+  app.use(express.json())
   app.use(cookieParser())
   app.use(cors({
     origin: "http://localhost:3000",
     credentials: true
   }))
   app.use(express.static("receipts-pdf"))
-  app.use(webhookRouter)
 
   const httpServer = http.createServer(app);
 

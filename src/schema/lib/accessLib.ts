@@ -160,7 +160,66 @@ export const createRecoverToken = async (user_id: number, email_to_verify: boole
         sameSite: "none",
         httpOnly: true
     })
-    console.log(urlToClick)
+    return urlToClick
+}
+
+export const checkPublicPrivateKeys = async () => {
+    try{
+        const privateKeys = JSON.parse(fs.readFileSync(process.cwd() + "/keys/private-keys.json", {encoding: "utf-8"}))
+        const publicKeys = JSON.parse(fs.readFileSync(process.cwd() + "/keys/public-keys.json", {encoding: "utf-8"}))
+        const time = DateTime.now()
+
+        const finalPrivateKeys = []
+        const finalPublicKeys = []
+
+
+        for(const key of privateKeys){
+            if(DateTime.fromSeconds(key.expired) > time) {
+                finalPrivateKeys.push(key)
+            }
+        }
+        for(const key of publicKeys){
+            if(DateTime.fromSeconds(key.expired) > time) {
+                finalPublicKeys.push(key)
+            }
+        }
+
+        return {
+            privateKeys: finalPrivateKeys,
+            publicKeys: finalPublicKeys
+        }
+    }catch (e) {
+        return {
+            privateKeys: [],
+            publicKeys: []
+        }
+    }
+}
+export const createPublicPrivateKeys = async () => {
+    console.log("HERE")
+
+    const {privateKeys, publicKeys} = await checkPublicPrivateKeys()
+
+    const { publicKey, privateKey } = await jose.generateKeyPair('EdDSA')
+    let privateJwk = await jose.exportJWK(privateKey)
+    let publicJwk = await jose.exportJWK(publicKey)
+    const kid = makeRandomToken(16)
+
+    const publicJSON = [{
+        kid: kid,
+        expired: DateTime.now().plus({day: 14, minute: 5}).toSeconds(),
+        content: publicJwk
+    }]
+
+    const privateJSON = [{
+        kid: kid,
+        retired: DateTime.now().plus({day: 7, minute: 5}).toSeconds(),
+        expired: DateTime.now().plus({day: 14, minute: 5}).toSeconds(),
+        content: privateJwk
+    }]
+
+    fs.writeFileSync(process.cwd() + "/keys/private-keys.json", JSON.stringify([...privateJSON, ...privateKeys]))
+    fs.writeFileSync(process.cwd() + "/keys/public-keys.json", JSON.stringify([...publicJSON, ...publicKeys]))
 }
 
 export const makeRandomToken = (length: number) => {

@@ -11,20 +11,15 @@ import {Cart} from "../../types/cartType";
 import {CreatePaymentIntentInput} from "../../inputs/createPaymentIntentInput";
 import {
     calculateTotal,
-    cancelOrdersPaymentIntents,
     changeItemsAvailability,
-    createArchive,
-    verifyBillingAddress,
-    verifyShippingAddress
+    checkAndHashInformation, checkForHolidays,
+    createPendingOrder,
+    postPaymentOperations
 } from "../../lib/paymentLib";
-import hash from "object-hash";
 import prisma from "../../../db/prisma";
-import {CreatePendingOrderInput} from "../../inputs/createPendingOrderInput";
 import {DATA_ERROR} from "../../../errors/DATA_ERROR";
 import {DATA_ERROR_ENUM} from "../../enums/DATA_ERROR_ENUM";
-import {ORDER_STATUS_ENUM} from "../../enums/ORDER_STATUS_ENUM";
 import {DateTime} from "luxon";
-import {v4 as uuidv4} from "uuid";
 import {AddPaymentMethodToPaymentIntentInput} from "../../inputs/addPaymentMethodToPaymentIntentInput";
 import {ConfirmPaymentInput} from "../../inputs/confirmPaymentInput";
 import {CreateCVCTokenInput} from "../../inputs/createCVCTokenInput";
@@ -32,38 +27,15 @@ import {CreateCVCTokenInput} from "../../inputs/createCVCTokenInput";
 @Resolver()
 export class PaymentResolvers {
 
-    // @Mutation(returns => PaymentIntent)
-    // @RequireValidAccessToken()
-    // async createNewPaymentIntent(@UserInfo() user: User, @Ctx() ctx: Context): Promise<PaymentIntent>{
-    //     const testAmount = 100 // 1 GBP
-    //     const result = await ctx.stripe.paymentIntents.create({
-    //         amount: testAmount,
-    //         currency: "gbp",
-    //         payment_method_types: ["card"],
-    //         customer: user.stripe_customer_id as string,
-    //         setup_future_usage: "on_session"
-    //     })
-    //
-    //     return {
-    //         id: result.id,
-    //         created: result.created,
-    //         amount: result.amount,
-    //         client_secret: result.client_secret as string,
-    //         currency: result.currency,
-    //         status: result.status,
-    //         customer: result.customer as string,
-    //     }
-    // }
 
     @Mutation(returns => PaymentIntent)
     @RequireValidAccessToken()
     async createOrRetrievePaymentIntent (@UserInfo() user: User, @Ctx() ctx: Context, @CartInfo() cart: Cart[], @Arg("data") inputData: CreatePaymentIntentInput): Promise<PaymentIntent> {
-        const {user_id} = ctx
+        await checkForHolidays()
         const {shipping_address, billing_address, phone_number, delivery_suggested} = inputData
-        await verifyShippingAddress(shipping_address, user_id!)
-        await verifyBillingAddress(billing_address, user_id!)
         const {total} = await calculateTotal(cart)
-        const hashToCheck = hash([shipping_address, billing_address, {cart: Array.from(cart.entries())}, {user_id: user_id, total: total, phone_number: phone_number, delivery_suggested: delivery_suggested}])
+        console.log(delivery_suggested)
+        const hashToCheck = await checkAndHashInformation(ctx, inputData, cart, total, "CARD")
         const resultHash = await prisma.payment_intents.findFirst({
             where: {
                 hash: hashToCheck
@@ -106,13 +78,13 @@ export class PaymentResolvers {
                     expiry_datetime: DateTime.now().plus({hour: 1}).toISO()
                 }
             })
-            await this.createPendingOrder(ctx, cart, {
+            await createPendingOrder(ctx, cart, {
                 payment_intent_id: paymentIntent.id,
                 phone_number: phone_number,
                 billing_address: billing_address,
                 shipping_address: shipping_address,
                 delivery_suggested: delivery_suggested
-            })
+            }, "STRIPE")
             return {
                 id: paymentIntent.id,
                 created: paymentIntent.created,
@@ -124,13 +96,13 @@ export class PaymentResolvers {
             }
         }else{
             const paymentIntent = await ctx.stripe.paymentIntents.retrieve(resultHash.payment_intent_id)
-            await this.createPendingOrder(ctx, cart, {
+            await createPendingOrder(ctx, cart, {
                 payment_intent_id: paymentIntent.id,
                 phone_number: phone_number,
                 billing_address: billing_address,
                 shipping_address: shipping_address,
                 delivery_suggested: delivery_suggested
-            })
+            }, "STRIPE")
             return {
                 id: paymentIntent.id,
                 created: paymentIntent.created,
@@ -142,59 +114,7 @@ export class PaymentResolvers {
             }
         }
     }
-    async createPendingOrder (ctx: Context, cart: Cart[], inputData: CreatePendingOrderInput): Promise<boolean> {
-        const {user_id} = ctx
-        const {payment_intent_id, shipping_address, billing_address, phone_number, delivery_suggested} = inputData
-        const datetime = DateTime.now().toISO()
-        const reference = uuidv4()
 
-        await cancelOrdersPaymentIntents(ctx, payment_intent_id)
-        if(await prisma.orders.findUnique({where: {order_id: payment_intent_id}}) !== null) return true
-
-        const items = await prisma.items.findMany({
-            include: {
-                vat: true
-            },
-            where: {
-                item_id: {
-                    in: cart.map((element) => element.item_id)
-                }
-            }
-        })
-        if(items === null) throw new DATA_ERROR("Your Cart Cannot Be Empty", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
-
-        const {total, vatTotal} = await calculateTotal(cart)
-        const archive = createArchive({
-            shipping_address: shipping_address,
-            billing_address: billing_address,
-            cart: cart,
-            items: items
-        })
-        // console.log(archive)
-        const shipping_cost = 0
-        const status = ORDER_STATUS_ENUM.REQUIRES_PAYMENT
-        await prisma.orders.create({
-            data: {
-                order_id: payment_intent_id,
-                price_total: total,
-                vat_total: vatTotal,
-                datetime: datetime,
-                shipping_cost: shipping_cost,
-                phone_number: phone_number,
-                status: status,
-                user_id: user_id!,
-                archive: JSON.stringify(archive),
-                reference: reference
-            }
-        })
-        await prisma.orders_delivery.create({
-            data: {
-                order_id: payment_intent_id,
-                suggested: delivery_suggested
-            }
-        })
-        return true
-    }
 
 
     @Mutation(returns => Boolean)
@@ -254,6 +174,12 @@ export class PaymentResolvers {
                 throw new DATA_ERROR("Requires Actions", DATA_ERROR_ENUM.PAYMENT_REQUIRES_ACTIONS)
             }
         }
+
+        const paymentMethodID = (await ctx.stripe.paymentIntents.retrieve(payment_intent_id)).payment_method as string
+        const paymentMethod = await ctx.stripe.paymentMethods.retrieve(paymentMethodID)
+        const last4 = paymentMethod.card!.last4
+
+        await postPaymentOperations(payment_intent_id, ctx.user_id!, "CARD", last4)
         return true
     }
 

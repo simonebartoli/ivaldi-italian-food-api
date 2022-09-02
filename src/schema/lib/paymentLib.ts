@@ -1,9 +1,4 @@
-import {User} from "../types/userType";
 import {Context} from "../types/not-graphql/contextType";
-import {INTERNAL_ERROR} from "../../errors/INTERNAL_ERROR";
-import {INTERNAL_ERROR_ENUM} from "../enums/INTERNAL_ERROR_ENUM";
-import {PAYMENT_ERROR} from "../../errors/PAYMENT_ERROR";
-import {PAYMENT_ERROR_ENUM} from "../enums/PAYMENT_ERROR_ENUM";
 import {ShippingAddress} from "../types/shippingAddressType";
 import {BillingAddress} from "../types/billingAddressType";
 import prisma from "../../db/prisma";
@@ -12,6 +7,15 @@ import {DATA_ERROR_ENUM} from "../enums/DATA_ERROR_ENUM";
 import {Cart} from "../types/cartType";
 import {Item} from "../types/itemType";
 import {ORDER_STATUS_ENUM} from "../enums/ORDER_STATUS_ENUM";
+import hash from "object-hash";
+import {CreatePaymentIntentInput} from "../inputs/createPaymentIntentInput";
+import {CreatePendingOrderInput} from "../inputs/createPendingOrderInput";
+import {DateTime} from "luxon";
+import {v4 as uuidv4} from "uuid";
+import {createEmail_OrderConfirmation} from "./emailsLib";
+import {MIN_ORDER_PRICE} from "../../bin/settings";
+import {BAD_REQ_ERROR} from "../../errors/BAD_REQ_ERROR";
+import {BAD_REQ_ERROR_ENUM} from "../enums/BAD_REQ_ERROR_ENUM";
 
 export type OrderArchiveType = {
     shipping_address: Omit<ShippingAddress, "address_id">
@@ -39,32 +43,19 @@ type CreateOrderArchiveType = {
 }
 
 
-export const getPaymentMethodIDFromFingerprint = async (fingerprint: string, user: User, ctx: Context): Promise<string | undefined> => {
-    if (user.stripe_customer_id !== null) {
-        const result = await ctx.stripe.customers.listPaymentMethods(
-            user.stripe_customer_id,
-            {type: "card"}
-        )
-        return result.data.find((element) =>
-            element.card !== undefined && element.card.fingerprint === fingerprint
-        )?.id
-    }
-    throw new INTERNAL_ERROR("Generic Error in Payment", INTERNAL_ERROR_ENUM.PAYMENT_ERROR)
-}
-export const verifyPaymentIntentFromID = async (payment_intent_id: string, user: User, ctx: Context) => {
-    let result
-    try{
-        result = await ctx.stripe.paymentIntents.retrieve(payment_intent_id)
-    }catch (e){
-        throw new PAYMENT_ERROR("Payment Intent ID Not Valid", PAYMENT_ERROR_ENUM.PAYMENT_INTENT_NOT_VALID)
-    }
-
-    if(result.status === "succeeded" || result.status === "canceled"){
-        throw new PAYMENT_ERROR("Payment Intent ID Not Valid", PAYMENT_ERROR_ENUM.PAYMENT_INTENT_NOT_VALID)
-    }
-    if(result.customer === null || result.customer !== user.stripe_customer_id){
-        throw new PAYMENT_ERROR("Payment Intent ID Not Valid", PAYMENT_ERROR_ENUM.PAYMENT_INTENT_NOT_VALID)
-    }
+export const checkForHolidays = async () => {
+    const currentDate = DateTime.now()
+    const result = await prisma.holidays.findFirst({
+        where: {
+            start_date: {
+                lte: currentDate.toJSDate()
+            },
+            end_date: {
+                gte: currentDate.toJSDate()
+            }
+        }
+    })
+    if(result !== null) throw new BAD_REQ_ERROR("No purchase during holidays", BAD_REQ_ERROR_ENUM.HOLIDAY_PERIOD)
 }
 
 export const verifyShippingAddress = async (address: ShippingAddress, user_id: number) => {
@@ -128,6 +119,8 @@ export const calculateTotal = async (cart: Cart[]): Promise<{ total: number, vat
             throw new DATA_ERROR("There are some changes in the cart, Check and Try Again", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
     }
 
+    if(total < MIN_ORDER_PRICE) throw new DATA_ERROR(`Your order needs to be at least £${total.toFixed(2)}`, DATA_ERROR_ENUM.MIN_ORDER_NOT_RESPECTED)
+
     return {
         total: Number(total.toFixed(2)),
         vatTotal: Number(vatTotal.toFixed(2))
@@ -160,7 +153,7 @@ export const createArchive = (data: CreateOrderArchiveType) => {
     return archive
 }
 
-export const cancelOrdersPaymentIntents = async (ctx: Context, payment_intent_id: string) => {
+export const cancelOrdersPaymentIntents = async (ctx: Context, payment_intent_id: string, type: "STRIPE" | "PAYPAL") => {
     const {user_id, stripe} = ctx
     const result = await prisma.orders.findMany({
         where: {
@@ -169,6 +162,7 @@ export const cancelOrdersPaymentIntents = async (ctx: Context, payment_intent_id
                     equals: payment_intent_id
                 }
             },
+            type: type,
             user_id: user_id!,
             status: ORDER_STATUS_ENUM.REQUIRES_PAYMENT
         }
@@ -199,7 +193,9 @@ export const cancelOrdersPaymentIntents = async (ctx: Context, payment_intent_id
             }
         })
 
-        for(const element of result) await stripe.paymentIntents.cancel(element.order_id)
+        if(type === "STRIPE"){
+            for(const element of result) await stripe.paymentIntents.cancel(element.order_id)
+        }
     }
 }
 export const changeItemsAvailability = async (order_id: string, actionType: "SUBTRACT" | "REVERT") => {
@@ -249,4 +245,114 @@ export const changeItemsAvailability = async (order_id: string, actionType: "SUB
             }
         })
     }
+}
+export const checkAndHashInformation = async (ctx: Context, inputData: CreatePaymentIntentInput, cart: Cart[], total: number, type: "CARD" | "PAYPAL"): Promise<string> => {
+    const {user_id} = ctx
+    const {shipping_address, billing_address, phone_number, delivery_suggested} = inputData
+    await verifyShippingAddress(shipping_address, user_id!)
+    await verifyBillingAddress(billing_address, user_id!)
+    return hash([shipping_address, billing_address, {cart: Array.from(cart.entries())}, {
+        user_id: user_id,
+        total: total,
+        phone_number: phone_number,
+        delivery_suggested: delivery_suggested,
+        type: type
+    }])
+}
+export const createPendingOrder = async (ctx: Context, cart: Cart[], inputData: CreatePendingOrderInput, type: "PAYPAL" | "STRIPE"): Promise<{reference: string, receipt_number: number}> => {
+    const {user_id} = ctx
+    const {payment_intent_id, shipping_address, billing_address, phone_number, delivery_suggested} = inputData
+    const datetime = DateTime.now().toISO()
+    const reference = uuidv4()
+
+    await cancelOrdersPaymentIntents(ctx, payment_intent_id, type)
+
+    const orderFound = await prisma.orders.findUnique({where: {order_id: payment_intent_id}})
+    if(orderFound !== null) return {
+        reference: orderFound.reference,
+        receipt_number: orderFound.receipt_number
+    }
+
+    const items = await prisma.items.findMany({
+        include: {
+            vat: true
+        },
+        where: {
+            item_id: {
+                in: cart.map((element) => element.item_id)
+            }
+        }
+    })
+    if(items === null) throw new DATA_ERROR("Your Cart Cannot Be Empty", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+
+    const {total, vatTotal} = await calculateTotal(cart)
+    const archive = createArchive({
+        shipping_address: shipping_address,
+        billing_address: billing_address,
+        cart: cart,
+        items: items
+    })
+    // console.log(archive)
+    const shipping_cost = 0
+    const status = ORDER_STATUS_ENUM.REQUIRES_PAYMENT
+    const result = await prisma.orders.create({
+        data: {
+            order_id: payment_intent_id,
+            price_total: total,
+            vat_total: vatTotal,
+            datetime: datetime,
+            shipping_cost: shipping_cost,
+            phone_number: phone_number,
+            status: status,
+            user_id: user_id!,
+            archive: JSON.stringify(archive),
+            reference: reference,
+            type: type
+        }
+    })
+    await prisma.orders_delivery.create({
+        data: {
+            order_id: payment_intent_id,
+            suggested: delivery_suggested === "" ? null : delivery_suggested
+        }
+    })
+    return {
+        reference: result.reference,
+        receipt_number: result.receipt_number
+    }
+}
+
+export const postPaymentOperations = async (payment_intent_id: string, user_id: number, type: "CARD" | "PAYPAL", account: string) => {
+    const order = await prisma.orders.update({
+        data: {
+            status: ORDER_STATUS_ENUM.CONFIRMED
+        },
+        where: {
+            order_id: payment_intent_id
+        },
+        include: {
+            users: true
+        }
+    })
+    await prisma.carts.deleteMany({where: {user_id: user_id}})
+    await prisma.payment_intents.delete({
+        where: {
+            payment_intent_id: payment_intent_id
+        }
+    })
+    await prisma.payment_methods.create({
+        data: {
+            reference: order!.reference,
+            type: type,
+            account: account
+        }
+    })
+
+    await createEmail_OrderConfirmation({
+        to: order.users.email!,
+        name: order.users.name,
+        datetime: DateTime.fromJSDate(order.datetime).toLocaleString(DateTime.DATETIME_SHORT),
+        surname: order.users.surname,
+        reference: order.reference
+    })
 }

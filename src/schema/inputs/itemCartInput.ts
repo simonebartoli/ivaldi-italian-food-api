@@ -2,7 +2,7 @@ import {Field, InputType, Int} from "type-graphql";
 import {IsInt, Min} from "class-validator";
 
 @InputType()
-export class ItemCart {
+export class ItemCartInput {
     @Field(type => Int)
     @IsInt()
     @Min(0)

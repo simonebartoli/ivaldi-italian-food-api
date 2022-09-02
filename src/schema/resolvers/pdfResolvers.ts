@@ -31,17 +31,17 @@ const notices = [
 
 @Resolver()
 export class PdfResolvers{
-    qrCode(resultHashed: string){
+    qrCode(order_ref: string){
         return [
             {
-                qr: `http://localhost:4000/${resultHashed}.pdf`,
+                qr: `http://localhost:3000/get-receipt?order_ref=${order_ref}`,
                 alignment: "center",
                 margin: [0, 0, 0, 10]
             },
             {
-                text: `http://localhost:4000/${resultHashed}.pdf`,
+                text: `http://localhost:3000/get-receipt?order_ref=${order_ref}`,
                 alignment: "center",
-                link: `http://localhost:4000/${resultHashed}.pdf`
+                link: `http://localhost:3000/get-receipt?order_ref=${order_ref}`
             }
         ]
     }
@@ -99,8 +99,7 @@ export class PdfResolvers{
                     }
                 ],
                 margin: [0, 10],
-                columnGap: 10,
-                pageBreak: "after"
+                columnGap: 10
             },
         ]
     }
@@ -243,7 +242,8 @@ export class PdfResolvers{
                 text: "Refunded Items",
                 alignment: "center",
                 fontSize: 18,
-                margin: [0, 0, 0, 30]
+                margin: [0, 0, 0, 30],
+                pageBreak: "before"
             }
         )
 
@@ -353,7 +353,7 @@ export class PdfResolvers{
         const resultHashed = hash(result)
         console.log(resultHashed)
 
-        if(fs.existsSync(process.cwd() + "/receipts-pdf/" + resultHashed + ".pdf")) return resultHashed
+        if(fs.existsSync(process.cwd() + "/receipts-pdf/" + resultHashed)) return resultHashed
         const {billingAddress, refunds, items, datetime, invoiceNumber, user, total, vat_total, shipping_cost, payment_method} = result
         const formattedAddress = billingAddress.first_address + ", " +
                                     (billingAddress.second_address ? billingAddress.second_address + ", " : "") +
@@ -436,7 +436,7 @@ export class PdfResolvers{
                 ...this.finalStatement(total, vat_total, refund_total),
                 ...this.refundTable(refunds),
                 ...notices,
-                ...this.qrCode(resultHashed)
+                ...this.qrCode(order_ref)
             ],
             defaultStyle: {
                 font: 'Times'
@@ -447,7 +447,8 @@ export class PdfResolvers{
         // @ts-ignore
         const pdfDoc = ctx.PdfGenerator.createPdfKitDocument(docDefinition);
 
-        pdfDoc.pipe(fs.createWriteStream(process.cwd() + "/receipts-pdf/" + resultHashed + ".pdf"));
+        fs.mkdirSync(process.cwd() + `/receipts-pdf/${resultHashed}`)
+        pdfDoc.pipe(fs.createWriteStream(process.cwd() + `/receipts-pdf/${resultHashed}/invoice.pdf`));
         pdfDoc.end();
         return resultHashed
     }

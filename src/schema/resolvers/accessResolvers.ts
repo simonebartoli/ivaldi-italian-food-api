@@ -8,7 +8,6 @@ import bcrypt from "bcrypt";
 import {Context} from "../types/not-graphql/contextType";
 import {DateTime} from "luxon";
 import * as jose from 'jose'
-import * as fs from "fs";
 import {RequireNotLogged} from "../custom-decorator/requireNotLogged";
 import {RequireValidRefreshToken} from "../custom-decorator/requireValidRefreshToken";
 import {RefreshTokenHeaderType, TokenPayloadType} from "../types/not-graphql/tokenType";
@@ -25,6 +24,7 @@ import {RequireValidRecoverToken} from "../custom-decorator/requireValidRecoverT
 import {ChangeRecoverTokenStatusInputs} from "../inputs/changeRecoverTokenStatusInputs";
 import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
 import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
+import {createEmail_LoginNoPassword} from "../lib/emailsLib";
 
 @Resolver()
 export class AccessResolvers {
@@ -81,10 +81,20 @@ export class AccessResolvers {
         if(result === null){
             throw new DATA_ERROR("Email Not Existing", DATA_ERROR_ENUM.INVALID_CREDENTIALS)
         }
-        const {email_to_verify} = result
-        await createRecoverToken(result.user_id, email_to_verify !== null, ctx)
+        const {email_to_verify, name, surname} = result
+        const token = await createRecoverToken(result.user_id, email_to_verify !== null, ctx)
+        const security_code = makeRandomToken(6)
 
-        return makeRandomToken(6)
+        await createEmail_LoginNoPassword({
+            to: email_to_verify || email,
+            name: name,
+            surname: surname,
+            security_code: security_code.toUpperCase(),
+            token: token,
+            expiry_datetime: DateTime.now().plus({hour: 1}).toLocaleString(DateTime.DATETIME_SHORT)
+        })
+
+        return security_code
     }
 
 
@@ -138,7 +148,7 @@ export class AccessResolvers {
         const refreshTokenPayload = <TokenPayloadType> jose.decodeJwt(token)
         const refreshTokenHeader = <RefreshTokenHeaderType> jose.decodeProtectedHeader(token)
 
-        const accessTokenExp = DateTime.now().plus({minutes: 5}).toSeconds() //CHANGE HERE
+        const accessTokenExp = DateTime.now().plus({seconds: 5}).toSeconds() //CHANGE HERE
         const ip = req.socket.remoteAddress || req.ip
         const ua = req.get('User-Agent')
 
@@ -218,33 +228,6 @@ export class AccessResolvers {
                 }
             }
         }
-        return true
-    }
-
-
-    // @Mutation(returns => Boolean)
-    async createPublicPrivateKeys(): Promise<boolean>{
-        const { publicKey, privateKey } = await jose.generateKeyPair('EdDSA')
-        let privateJwk = await jose.exportJWK(privateKey)
-        let publicJwk = await jose.exportJWK(publicKey)
-        const kid = makeRandomToken(16)
-
-        const publicJSON = [{
-            kid: kid,
-            expired: DateTime.now().plus({day: 14}).toSeconds(),
-            content: publicJwk
-        }]
-
-        const privateJSON = [{
-            kid: kid,
-            retired: DateTime.now().plus({day: 7}).toSeconds(),
-            expired: DateTime.now().plus({day: 14}).toSeconds(),
-            content: privateJwk
-        }]
-
-        fs.writeFileSync(process.cwd() + "/keys/private-keys.json", JSON.stringify(privateJSON))
-        fs.writeFileSync(process.cwd() + "/keys/public-keys.json", JSON.stringify(publicJSON))
-
         return true
     }
 

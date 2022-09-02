@@ -25,6 +25,56 @@ export class ItemResolvers {
         return result
     }
 
+    @Query(returns => String)
+    async getKeywordsItem(@Arg("id", type => Int) id: number): Promise<string> {
+        const resultKeywords = await prisma.keywords.findMany({
+            where: {
+                item_id: id
+            }
+        })
+        const categoriesID: number[] = []
+
+        const resultSubCategories = await prisma.sub_categories_items.findMany({
+            include: {
+                sub_categories: true
+            },
+            where: {
+                item_id: id
+            }
+        })
+        resultSubCategories.forEach(element => categoriesID.push(element.sub_categories.category_id))
+        const resultCategories = resultSubCategories.length === 0 ? await prisma.categories_items.findMany({
+            include: {
+                categories: true
+            },
+            where: {
+                item_id: id
+            }
+
+        }) : []
+        resultCategories.forEach(element => categoriesID.push(element.category_id))
+
+        const categoryInformation = await prisma.categories.findMany({
+            where: {
+                category_id: {
+                    in: categoriesID
+                }
+            }
+        })
+        const formatString = (element: string): string => {
+            const keywords = element.split(" ")
+            let result: string = ""
+            keywords.forEach(element => result = element + ",")
+            return result
+        }
+
+        let result: string = ""
+        resultKeywords.forEach(element => result += formatString(element.keyword))
+        resultSubCategories.forEach(element => result += formatString(element.sub_categories.name))
+        categoryInformation.forEach(element => result += formatString(element.name))
+
+        return result
+    }
 
     @Query(returns => [Item])
     async getItems_FULL(@Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{

@@ -5,29 +5,51 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Payment with Card Saved + Receipt PDF pt1">
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/confirmPaymentInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createCVCTokenInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createRetrievePdfInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/lib/receiptsLib.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/lib/refundsLib.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/paymentMethodResolver.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/pdfResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/paymentMethodDBType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/REST/paypalPayments.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bin/init-emails.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bin/init-key-rotation.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/countries.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/enums/CONTACT_STATUS_ENUM.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createNewContactRequestInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/orderReceiptFilters.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/lib/emailsLib.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/contactResolver.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/holidayResolvers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paypalResolver.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/contactType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/holidayType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test-data/key-rotation.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emails-template/build_production/email-confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/emails/email-confirmation.hbs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emails-template/build_production/verification.html" beforeDir="false" afterPath="$PROJECT_DIR$/emails/verification.hbs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emails-template/src/templates/email-confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/emails-template/src/templates/email-confirmation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keys/private-keys.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/keys/public-keys.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bin/InitRedis.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/init-redis.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bin/settings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/settings.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bin/www.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/www.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/inputs/addPaymentMethodToPaymentIntentInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/addPaymentMethodToPaymentIntentInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/orderFieldResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/orderFieldResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/inputs/itemCart.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/itemCartInput.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/cartResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/cartResolver.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/orderType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/orderType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/paymentMethodType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/paymentMethodType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/payments/paypal-api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paypal-api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/pdfResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/pdfResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/webhooks/webhook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/webhooks/webhook.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-data/test-data-generator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test-data/test-data-generator.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,50 +77,54 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "E:/Personal Project/viadiscampo-loading",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "reference.settings.project.statistic.project.settings",
-    "ts.external.directory.path": "E:\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Personal Project/ivaldi-italian-food-api/emails-template/src/templates&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.statistic.project.settings&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;E:\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JSON"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\emails-template\src\templates" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\images" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\src\images" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\field-resolvers" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\types" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\receipts-pdf" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\emails" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\payments" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
-      <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\types" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\REST" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\receipts-pdf" />
     </key>
     <key name="es6.move.members.recent.items">
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers\payments\datetime.ts" />
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\lib\tokenVerificationLib.ts" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Attach to Node.js/Chrome.Node Debug">
+    <configuration name="Node Debug" type="ChromiumRemoteDebugType" factoryName="Chromium Remote" port="4000">
+      <method v="2" />
+    </configuration>
     <configuration name="generate-data" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -109,6 +135,10 @@
       <envs />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Attach to Node.js/Chrome.Node Debug" />
+      <item itemvalue="npm.generate-data" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="npm.generate-data" />
@@ -212,7 +242,19 @@
       <workItem from="1659900132913" duration="4248000" />
       <workItem from="1659955688149" duration="1065000" />
       <workItem from="1659983989657" duration="628000" />
-      <workItem from="1660122801348" duration="4910000" />
+      <workItem from="1660122801348" duration="9984000" />
+      <workItem from="1660209340711" duration="15632000" />
+      <workItem from="1660312144780" duration="13490000" />
+      <workItem from="1660414127100" duration="9034000" />
+      <workItem from="1660922069253" duration="663000" />
+      <workItem from="1661434787353" duration="3989000" />
+      <workItem from="1661674187506" duration="13649000" />
+      <workItem from="1661778539567" duration="6766000" />
+      <workItem from="1661788470134" duration="7375000" />
+      <workItem from="1661855197083" duration="40000" />
+      <workItem from="1661855239699" duration="128000" />
+      <workItem from="1661855371705" duration="16697000" />
+      <workItem from="1662109129953" duration="2207000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -347,7 +389,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659384027048</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Payment with Card Saved + Receipt PDF pt1">
+      <created>1660127897017</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1660127897017</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

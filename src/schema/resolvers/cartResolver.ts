@@ -1,4 +1,4 @@
-import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, Ctx, Float, Mutation, Query, Resolver} from "type-graphql";
 import {Cart} from "../types/cartType";
 import {RequireValidAccessToken} from "../custom-decorator/requireValidAccessToken";
 import prisma from "../../db/prisma";
@@ -9,8 +9,10 @@ import {Context} from "../types/not-graphql/contextType";
 import {RemoveEntryFromCartInput} from "../inputs/removeEntryFromCartInput";
 import {DATA_ERROR} from "../../errors/DATA_ERROR";
 import {DATA_ERROR_ENUM} from "../enums/DATA_ERROR_ENUM";
-import {ItemCart} from "../inputs/itemCart";
+import {ItemCartInput} from "../inputs/itemCartInput";
 import {Item} from "../types/itemType";
+import hash from "object-hash";
+import {MIN_ORDER_PRICE} from "../../bin/settings";
 
 @Resolver()
 export class CartResolver {
@@ -68,9 +70,8 @@ export class CartResolver {
         return result
     }
 
-
     @Query(returns => [Item])
-    async getItemsCart(@Arg("items", returns => [ItemCart]) items: ItemCart[]): Promise<Item[]> {
+    async getItemsCart(@Arg("items", returns => [ItemCartInput]) items: ItemCartInput[]): Promise<Item[]> {
         const items_id = items.map((element) => element.item_id)
         return await prisma.items.findMany({
             where: {
@@ -82,6 +83,51 @@ export class CartResolver {
                 }
             }
         })
+    }
+
+    @Query(returns => Boolean)
+    @RequireValidAccessToken()
+    async checkIfCartAvailable(@Ctx() ctx: Context, @Arg("items", returns => [ItemCartInput]) items: ItemCartInput[]): Promise<boolean> {
+        const user_id = ctx.user_id!
+
+        const itemsClient: ItemCartInput[] = []
+        items.forEach(element => itemsClient.push({item_id: element.item_id, amount: element.amount}))
+
+        const itemsCartServer = await prisma.carts.findMany({
+            where: {
+                user_id: user_id,
+                items: {
+                    amount_available: {
+                        gt: 0
+                    }
+                }
+            },
+            select: {
+                item_id: true,
+                amount: true
+            }
+        })
+
+        const serverHash = hash(itemsCartServer)
+        const clientHash = hash(itemsClient)
+
+        console.log(serverHash)
+        console.log(clientHash)
+
+        if(serverHash === clientHash){
+            return true
+        }else{
+            const itemsMissing: ItemCartInput[] = []
+            for(const itemClient of items) {
+                if(!itemsCartServer.find(element => element.item_id === itemClient.item_id && element.amount === itemClient.amount)){
+                    itemsMissing.push(itemClient)
+                }
+            }
+            throw new DATA_ERROR("Some items in your cart are no more available.",
+                DATA_ERROR_ENUM.AMOUNT_NOT_AVAILABLE,
+                itemsMissing
+            )
+        }
     }
 
     @Mutation(returns => Boolean)
@@ -138,7 +184,6 @@ export class CartResolver {
         return true
     }
 
-
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
     async removeRecord(@Ctx() ctx: Context, @CartInfo() cart: Cart[], @Arg("data") inputData: RemoveEntryFromCartInput): Promise<boolean> {
@@ -160,7 +205,6 @@ export class CartResolver {
 
         return true
     }
-
 
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
@@ -200,6 +244,12 @@ export class CartResolver {
             }
         }
         return true
+    }
+
+
+    @Query(returns => Float)
+    getMinimumOrderPrice(): number {
+        return MIN_ORDER_PRICE
     }
 
     // @Query(returns => Boolean)
