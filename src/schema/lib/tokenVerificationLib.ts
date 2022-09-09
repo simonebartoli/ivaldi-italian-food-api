@@ -23,6 +23,7 @@ export const verifySignAccessToken = async (token: string): Promise<TokenPayload
         id: payload.id,
         exp: payload.exp,
         kid: header.kid,
+        role: header.role,
         token_id: header.token_id,
         auth_level: header.auth_level
     }

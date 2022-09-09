@@ -5,6 +5,11 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/emails-template/src/components" />
+      <excludeFolder url="file://$MODULE_DIR$/emails-template/src/css" />
+      <excludeFolder url="file://$MODULE_DIR$/emails-template/src/layouts" />
+      <excludeFolder url="file://$MODULE_DIR$/emails-template/build_local" />
+      <excludeFolder url="file://$MODULE_DIR$/emails-template/build_production" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -12,7 +12,7 @@ export class CategoryResolvers {
         return await prisma.categories.findMany()
     }
 
-    @Query(returns => [Category])
+    // @Query(returns => [Category])
     async getCategories_pagination(@Args() {limit, offset}: PaginationInterface): Promise<Category[]>{
         return await prisma.categories.findMany({
             skip: offset,
@@ -20,7 +20,7 @@ export class CategoryResolvers {
         })
     }
 
-    @Query(returns => [Category])
+    // @Query(returns => [Category])
     async getCategories_cursor(@Args() {cursor, limit}: CursorInterface): Promise<Category[]>{
         if(cursor === undefined || cursor === null){
             return await prisma.categories.findMany({

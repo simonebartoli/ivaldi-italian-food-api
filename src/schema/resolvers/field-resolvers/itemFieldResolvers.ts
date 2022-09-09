@@ -42,4 +42,14 @@ export class ItemFieldResolvers implements ResolverInterface<Item>{
         return [...resultCategory, ...resultSubCategory].map(element => element.name)
     }
 
+    @FieldResolver()
+    async keywords(@Root() item: Item): Promise<string[]> {
+        const result = await prisma.keywords.findMany({
+            where: {
+                item_id: item.item_id
+            }
+        })
+        return result.map(element => element.keyword)
+    }
+
 }

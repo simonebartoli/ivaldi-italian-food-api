@@ -15,8 +15,12 @@ import Stripe from "stripe";
 import {PDF_FONTS, STRIPE_SECRET_KEY} from "./settings";
 import PdfPrinter from "pdfmake"
 import {initKeyRotation} from "./init-key-rotation";
+import {uploadRouter} from "../REST/uploadFiles";
+import fileUpload from "express-fileupload";
+import path from "path";
 
 const PdfGenerator = new PdfPrinter(PDF_FONTS)
+export const secureUploadLink = new Map<string, Date>()
 initKeyRotation()
 
 async function startApolloServer() {
@@ -33,6 +37,12 @@ async function startApolloServer() {
     resolvers: [process.cwd() + (process.env["NODE_ENV"] === "production" ? "/build/src/schema/resolvers/**/*.{ts,js}" : "/src/schema/resolvers/**/*.{ts,js}")],
   });
   const app = express();
+  app.use(fileUpload({
+    abortOnLimit: true,
+    limits: { fileSize: 2 * 1024 * 1024 },
+    useTempFiles : true,
+    tempFileDir : path.join(process.cwd() + "/images/tmp/")
+  }));
   app.use(express.json())
   app.use(cookieParser())
   app.use(cors({
@@ -40,6 +50,9 @@ async function startApolloServer() {
     credentials: true
   }))
   app.use(express.static("receipts-pdf"))
+  app.use("/images", express.static("images"))
+  app.use(uploadRouter)
+
 
   const httpServer = http.createServer(app);
 

@@ -39,4 +39,7 @@ export class Item {
 
     @Field(type => Discount,{nullable: true})
     discount?: Discount
+
+    @Field(type => [String!], {nullable: true})
+    keywords?: string[]
 }

@@ -25,6 +25,10 @@ import {ChangeRecoverTokenStatusInputs} from "../inputs/changeRecoverTokenStatus
 import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
 import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
 import {createEmail_LoginNoPassword} from "../lib/emailsLib";
+import {RequireValidAccessToken} from "../custom-decorator/requireValidAccessToken";
+import {RequireAdmin} from "../custom-decorator/requireAdmin";
+import { v4 as uuidv4 } from 'uuid';
+import {secureUploadLink} from "../../bin/www";
 
 @Resolver()
 export class AccessResolvers {
@@ -157,6 +161,11 @@ export class AccessResolvers {
         const refreshTokenVersion = refreshTokenHeader.version
         const refreshTokenExp = refreshTokenPayload.exp
         const refreshTokenID = refreshTokenHeader.token_id
+        const user = await prisma.users.findFirst({
+            where: {
+                user_id: userID
+            }
+        })
 
         await updateRefreshToken(
             userID,
@@ -191,6 +200,7 @@ export class AccessResolvers {
             .setExpirationTime(accessTokenExp)
             .setProtectedHeader({
                 kid: kid,
+                role: user!.role,
                 auth_level: authLevel,
                 token_id: accessTokenID,
                 alg: "EdDSA"
@@ -229,6 +239,15 @@ export class AccessResolvers {
             }
         }
         return true
+    }
+
+    @Query(returns => String)
+    @RequireValidAccessToken()
+    @RequireAdmin()
+    createSecureLink() {
+        const link = uuidv4()
+        secureUploadLink.set(link, DateTime.now().plus({minute: 5}).toJSDate())
+        return link
     }
 
 }

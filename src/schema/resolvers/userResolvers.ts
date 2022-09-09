@@ -14,7 +14,7 @@ import {TRIGGER_ENUM} from "../enums/TRIGGER_ENUM";
 import {DateTime} from "luxon";
 import {createRecoverToken, makeRandomToken} from "../lib/accessLib";
 import {Context} from "../types/not-graphql/contextType";
-import {createEmail_LoginNoPassword} from "../lib/emailsLib";
+import {createEmail_EmailToVerify} from "../lib/emailsLib";
 
 @Resolver()
 export class UserResolvers {
@@ -127,7 +127,7 @@ export class UserResolvers {
         const {user_id, email_to_verify} = result
         const security_code = makeRandomToken(6)
         const token = await createRecoverToken(user_id, email_to_verify !== null, ctx)
-        await createEmail_LoginNoPassword({
+        await createEmail_EmailToVerify({
             to: email_to_verify || email,
             name: name,
             surname: surname,

@@ -4,52 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Payment with Card Saved + Receipt PDF pt1">
-      <change afterPath="$PROJECT_DIR$/images/logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/REST/paypalPayments.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bin/init-emails.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bin/init-key-rotation.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/countries.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/enums/CONTACT_STATUS_ENUM.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createNewContactRequestInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/orderReceiptFilters.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/lib/emailsLib.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/contactResolver.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/holidayResolvers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paypalResolver.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/contactType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/holidayType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test-data/key-rotation.ts" afterDir="false" />
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Key Rotation + Email System + Min Order + Holiday + Contact Page">
+      <change afterPath="$PROJECT_DIR$/src/REST/uploadFiles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/custom-decorator/requireAdmin.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/addNewItemInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/modifyItemDetailsInput.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emails-template/build_production/email-confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/emails/email-confirmation.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emails-template/build_production/verification.html" beforeDir="false" afterPath="$PROJECT_DIR$/emails/verification.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emails-template/src/templates/email-confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/emails-template/src/templates/email-confirmation.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/keys/private-keys.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/keys/public-keys.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bin/InitRedis.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/init-redis.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bin/settings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/settings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bin/init-key-rotation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/init-key-rotation.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bin/www.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/www.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/BAD_REQ_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/INTERNAL_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/inputs/itemCart.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/itemCartInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/accessLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/enums/AUTH_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/AUTH_ERROR_ENUM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/lib/tokenVerificationLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/tokenVerificationLib.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/accessResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/cartResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/cartResolver.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/categoryResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/categoryResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/itemFieldResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/itemFieldResolvers.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/payments/paypal-api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paypal-api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/pdfResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/pdfResolvers.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/userResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/webhooks/webhook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/webhooks/webhook.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-data/test-data-generator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test-data/test-data-generator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/itemType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/itemType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/not-graphql/tokenType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/tokenType.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -77,37 +52,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Personal Project/ivaldi-italian-food-api/emails-template/src/templates&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.statistic.project.settings&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;E:\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "E:/Personal Project/ivaldi-italian-food-api/src/schema/inputs",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "reference.settings.project.statistic.project.settings",
+    "ts.external.directory.path": "E:\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;JSON&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JSON"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\emails-template\src\templates" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\images" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\images" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\REST" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\custom-decorator" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\emails-template\src\templates" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\Personal Project\ivaldi-italian-food-api\emails" />
@@ -254,7 +229,15 @@
       <workItem from="1661855197083" duration="40000" />
       <workItem from="1661855239699" duration="128000" />
       <workItem from="1661855371705" duration="16697000" />
-      <workItem from="1662109129953" duration="2207000" />
+      <workItem from="1662109129953" duration="7436000" />
+      <workItem from="1662284548012" duration="6251000" />
+      <workItem from="1662371832963" duration="270000" />
+      <workItem from="1662396515408" duration="2779000" />
+      <workItem from="1662457510376" duration="1279000" />
+      <workItem from="1662543383446" duration="6020000" />
+      <workItem from="1662631303514" duration="16931000" />
+      <workItem from="1662721578280" duration="3238000" />
+      <workItem from="1662740478869" duration="2580000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -396,7 +379,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660127897017</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Key Rotation + Email System + Min Order + Holiday + Contact Page">
+      <created>1662113197080</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1662113197080</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -434,7 +424,8 @@
     <MESSAGE value="Order CARD pt1" />
     <MESSAGE value="Order CARD pt2 + Order Page + DB Update" />
     <MESSAGE value="Payment with Card Saved + Receipt PDF pt1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Payment with Card Saved + Receipt PDF pt1" />
+    <MESSAGE value="Key Rotation + Email System + Min Order + Holiday + Contact Page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Key Rotation + Email System + Min Order + Holiday + Contact Page" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

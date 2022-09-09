@@ -10,6 +10,7 @@ export type RecoverTokenHeaderType = {
 }
 export type AccessTokenHeaderType = {
     kid: string
+    role: "client" | "admin"
     token_id: number
     auth_level: string
 }

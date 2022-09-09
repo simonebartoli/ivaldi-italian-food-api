@@ -1,4 +1,4 @@
-import {Arg, Args, Ctx, Int, Query, Resolver} from "type-graphql";
+import {Arg, Args, Ctx, Int, Mutation, Query, Resolver} from "type-graphql";
 import prisma from "../../db/prisma";
 import {Item} from "../types/itemType";
 import {PaginationInterface} from "../args/paginationInterface";
@@ -10,6 +10,11 @@ import {DATA_ERROR} from "../../errors/DATA_ERROR";
 import {DATA_ERROR_ENUM} from "../enums/DATA_ERROR_ENUM";
 import {BAD_REQ_ERROR} from "../../errors/BAD_REQ_ERROR";
 import {BAD_REQ_ERROR_ENUM} from "../enums/BAD_REQ_ERROR_ENUM";
+import {RequireValidAccessToken} from "../custom-decorator/requireValidAccessToken";
+import {RequireAdmin} from "../custom-decorator/requireAdmin";
+import {ModifyItemDetailsInput} from "../inputs/modifyItemDetailsInput";
+import {DateTime} from "luxon";
+import {AddNewItemInput} from "../inputs/addNewItemInput";
 
 @Resolver()
 export class ItemResolvers {
@@ -81,8 +86,14 @@ export class ItemResolvers {
         const {discountOnly = false, priceRange = undefined, outOfStock = false, keywords} = options
         const {max, min} = priceRange || {}
 
-        let products: SearchResult | undefined = keywords !== undefined ? await searchProducts(keywords, ctx) : undefined
-        const productsID = products !== undefined ? [...products.keys()] : undefined
+        let productsID: number[] | undefined = undefined
+        let products: SearchResult
+
+        if(keywords !== "All Products"){
+            products = await searchProducts(keywords, ctx)
+            productsID = [...products.keys()]
+        }
+
 
         const result = await prisma.items.findMany({
             where: {
@@ -206,7 +217,290 @@ export class ItemResolvers {
         return resultFormatted.slice(offset, limit)
     }
 
-    @Query(returns => [Item])
+
+    @Mutation(returns => Boolean)
+    @RequireValidAccessToken()
+    @RequireAdmin()
+    async addNewItem(@Arg("data", returns => AddNewItemInput) inputData: AddNewItemInput){
+        const {name, description, price_total, price_unit, amount_available, discount, vat, keyword, category, photo_loc} = inputData
+
+        let vatID: number
+        let discountID: number | null
+        let dbCategoryID: number[] = []
+        let dbSubCategoryID: number[] = []
+
+        const resultDBName = await prisma.items.findUnique({
+            where: {
+                name: name
+            }
+        })
+        if(resultDBName !== null) throw new DATA_ERROR("Name Already Used", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+
+        const resultDBVat = await prisma.vat.findUnique({
+            where: {
+                percentage: vat
+            }
+        })
+        if(resultDBVat === null) throw new DATA_ERROR("VAT Not Registered", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+        vatID = resultDBVat.vat_id
+
+        if(discount === 0){
+            discountID = null
+        }else{
+            const result = await prisma.discounts.findFirst({
+                where: {
+                    percentage: discount
+                }
+            })
+            if(result === null){
+                discountID = (await prisma.discounts.create({
+                    data: {
+                        percentage: discount
+                    }
+                })).discount_id
+            }else{
+                discountID = result.discount_id
+            }
+        }
+
+        let resultDBCategory
+        for(const cat of category){
+            try{
+                resultDBCategory = await prisma.categories.findFirst({
+                    where: {
+                        name: cat
+                    }
+                })
+                if(resultDBCategory === null) {
+                    resultDBCategory = await prisma.sub_categories.findFirstOrThrow({
+                        where: {
+                            name: cat
+                        }
+                    })
+                    dbSubCategoryID.push(resultDBCategory.sub_category_id)
+                }else{
+                    dbCategoryID.push(resultDBCategory.category_id)
+                }
+            }catch (e) {
+                throw new DATA_ERROR("Category is Invalid", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+            }
+        }
+
+        const resultDBItemAdded = await prisma.items.create({
+            data: {
+                name: name,
+                description: description,
+                price_total: price_total,
+                price_unit: price_unit,
+                amount_available: amount_available,
+                vat_id: vatID,
+                entry_date: DateTime.now().toJSDate(),
+                discount_id: discountID,
+                photo_loc: photo_loc
+            }
+        })
+        const item_id = resultDBItemAdded.item_id
+
+        if(dbCategoryID.length > 0){
+            const categoryCreateObject = dbCategoryID.map((element) => {
+                return {
+                    item_id: item_id,
+                    category_id: element
+                }
+            })
+            await prisma.categories_items.createMany({
+                data: categoryCreateObject
+            })
+        }
+        if(dbSubCategoryID.length > 0){
+            const subCategoryCreateObject = dbSubCategoryID.map((element) => {
+                return {
+                    item_id: item_id,
+                    sub_category_id: element
+                }
+            })
+            await prisma.sub_categories_items.createMany({
+                data: subCategoryCreateObject
+            })
+        }
+
+        const keywordCreateObject = keyword.map((element) => {
+            return {
+                item_id: item_id,
+                keyword: element
+            }
+        })
+        await prisma.keywords.createMany({
+            data: keywordCreateObject
+        })
+
+
+        return true
+    }
+
+    @Mutation(returns => Boolean)
+    @RequireValidAccessToken()
+    @RequireAdmin()
+    async modifyItemDetails(@Arg("data", returns => ModifyItemDetailsInput) inputData: ModifyItemDetailsInput) {
+        const {item_id, name, description, price_total, price_unit, amount_available, discount, vat, keyword, category, photo_loc} = inputData
+
+        let vatID: number | undefined = undefined
+        let discountID: number | null | undefined = undefined
+        let dbCategoryID: number[] | undefined = undefined
+        let dbSubCategoryID: number[] | undefined = undefined
+
+        if(await prisma.items.findUnique({where: {item_id: item_id}}) === null){
+            throw new DATA_ERROR("Item Not Existing", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+        }
+
+        if(name !== undefined) {
+            const result = await prisma.items.findUnique({
+                where: {
+                    name: name
+                }
+            })
+            if(result !== null) throw new DATA_ERROR("Name Already Used", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+        }
+        if(vat !== undefined){
+            const result = await prisma.vat.findUnique({
+                where: {
+                    percentage: vat
+                }
+            })
+            if(result === null) throw new DATA_ERROR("VAT Not Registered", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+            vatID = result.vat_id
+        }
+        if(discount !== undefined) {
+            if(discount === 0){
+                discountID = null
+            }else{
+                const result = await prisma.discounts.findFirst({
+                    where: {
+                        percentage: discount
+                    }
+                })
+                if(result === null){
+                    discountID = (await prisma.discounts.create({
+                        data: {
+                            percentage: discount
+                        }
+                    })).discount_id
+                }else{
+                    discountID = result.discount_id
+                }
+            }
+        }
+        if(category !== undefined){
+            dbCategoryID = []
+            dbSubCategoryID = []
+
+            let result
+            for(const cat of category){
+                try{
+                    result = await prisma.categories.findFirst({
+                        where: {
+                            name: cat
+                        }
+                    })
+                    if(result === null) {
+                        result = await prisma.sub_categories.findFirstOrThrow({
+                            where: {
+                                name: cat
+                            }
+                        })
+                        dbSubCategoryID.push(result.sub_category_id)
+                    }else{
+                        dbCategoryID.push(result.category_id)
+                    }
+                }catch (e) {
+                    throw new DATA_ERROR("Category is Invalid", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+                }
+            }
+        }
+
+        if(dbCategoryID !== undefined){
+            await prisma.categories_items.deleteMany({
+                where: {
+                    item_id: item_id
+                }
+            })
+            const categoryCreateObject = dbCategoryID.map((element) => {
+                return {
+                    item_id: item_id,
+                    category_id: element
+                }
+            })
+            await prisma.categories_items.createMany({
+                data: categoryCreateObject
+            })
+        }
+        if(dbSubCategoryID !== undefined){
+            await prisma.sub_categories_items.deleteMany({
+                where: {
+                    item_id: item_id
+                }
+            })
+            const subCategoryCreateObject = dbSubCategoryID.map((element) => {
+                return {
+                    item_id: item_id,
+                    sub_category_id: element
+                }
+            })
+            await prisma.sub_categories_items.createMany({
+                data: subCategoryCreateObject
+            })
+        }
+        if(keyword !== undefined){
+            await prisma.keywords.deleteMany({
+                where: {
+                    item_id: item_id
+                }
+            })
+            const keywordCreateObject = keyword.map((element) => {
+                return {
+                    item_id: item_id,
+                    keyword: element
+                }
+            })
+            await prisma.keywords.createMany({
+                data: keywordCreateObject
+            })
+        }
+
+        await prisma.items.update({
+            where: {
+                item_id: item_id
+            },
+            data: {
+                name: name,
+                description: description,
+                price_total: price_total,
+                price_unit: price_unit,
+                amount_available: amount_available,
+                vat_id: vatID,
+                entry_date: DateTime.now().toJSDate(),
+                discount_id: discountID,
+                photo_loc: photo_loc
+            }
+        })
+
+        return true
+    }
+
+    @Mutation(returns => Boolean)
+    @RequireValidAccessToken()
+    @RequireAdmin()
+    async removeItem(@Arg("item_id", returns => Int) item_id: number){
+        await prisma.items.delete({
+            where: {
+                item_id: item_id
+            }
+        })
+        return true
+    }
+
+
+    // @Query(returns => [Item])
     async getItems_cursor(@Args() {cursor, limit}: CursorInterface, @Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
         const {discountOnly = false, priceRange, outOfStock = false, keywords} = options
         const {max, min} = priceRange || {}

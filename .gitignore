@@ -4,6 +4,10 @@ yarn-error.log
 .nyc_output
 coverage
 build/
+images/*.png
+images/tmp/**.*
+receipts-pdf/*
+keys
 logs
 *.log
 emails-template
