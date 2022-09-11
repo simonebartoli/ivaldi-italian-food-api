@@ -60,6 +60,41 @@ export async function capturePayment(orderId: string) {
     return handleResponse(response);
 }
 
+async function getCaptureId(orderId: string) {
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v2/checkout/orders/${orderId}`
+    const response = await axios.get(url, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    const result = handleResponse(response)
+    console.log(result.data.purchase_units[0].payments.captures[0].id)
+    return result.data.purchase_units[0].payments.captures[0].id
+}
+
+export async function refundPayment(orderId: string, amount: string, reason: string) {
+    const accessToken = await generateAccessToken();
+    const captureId = await getCaptureId(orderId)
+    const url = `${base}/v2/payments/captures/${captureId}/refund`;
+
+    const response = await axios.post(url,
+        {
+            amount: {
+                currency_code: "GBP",
+                value: amount
+            },
+            note_to_payer: reason
+        },{
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    return handleResponse(response);
+}
+
 export async function generateAccessToken() {
     const auth = Buffer.from(PAYPAL_CLIENT_ID + ":" + PAYPAL_SECRET).toString("base64");
     const response = await axios.post(`${base}/v1/oauth2/token`, new URLSearchParams({"grant_type": "client_credentials"}),
@@ -74,7 +109,7 @@ export async function generateAccessToken() {
     return jsonData.data.access_token;
 }
 
-async function handleResponse(response: AxiosResponse) {
+function handleResponse(response: AxiosResponse) {
     if (response.status === 200 || response.status === 201) {
         return response;
     }

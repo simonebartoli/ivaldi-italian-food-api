@@ -3,6 +3,8 @@ import {User} from "./userType";
 import {Archive} from "./archiveType";
 import {ORDER_STATUS_ENUM} from "../enums/ORDER_STATUS_ENUM";
 import {PaymentMethodDB} from "./paymentMethodDBType";
+import {OrderDelivery} from "./orderDeliveryType";
+import {Refund} from "./refundType";
 
 @ObjectType()
 export class Order {
@@ -40,4 +42,9 @@ export class Order {
     @Field(type => User)
     user?: User
 
+    @Field(type => OrderDelivery)
+    order_delivery?: OrderDelivery
+
+    @Field(type => [Refund], {nullable: true})
+    refund?: Refund[] | null
 }

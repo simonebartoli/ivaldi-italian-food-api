@@ -114,7 +114,7 @@ export const calculateTotal = async (cart: Cart[]): Promise<{ total: number, vat
     for(const item of items) {
         if(cartFormatted.has(item.item_id)) {
             total += item.price_total * cartFormatted.get(item.item_id)!
-            vatTotal += item.price_total * cartFormatted.get(item.item_id)! * (item.vat.percentage !== 0 ? item.vat.percentage / 100 : 1)
+            vatTotal += item.price_total * cartFormatted.get(item.item_id)! * (item.vat.percentage / 100)
         }else
             throw new DATA_ERROR("There are some changes in the cart, Check and Try Again", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
     }
@@ -312,7 +312,7 @@ export const createPendingOrder = async (ctx: Context, cart: Cart[], inputData: 
     })
     await prisma.orders_delivery.create({
         data: {
-            order_id: payment_intent_id,
+            reference: result.reference,
             suggested: delivery_suggested === "" ? null : delivery_suggested
         }
     })

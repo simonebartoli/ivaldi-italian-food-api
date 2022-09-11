@@ -221,7 +221,7 @@ export class ItemResolvers {
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
     @RequireAdmin()
-    async addNewItem(@Arg("data", returns => AddNewItemInput) inputData: AddNewItemInput){
+    async addNewItem(@Ctx() ctx: Context, @Arg("data", returns => AddNewItemInput) inputData: AddNewItemInput){
         const {name, description, price_total, price_unit, amount_available, discount, vat, keyword, category, photo_loc} = inputData
 
         let vatID: number
@@ -333,6 +333,9 @@ export class ItemResolvers {
         await prisma.keywords.createMany({
             data: keywordCreateObject
         })
+        for(const key of keyword){
+            await ctx.redis.SADD(key, String(item_id))
+        }
 
 
         return true
@@ -341,7 +344,7 @@ export class ItemResolvers {
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
     @RequireAdmin()
-    async modifyItemDetails(@Arg("data", returns => ModifyItemDetailsInput) inputData: ModifyItemDetailsInput) {
+    async modifyItemDetails(@Ctx() ctx: Context, @Arg("data", returns => ModifyItemDetailsInput) inputData: ModifyItemDetailsInput) {
         const {item_id, name, description, price_total, price_unit, amount_available, discount, vat, keyword, category, photo_loc} = inputData
 
         let vatID: number | undefined = undefined
@@ -465,6 +468,9 @@ export class ItemResolvers {
             await prisma.keywords.createMany({
                 data: keywordCreateObject
             })
+            for(const key of keyword){
+                await ctx.redis.SADD(key, String(item_id))
+            }
         }
 
         await prisma.items.update({

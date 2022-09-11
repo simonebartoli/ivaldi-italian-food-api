@@ -63,6 +63,7 @@ async function startApolloServer() {
       req: req,
       res: res,
       redis: redisClient,
+      role: null,
       user_id: null,
       stripe: stripe,
       PdfGenerator: PdfGenerator

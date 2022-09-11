@@ -16,6 +16,7 @@ export function RequireValidAccessToken() {
         const accessToken = await verifySignAccessToken(token.split(" ")[1])
         await verifyExtraPropertyAccessToken(accessToken, ipReq, uaReq)
 
+        context.role = accessToken.role
         context.user_id = accessToken.id
         return next();
     });

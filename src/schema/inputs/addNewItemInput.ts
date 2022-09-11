@@ -4,7 +4,7 @@ import {ArrayMinSize, Length, Max, Min} from "class-validator";
 @InputType()
 export class AddNewItemInput {
     @Field()
-    @Length(3, 19)
+    @Length(3, 49)
     name: string
 
     @Field()
