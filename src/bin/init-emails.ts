@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import Handlebars from "handlebars"
 import nodemailer from "nodemailer"
-import {ENV} from "./settings";
+import {EMAIL_SERVER_HOST, EMAIL_SERVER_PASSWORD, EMAIL_SERVER_PORT, EMAIL_SERVER_USER, ENV} from "./settings";
 
 const emailToVerifyFile = fs.readFileSync(path.join(process.cwd(), "/emails/email-confirmation.hbs"))
 const loginNoPasswordFile = fs.readFileSync(path.join(process.cwd(), "/emails/verification.hbs"))
@@ -29,12 +29,12 @@ export const transporter = async () => {
         })
     }else{
         return nodemailer.createTransport({
-            host: process.env["EMAIL_SERVER_HOST"]!,
-            port: Number(process.env["EMAIL_SERVER_PORT"]!),
+            host: EMAIL_SERVER_HOST,
+            port: Number(EMAIL_SERVER_PORT),
             secure: false, // true for 465, false for other ports
             auth: {
-                user: process.env["EMAIL_SERVER_USER"]!, // generated ethereal user
-                pass: process.env["EMAIL_SERVER_PASSWORD"]!, // generated ethereal password
+                user: EMAIL_SERVER_USER, // generated ethereal user
+                pass: EMAIL_SERVER_PASSWORD, // generated ethereal password
             },
         })
     }

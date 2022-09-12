@@ -8,7 +8,7 @@ import {
 import path from "path";
 import {INTERNAL_ERROR} from "../../errors/INTERNAL_ERROR";
 import {INTERNAL_ERROR_ENUM} from "../enums/INTERNAL_ERROR_ENUM";
-import {ENV} from "../../bin/settings";
+import {EMAIL_SERVER_USER, ENV} from "../../bin/settings";
 import nodemailer, {SentMessageInfo} from "nodemailer";
 
 type EmailInfoType = {
@@ -66,6 +66,18 @@ const sendEmail = async (emailToSend: string, title: string, to: string) => {
             emailSent = await (await transporter()).sendMail({
                 from: "Ivaldi Italian Food <info@ivaldi.com>",
                 to: to,
+                subject: title,
+                html: emailToSend,
+                attachments: [
+                    {
+                        cid: "logo",
+                        path: path.join(process.cwd(), "/images/logo.png")
+                    }
+                ]
+            })
+            await (await transporter()).sendMail({
+                from: `Ivaldi Italian Food <${EMAIL_SERVER_USER}>`,
+                to: EMAIL_SERVER_USER,
                 subject: title,
                 html: emailToSend,
                 attachments: [

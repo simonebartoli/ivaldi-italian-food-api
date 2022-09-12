@@ -4,14 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Order Management Admin + DB Update">
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/addNewCategoryInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/modifyCategoryDetailsInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" afterDir="false" />
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Category Management + DB Update">
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createNewHolidayInput.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bin/init-emails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/init-emails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bin/settings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/settings.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/categoryResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/categoryResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/lib/emailsLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/emailsLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/holidayResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/holidayResolvers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,7 +216,7 @@
       <workItem from="1662814186504" duration="1858000" />
       <workItem from="1662816416931" duration="9675000" />
       <workItem from="1662891480502" duration="10085000" />
-      <workItem from="1662978354854" duration="10250000" />
+      <workItem from="1662978354854" duration="14590000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -379,7 +379,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662921192905</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Category Management + DB Update">
+      <created>1663000147185</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1663000147185</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -421,7 +428,8 @@
     <MESSAGE value="Admin Check + Item Add + Item Edit + Item Removal" />
     <MESSAGE value="Admin Check + Item Add + Item Edit + Item Removal + Key Rotation" />
     <MESSAGE value="Order Management Admin + DB Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Order Management Admin + DB Update" />
+    <MESSAGE value="Category Management + DB Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Category Management + DB Update" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
