@@ -4,29 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Admin Check + Item Add + Item Edit + Item Removal + Key Rotation">
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/confirmDeliveryInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createRefundInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createTimeslotDeliveryInput.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/orderDeliveryType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/schema/types/refundType.ts" afterDir="false" />
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Order Management Admin + DB Update">
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/addNewCategoryInput.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/inputs/modifyCategoryDetailsInput.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bin/www.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/www.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/custom-decorator/requireValidAccessToken.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/custom-decorator/requireValidAccessToken.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/inputs/addNewItemInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/addNewItemInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/inputs/modifyItemDetailsInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/modifyItemDetailsInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/orderFieldResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/orderFieldResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/payments/paypal-api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paypal-api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/not-graphql/contextType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/types/orderType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/orderType.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-data/orders.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test-data/orders.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/categoryResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/categoryResolvers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,30 +38,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Personal Project/ivaldi-italian-food-api/tsconfig.json&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.statistic.project.settings&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;E:\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
+    "last_opened_file_path": "E:/Download",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "E:\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;JSON&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JSON"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
@@ -229,7 +215,8 @@
       <workItem from="1662813932912" duration="248000" />
       <workItem from="1662814186504" duration="1858000" />
       <workItem from="1662816416931" duration="9675000" />
-      <workItem from="1662891480502" duration="6580000" />
+      <workItem from="1662891480502" duration="10085000" />
+      <workItem from="1662978354854" duration="10250000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -385,7 +372,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662748413499</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Order Management Admin + DB Update">
+      <created>1662921192905</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1662921192905</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -426,7 +420,8 @@
     <MESSAGE value="Key Rotation + Email System + Min Order + Holiday + Contact Page" />
     <MESSAGE value="Admin Check + Item Add + Item Edit + Item Removal" />
     <MESSAGE value="Admin Check + Item Add + Item Edit + Item Removal + Key Rotation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Admin Check + Item Add + Item Edit + Item Removal + Key Rotation" />
+    <MESSAGE value="Order Management Admin + DB Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Order Management Admin + DB Update" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
