@@ -4,14 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Category Management + DB Update">
-      <change afterPath="$PROJECT_DIR$/src/schema/inputs/createNewHolidayInput.ts" afterDir="false" />
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Holiday Done">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369/storage_v2/_src_/database/ivaldi-db.rqsVew/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bin/init-emails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/init-emails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bin/settings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/settings.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/emailsLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/emailsLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/holidayResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/holidayResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/args/getItemsArgs.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/inputs/modifyItemDetailsInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/modifyItemDetailsInput.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/itemType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/itemType.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +53,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "E:\\Personal Project\\ivaldi-italian-food-api\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
@@ -216,7 +220,9 @@
       <workItem from="1662814186504" duration="1858000" />
       <workItem from="1662816416931" duration="9675000" />
       <workItem from="1662891480502" duration="10085000" />
-      <workItem from="1662978354854" duration="14590000" />
+      <workItem from="1662978354854" duration="21073000" />
+      <workItem from="1663069004164" duration="2201000" />
+      <workItem from="1663073847633" duration="5348000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -386,7 +392,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663000147185</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Holiday Done">
+      <created>1663008816157</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1663008816157</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -404,7 +417,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Configuration Ready" />
     <MESSAGE value="First Config with TypeGraphQL" />
     <MESSAGE value="Login pt1" />
     <MESSAGE value="Login pt2" />
@@ -429,7 +441,8 @@
     <MESSAGE value="Admin Check + Item Add + Item Edit + Item Removal + Key Rotation" />
     <MESSAGE value="Order Management Admin + DB Update" />
     <MESSAGE value="Category Management + DB Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Category Management + DB Update" />
+    <MESSAGE value="Holiday Done" />
+    <option name="LAST_COMMIT_MESSAGE" value="Holiday Done" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

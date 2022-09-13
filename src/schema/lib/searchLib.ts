@@ -49,8 +49,9 @@ export const searchProducts = async (keywordsString: string, ctx: Context): Prom
                 CURRENT_ACCURACY += KEY_ACCURACY
             }
         }
+        const keywordNotFoundFinalLowLevel = []
+        const redisKeys = await redis.KEYS("*")
         if(CURRENT_ACCURACY < OVERALL_MIN_ACCURACY){
-            const redisKeys = await redis.KEYS("*")
             for(const keywordNotFound of keywordsNotFoundFinal){
                 const keysToCheck = redisKeys.filter((element) => {
                     return element.length >= keywordNotFound.length - 2 && element.length <= keywordNotFound.length + 2;
@@ -60,8 +61,16 @@ export const searchProducts = async (keywordsString: string, ctx: Context): Prom
                         await redis.SADD(`keyword_alias@${keywordNotFound}`, keyToCheck)
                         await redis.EXPIRE(`keyword_alias@${keywordNotFound}`, 3600)
                         keywordsAlias.push(keyToCheck)
+                    }else{
+                        keywordNotFoundFinalLowLevel.push(keywordNotFound)
                     }
                 }
+            }
+        }
+        if(CURRENT_ACCURACY < OVERALL_MIN_ACCURACY) {
+            for(const keyNotFound of keywordNotFoundFinalLowLevel){
+                const result = redisKeys.filter((_) => _.includes(keyNotFound))
+                for(const element of result) keywordsAlias.push(element)
             }
         }
         console.timeEnd("CHECK FURTHER KEYS")

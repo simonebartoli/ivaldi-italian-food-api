@@ -32,6 +32,9 @@ export class ModifyItemDetailsInput {
     @Max(100)
     discount?: number
 
+    @Field(type => Boolean, {nullable: true})
+    priority?: boolean
+
     @Field(type => Float, {nullable: true})
     vat?: number
 

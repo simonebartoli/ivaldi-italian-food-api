@@ -80,6 +80,7 @@ model items {
   photo_loc            String                 @db.VarChar(255)
   entry_date           DateTime               @default(dbgenerated("(now())::timestamp without time zone")) @db.Timestamp(6)
   discount_id          Int?
+  priority             Boolean                @default(false)
   discounts            discounts?             @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fkitems605249")
   vat                  vat                    @relation(fields: [vat_id], references: [vat_id], map: "items_vat_vat_id_fk")
   bundles_items        bundles_items[]
@@ -190,7 +191,7 @@ model sub_categories {
   name                 String                 @unique(map: "list_items_category_key") @db.VarChar(255)
   notes                String?                @db.VarChar(511)
   category_id          Int
-  categories           categories             @relation(fields: [category_id], references: [category_id], map: "sub_categories_categories_category_id_fk")
+  categories           categories             @relation(fields: [category_id], references: [category_id], onDelete: Cascade, map: "sub_categories_categories_category_id_fk")
   sub_categories_items sub_categories_items[]
 }
 

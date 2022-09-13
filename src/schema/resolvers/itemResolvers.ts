@@ -15,6 +15,8 @@ import {RequireAdmin} from "../custom-decorator/requireAdmin";
 import {ModifyItemDetailsInput} from "../inputs/modifyItemDetailsInput";
 import {DateTime} from "luxon";
 import {AddNewItemInput} from "../inputs/addNewItemInput";
+import axios from "axios";
+import {DOMAIN, REVALIDATE_TOKEN} from "../../bin/settings";
 
 @Resolver()
 export class ItemResolvers {
@@ -83,7 +85,7 @@ export class ItemResolvers {
 
     @Query(returns => [Item])
     async getItems_FULL(@Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
-        const {discountOnly = false, priceRange = undefined, outOfStock = false, keywords} = options
+        const {discountOnly = false, priceRange = undefined, outOfStock = false, keywords, priority} = options
         const {max, min} = priceRange || {}
 
         let productsID: number[] | undefined = undefined
@@ -109,7 +111,8 @@ export class ItemResolvers {
                 price_total: {
                     gte: min,
                     lte: max
-                }
+                },
+                priority: priority
             }
         })
         return result.map((element) => {
@@ -345,7 +348,7 @@ export class ItemResolvers {
     @RequireValidAccessToken()
     @RequireAdmin()
     async modifyItemDetails(@Ctx() ctx: Context, @Arg("data", returns => ModifyItemDetailsInput) inputData: ModifyItemDetailsInput) {
-        const {item_id, name, description, price_total, price_unit, amount_available, discount, vat, keyword, category, photo_loc} = inputData
+        const {item_id, name, description, price_total, price_unit, amount_available, discount, vat, keyword, category, photo_loc, priority} = inputData
 
         let vatID: number | undefined = undefined
         let discountID: number | null | undefined = undefined
@@ -486,9 +489,17 @@ export class ItemResolvers {
                 vat_id: vatID,
                 entry_date: DateTime.now().toJSDate(),
                 discount_id: discountID,
-                photo_loc: photo_loc
+                photo_loc: photo_loc,
+                priority: priority
             }
         })
+        try{
+            console.log(`${DOMAIN}/api/revalidate?secret=${REVALIDATE_TOKEN}&id=${item_id}`)
+            const response = await axios.get(`${DOMAIN}/api/revalidate?secret=${REVALIDATE_TOKEN}&id=${item_id}`)
+            console.log(response.data)
+        }catch (e) {
+            console.log((e as Error).message)
+        }
 
         return true
     }
@@ -506,7 +517,13 @@ export class ItemResolvers {
     }
 
 
+    @Query(returns => [String])
+    async getKeywords() {
+        return (await prisma.keywords.findMany()).map(_ => _.keyword)
+    }
+
     // @Query(returns => [Item])
+/*
     async getItems_cursor(@Args() {cursor, limit}: CursorInterface, @Args() options: GetItemsArgs, @Ctx() ctx: Context): Promise<Item[]>{
         const {discountOnly = false, priceRange, outOfStock = false, keywords} = options
         const {max, min} = priceRange || {}
@@ -566,5 +583,6 @@ export class ItemResolvers {
             }
         })
     }
+*/
 
 }

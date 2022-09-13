@@ -20,6 +20,9 @@ export class GetItemsArgs {
     @Field(type => Price, {nullable: true})
     priceRange?: Price
 
+    @Field(type => Boolean, {nullable: true})
+    priority?: boolean
+
     @Field(type => String)
     keywords: string
 

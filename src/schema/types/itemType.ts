@@ -31,6 +31,9 @@ export class Item {
     @Field()
     entry_date: Date
 
+    @Field(type => Boolean)
+    priority: Boolean
+
     @Field(type => [String])
     category?: string[]
 
