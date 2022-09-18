@@ -8,7 +8,7 @@ import {
 import path from "path";
 import {INTERNAL_ERROR} from "../../errors/INTERNAL_ERROR";
 import {INTERNAL_ERROR_ENUM} from "../enums/INTERNAL_ERROR_ENUM";
-import {EMAIL_SERVER_USER, ENV} from "../../bin/settings";
+import {EMAIL_SERVER_FALLBACK_USER, EMAIL_SERVER_USER, ENV} from "../../bin/settings";
 import nodemailer, {SentMessageInfo} from "nodemailer";
 
 type EmailInfoType = {
@@ -64,7 +64,7 @@ const sendEmail = async (emailToSend: string, title: string, to: string, admin_e
     do{
         try{
             emailSent = await (await transporter()).sendMail({
-                from: "Ivaldi Italian Food <info@ivaldi.com>",
+                from: `Ivaldi Italian Food <${EMAIL_SERVER_USER}>`,
                 to: to,
                 subject: title,
                 html: emailToSend,
@@ -78,7 +78,7 @@ const sendEmail = async (emailToSend: string, title: string, to: string, admin_e
             if(admin_email){
                 await (await transporter()).sendMail({
                     from: `Ivaldi Italian Food <${EMAIL_SERVER_USER}>`,
-                    to: EMAIL_SERVER_USER,
+                    to: EMAIL_SERVER_FALLBACK_USER,
                     subject: title,
                     html: emailToSend,
                     attachments: [

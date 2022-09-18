@@ -17,6 +17,7 @@ export const EMAIL_SERVER_HOST = process.env["EMAIL_SERVER_HOST"] as string
 export const EMAIL_SERVER_PORT = process.env["EMAIL_SERVER_PORT"] as string
 export const EMAIL_SERVER_USER = process.env["EMAIL_SERVER_USER"] as string
 export const EMAIL_SERVER_PASSWORD = process.env["EMAIL_SERVER_PASSWORD"] as string
+export const EMAIL_SERVER_FALLBACK_USER = process.env["EMAIL_SERVER_FALLBACK_USER"] as string
 
 export const PDF_FONTS = {
     Courier: {
