@@ -11,7 +11,7 @@ import {setHttpPlugin} from "../plugins/sendResponse";
 import {Context} from "../schema/types/not-graphql/contextType";
 import {redisClient} from "../db/redis";
 import Stripe from "stripe";
-import {PDF_FONTS, STRIPE_SECRET_KEY} from "./settings";
+import {DOMAIN, PDF_FONTS, STRIPE_SECRET_KEY} from "./settings";
 import PdfPrinter from "pdfmake"
 import {initKeyRotation} from "./init-key-rotation";
 import {uploadRouter} from "../REST/uploadFiles";
@@ -43,7 +43,7 @@ async function startApolloServer() {
     app.use(express.json())
     app.use(cookieParser())
     app.use(cors({
-        origin: "http://localhost:3000",
+        origin: DOMAIN,
         credentials: true
     }))
     app.use(express.static("receipts-pdf"))
