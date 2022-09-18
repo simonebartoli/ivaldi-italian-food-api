@@ -10,7 +10,7 @@ export const searchProducts = async (keywordsString: string, ctx: Context): Prom
     const SINGLE_MIN_ACCURACY = 25
 
     console.time("FUNCTION")
-    const keywordsPassed = keywordsString.split(" ").filter(element => element.length > 2)
+    const keywordsPassed = keywordsString.split(" ").filter(element => element.length > 2).map((element) => element.toLowerCase())
     let keywordsNotFound: string[] = []
     const keywordsAlias: string[] = []
 

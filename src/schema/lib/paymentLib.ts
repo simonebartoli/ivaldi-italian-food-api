@@ -13,9 +13,10 @@ import {CreatePendingOrderInput} from "../inputs/createPendingOrderInput";
 import {DateTime} from "luxon";
 import {v4 as uuidv4} from "uuid";
 import {createEmail_OrderConfirmation} from "./emailsLib";
-import {MIN_ORDER_PRICE} from "../../bin/settings";
+import {DOMAIN, MIN_ORDER_PRICE, REVALIDATE_TOKEN} from "../../bin/settings";
 import {BAD_REQ_ERROR} from "../../errors/BAD_REQ_ERROR";
 import {BAD_REQ_ERROR_ENUM} from "../enums/BAD_REQ_ERROR_ENUM";
+import axios from "axios";
 
 export type OrderArchiveType = {
     shipping_address: Omit<ShippingAddress, "address_id">
@@ -347,6 +348,16 @@ export const postPaymentOperations = async (payment_intent_id: string, user_id: 
             account: account
         }
     })
+
+    const archive = JSON.parse(order.archive) as OrderArchiveType
+    for(const element of archive.items){
+        try{
+            const response = await axios.get(`${DOMAIN}/api/revalidate?secret=${REVALIDATE_TOKEN}&id=${element.item_id}`)
+            console.log(response.data)
+        }catch (e) {
+            console.log((e as Error).message)
+        }
+    }
 
     try{
         await createEmail_OrderConfirmation({

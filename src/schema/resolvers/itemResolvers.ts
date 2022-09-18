@@ -229,6 +229,8 @@ export class ItemResolvers {
     async addNewItem(@Ctx() ctx: Context, @Arg("data", returns => AddNewItemInput) inputData: AddNewItemInput){
         const {name, description, price_total, price_unit, amount_available, discount, vat, keyword, category, photo_loc} = inputData
 
+        const categoryToAddRedis: string[] = []
+
         let vatID: number
         let discountID: number | null
         let dbCategoryID: number[] = []
@@ -278,12 +280,19 @@ export class ItemResolvers {
                 })
                 if(resultDBCategory === null) {
                     resultDBCategory = await prisma.sub_categories.findFirstOrThrow({
+                        include: {
+                            categories: true
+                        },
                         where: {
                             name: cat
                         }
                     })
+                    categoryToAddRedis.push(resultDBCategory.name)
+                    categoryToAddRedis.push(resultDBCategory.categories.name)
+
                     dbSubCategoryID.push(resultDBCategory.sub_category_id)
                 }else{
+                    categoryToAddRedis.push(resultDBCategory.name)
                     dbCategoryID.push(resultDBCategory.category_id)
                 }
             }catch (e) {
@@ -305,6 +314,10 @@ export class ItemResolvers {
             }
         })
         const item_id = resultDBItemAdded.item_id
+
+        for(const cat of categoryToAddRedis){
+            await ctx.redis.SADD(cat.toLowerCase(), String(item_id))
+        }
 
         if(dbCategoryID.length > 0){
             const categoryCreateObject = dbCategoryID.map((element) => {
@@ -412,12 +425,18 @@ export class ItemResolvers {
                     })
                     if(result === null) {
                         result = await prisma.sub_categories.findFirstOrThrow({
+                            include: {
+                                categories: true
+                            },
                             where: {
                                 name: cat
                             }
                         })
+                        await ctx.redis.SADD(cat.toLowerCase(), String(item_id))
+                        await ctx.redis.SADD(result.categories.name.toLowerCase(), String(item_id))
                         dbSubCategoryID.push(result.sub_category_id)
                     }else{
+                        await ctx.redis.SADD(cat.toLowerCase(), String(item_id))
                         dbCategoryID.push(result.category_id)
                     }
                 }catch (e) {
