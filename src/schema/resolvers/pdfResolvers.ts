@@ -6,6 +6,7 @@ import {retrieveOrderInfo} from "../lib/receiptsLib";
 import hash from "object-hash";
 import {DateTime} from "luxon";
 import {RefundType} from "../lib/refundsLib";
+import {DOMAIN} from "../../bin/settings";
 
 const notices = [
     {
@@ -34,14 +35,14 @@ export class PdfResolvers{
     qrCode(order_ref: string){
         return [
             {
-                qr: `http://localhost:3000/get-receipt?order_ref=${order_ref}`,
+                qr: `${DOMAIN}/get-receipt?order_ref=${order_ref}`,
                 alignment: "center",
                 margin: [0, 0, 0, 10]
             },
             {
-                text: `http://localhost:3000/get-receipt?order_ref=${order_ref}`,
+                text: `${DOMAIN}/get-receipt?order_ref=${order_ref}`,
                 alignment: "center",
-                link: `http://localhost:3000/get-receipt?order_ref=${order_ref}`
+                link: `${DOMAIN}/get-receipt?order_ref=${order_ref}`
             }
         ]
     }

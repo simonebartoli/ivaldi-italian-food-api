@@ -8,7 +8,7 @@ import {
 import path from "path";
 import {INTERNAL_ERROR} from "../../errors/INTERNAL_ERROR";
 import {INTERNAL_ERROR_ENUM} from "../enums/INTERNAL_ERROR_ENUM";
-import {EMAIL_SERVER_FALLBACK_USER, EMAIL_SERVER_USER, ENV} from "../../bin/settings";
+import {DOMAIN, EMAIL_SERVER_FALLBACK_USER, EMAIL_SERVER_USER, ENV} from "../../bin/settings";
 import nodemailer, {SentMessageInfo} from "nodemailer";
 
 type EmailInfoType = {
@@ -40,8 +40,8 @@ export const createEmail_OrderConfirmation = async (emailInfo: EmailInfoType) =>
         name: emailInfo["name"],
         surname: emailInfo["surname"],
         datetime: emailInfo["datetime"],
-        order_link: `http://localhost:3000/orders?order_ref=${emailInfo["reference"]}`,
-        receipt_link: `http://localhost:3000/receipts?order_ref=${emailInfo["reference"]}`
+        order_link: `${DOMAIN}/orders?order_ref=${emailInfo["reference"]}`,
+        receipt_link: `${DOMAIN}/receipts?order_ref=${emailInfo["reference"]}`
     })
     await sendEmail(emailToSend, "Ivaldi Italian Food - Order Confirmation", emailInfo["to"] as string, true)
 }

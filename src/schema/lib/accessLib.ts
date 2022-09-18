@@ -10,7 +10,7 @@ import {Context} from "../types/not-graphql/contextType";
 import prisma from "../../db/prisma";
 import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
 import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
-import {COOKIE_SECURE} from "../../bin/settings";
+import {COOKIE_SECURE, DOMAIN} from "../../bin/settings";
 
 export const findPrivateKey = async (): Promise<KeyObject> => {
     let privateKeysFile: string = fs.readFileSync(process.cwd() + "/keys/private-keys.json").toString()
@@ -132,7 +132,7 @@ export const updateRefreshToken = async (userID: number, exp: number, authLevel:
 export const createRecoverToken = async (user_id: number, email_to_verify: boolean, ctx: Context) => {
     const {res} = ctx
     const token = makeRandomToken(64)
-    const urlToClick = `http://localhost:3000/verify?secret=${token}`
+    const urlToClick = `${DOMAIN}/verify?secret=${token}`
     const exp = DateTime.now().plus({hour: 1})
     const result = await prisma.recover_tokens.create({
         data: {
