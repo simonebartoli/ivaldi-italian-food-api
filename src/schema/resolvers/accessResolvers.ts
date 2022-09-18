@@ -90,7 +90,7 @@ export class AccessResolvers {
         const security_code = makeRandomToken(6)
 
         await createEmail_LoginNoPassword({
-            to: email_to_verify || email,
+            to: email_to_verify !== null ? email_to_verify : email,
             name: name,
             surname: surname,
             security_code: security_code.toUpperCase(),

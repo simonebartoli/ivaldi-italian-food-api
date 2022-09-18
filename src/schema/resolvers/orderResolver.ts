@@ -153,35 +153,36 @@ export class OrderResolver {
             archive.forEach(_ => {
                 total += _.price_total
             })
-            return total
+            return Number(total.toFixed(2))
         })()
 
-        await prisma.refunds.create({
-            data: {
-                order_ref: reference,
-                archive: JSON.stringify(archive),
-                notes: notes,
-                datetime: DateTime.now().toJSDate()
-            }
-        })
-        await prisma.orders.update({
-            where: {
-                reference: reference
-            },
-            data: {
-                status: "REFUNDED"
-            }
-        })
-
-
-        if(result.payment_methods!.type === "CARD") {
-            await ctx.stripe.refunds.create({
-                payment_intent: result.order_id,
-                amount: Number(totalRefund * 100)
+        await prisma.$transaction(async prisma => {
+            await prisma.refunds.create({
+                data: {
+                    order_ref: reference,
+                    archive: JSON.stringify(archive),
+                    notes: notes,
+                    datetime: DateTime.now().toJSDate()
+                }
             })
-        }else if(result.payment_methods!.type === "PAYPAL") {
-            await refundPayment(result.order_id, totalRefund.toFixed(2), notes)
-        }
+            await prisma.orders.update({
+                where: {
+                    reference: reference
+                },
+                data: {
+                    status: "REFUNDED"
+                }
+            })
+
+            if(result.payment_methods!.type === "CARD") {
+                await ctx.stripe.refunds.create({
+                    payment_intent: result.order_id,
+                    amount: Number(totalRefund * 100)
+                })
+            }else if(result.payment_methods!.type === "PAYPAL") {
+                await refundPayment(result.order_id, totalRefund.toFixed(2), notes)
+            }
+        })
 
         return true
     }

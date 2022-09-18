@@ -2,7 +2,6 @@ import {Arg, Args, Ctx, Int, Mutation, Query, Resolver} from "type-graphql";
 import prisma from "../../db/prisma";
 import {Item} from "../types/itemType";
 import {PaginationInterface} from "../args/paginationInterface";
-import {CursorInterface} from "../args/cursorInterface";
 import {GetItemsArgs} from "../args/getItemsArgs";
 import {searchProducts, SearchResult} from "../lib/searchLib";
 import {Context} from "../types/not-graphql/contextType";
@@ -113,6 +112,9 @@ export class ItemResolvers {
                     lte: max
                 },
                 priority: priority
+            },
+            orderBy: {
+                price_total: "asc"
             }
         })
         return result.map((element) => {

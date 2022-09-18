@@ -30,12 +30,17 @@ export const transporter = async () => {
     }else{
         return nodemailer.createTransport({
             host: EMAIL_SERVER_HOST,
+            pool: true,
             port: Number(EMAIL_SERVER_PORT),
             secure: false, // true for 465, false for other ports
             auth: {
                 user: EMAIL_SERVER_USER, // generated ethereal user
                 pass: EMAIL_SERVER_PASSWORD, // generated ethereal password
             },
+            tls: {
+                rejectUnauthorized: false
+            }
+            // ignoreTLS: true
         })
     }
 }

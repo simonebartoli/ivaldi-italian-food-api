@@ -348,11 +348,15 @@ export const postPaymentOperations = async (payment_intent_id: string, user_id: 
         }
     })
 
-    await createEmail_OrderConfirmation({
-        to: order.users.email!,
-        name: order.users.name,
-        datetime: DateTime.fromJSDate(order.datetime).toLocaleString(DateTime.DATETIME_SHORT),
-        surname: order.users.surname,
-        reference: order.reference
-    })
+    try{
+        await createEmail_OrderConfirmation({
+            to: order.users.email!,
+            name: order.users.name,
+            datetime: DateTime.fromJSDate(order.datetime).toLocaleString(DateTime.DATETIME_SHORT),
+            surname: order.users.surname,
+            reference: order.reference
+        })
+    }catch (e) {
+
+    }
 }

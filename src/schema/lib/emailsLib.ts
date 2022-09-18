@@ -43,7 +43,7 @@ export const createEmail_OrderConfirmation = async (emailInfo: EmailInfoType) =>
         order_link: `http://localhost:3000/orders?order_ref=${emailInfo["reference"]}`,
         receipt_link: `http://localhost:3000/receipts?order_ref=${emailInfo["reference"]}`
     })
-    await sendEmail(emailToSend, "Ivaldi Italian Food - Order Confirmation", emailInfo["to"] as string)
+    await sendEmail(emailToSend, "Ivaldi Italian Food - Order Confirmation", emailInfo["to"] as string, true)
 }
 export const createEmail_Contact = async (emailInfo: EmailInfoType) => {
     const emailToSend = contactCompiled({
@@ -53,10 +53,10 @@ export const createEmail_Contact = async (emailInfo: EmailInfoType) => {
         phone_number: emailInfo["phone_number"],
         message: emailInfo["message"],
     })
-    await sendEmail(emailToSend, "Ivaldi Italian Food - Contact Request", emailInfo["to"] as string)
+    await sendEmail(emailToSend, "Ivaldi Italian Food - Contact Request", emailInfo["to"] as string, true)
 }
 
-const sendEmail = async (emailToSend: string, title: string, to: string) => {
+const sendEmail = async (emailToSend: string, title: string, to: string, admin_email: boolean = false) => {
     let emailSent: SentMessageInfo
     let SENT = false
     let ATTEMPTS = 0
@@ -75,22 +75,24 @@ const sendEmail = async (emailToSend: string, title: string, to: string) => {
                     }
                 ]
             })
-            await (await transporter()).sendMail({
-                from: `Ivaldi Italian Food <${EMAIL_SERVER_USER}>`,
-                to: EMAIL_SERVER_USER,
-                subject: title,
-                html: emailToSend,
-                attachments: [
-                    {
-                        cid: "logo",
-                        path: path.join(process.cwd(), "/images/logo.png")
-                    }
-                ]
-            })
+            if(admin_email){
+                await (await transporter()).sendMail({
+                    from: `Ivaldi Italian Food <${EMAIL_SERVER_USER}>`,
+                    to: EMAIL_SERVER_USER,
+                    subject: title,
+                    html: emailToSend,
+                    attachments: [
+                        {
+                            cid: "logo",
+                            path: path.join(process.cwd(), "/images/logo.png")
+                        }
+                    ]
+                })
+            }
             SENT = true
 
         }catch (e) {
-            console.log((e as Error).message)
+            console.log((e as Error))
         }
         finally {
             ATTEMPTS += 1

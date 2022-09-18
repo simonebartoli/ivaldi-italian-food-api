@@ -1,12 +1,12 @@
 import 'dotenv/config'
 
 export const MIN_ORDER_PRICE = 40
-export const DOMAIN = process.env["DOMAIN"] as string
 
 export const ENV = process.env["NODE_ENV"] as "development" | "production"
+export const DOMAIN = process.env["DOMAIN"] as string
+
 export const STRIPE_SECRET_KEY = process.env["STRIPE_SECRET_KEY"] as string
 export const COOKIE_SECURE = process.env["COOKIE_SECURE"] as string
-export const WEBHOOK_SECRET_KEY = process.env["WEBHOOK_SECRET_KEY"] as string
 
 export const REVALIDATE_TOKEN = process.env["REVALIDATE_TOKEN"] as string
 

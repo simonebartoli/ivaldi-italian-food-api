@@ -6,6 +6,7 @@
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/bin/www.ts",
     "build": "tsc --project ./",
     "prestart": "rimraf build && yarn run build",
+    "redis": "ts-node src/bin/init-redis.ts",
     "start": "cross-env NODE_ENV=production node ./build/bin/www.js",
     "serve": "cross-env NODE_ENV=production node ./build/src/bin/www.js",
     "generate-data": "ts-node test-data/test-data-generator.ts",
