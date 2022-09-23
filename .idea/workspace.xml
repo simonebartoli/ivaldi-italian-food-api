@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Version 1.0.3 ~ Fix Domain Variable">
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Version 1.0.4 ~ Redis Fixes">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bin/init-redis.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/init-redis.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/searchLib.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -224,7 +223,10 @@
       <workItem from="1663356751981" duration="199000" />
       <workItem from="1663435620661" duration="11268000" />
       <workItem from="1663498227319" duration="6779000" />
-      <workItem from="1663522137284" duration="2941000" />
+      <workItem from="1663522137284" duration="3589000" />
+      <workItem from="1663698295917" duration="2015000" />
+      <workItem from="1663718120921" duration="396000" />
+      <workItem from="1663954945269" duration="4203000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -436,7 +438,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663515889394</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Version 1.0.4 ~ Redis Fixes">
+      <created>1663526660497</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1663526660497</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -454,7 +463,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Item Type Created" />
     <MESSAGE value="Category + SubCategory + Foreign Key Fixed + Test Data Generated" />
     <MESSAGE value="Items Filters + Address + Cart" />
     <MESSAGE value="Cart Finished + Update Prisma 4 + Order &amp; Receipt types + Order Data Generated" />
@@ -479,7 +487,8 @@
     <MESSAGE value="Version 1.0.1 ~ Fix Emails" />
     <MESSAGE value="Version 1.0.2 ~ Fix Cors" />
     <MESSAGE value="Version 1.0.3 ~ Fix Domain Variable" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 1.0.3 ~ Fix Domain Variable" />
+    <MESSAGE value="Version 1.0.4 ~ Redis Fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 1.0.4 ~ Redis Fixes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

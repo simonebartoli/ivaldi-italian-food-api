@@ -9,6 +9,13 @@ const initRedis = async (client: redisType) => {
         await client.SADD(keyword.keyword, keyword.item_id.toString())
     }
 
+    const items = await prisma.items.findMany()
+    for(const item of items){
+        const array = item.name.split(" ").filter(_ => _.length > 2)
+        for(const _ of array){
+            await redisClient.SADD(_.toLowerCase(), String(item.item_id))
+        }
+    }
     const categories = await prisma.categories.findMany({
         include: {
             sub_categories: {

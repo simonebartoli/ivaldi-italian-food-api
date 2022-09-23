@@ -354,6 +354,9 @@ export class ItemResolvers {
         for(const key of keyword){
             await ctx.redis.SADD(key, String(item_id))
         }
+        for(const name of resultDBItemAdded.name.split(" ").filter(_ => _.length > 2)){
+            await ctx.redis.SADD(name, String(item_id))
+        }
 
 
         return true
@@ -370,7 +373,30 @@ export class ItemResolvers {
         let dbCategoryID: number[] | undefined = undefined
         let dbSubCategoryID: number[] | undefined = undefined
 
-        if(await prisma.items.findUnique({where: {item_id: item_id}}) === null){
+        const product = await prisma.items.findUnique({
+            include: {
+                keywords: true,
+                sub_categories_items: {
+                    include: {
+                        sub_categories: {
+                            include: {
+                                categories: true
+                            }
+                        }
+                    }
+                },
+                categories_items: {
+                    include: {
+                        categories: true
+                    }
+                }
+            },
+            where: {
+                item_id: item_id
+            }
+        })
+
+        if(product === null){
             throw new DATA_ERROR("Item Not Existing", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
         }
 
@@ -381,6 +407,14 @@ export class ItemResolvers {
                 }
             })
             if(result !== null) throw new DATA_ERROR("Name Already Used", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+            const arrayOfNamesToInsert = name.split(" ").filter(_ => _.length > 2)
+
+            for(const name of product.name.split(" ").filter(_ => _.length > 2)){
+                await ctx.redis.SREM(name, String(item_id))
+            }
+            for(const name of arrayOfNamesToInsert){
+                await ctx.redis.SADD(name, String(item_id))
+            }
         }
         if(vat !== undefined){
             const result = await prisma.vat.findUnique({
@@ -414,6 +448,23 @@ export class ItemResolvers {
         if(category !== undefined){
             dbCategoryID = []
             dbSubCategoryID = []
+
+            const categoryToRemove = (() => {
+                const array: string[] = []
+                product.categories_items.forEach(_ => {
+                    array.push(_.categories.name)
+                })
+                product.sub_categories_items.forEach(_ => {
+                    array.push(_.sub_categories.name)
+                })
+                product.sub_categories_items.forEach(_ => {
+                    array.push(_.sub_categories.categories.name)
+                })
+                return array
+            })()
+            for(const catToRemove of categoryToRemove){
+                await ctx.redis.SREM(catToRemove.toLowerCase(), String(item_id))
+            }
 
             let result
             for(const cat of category){
@@ -492,6 +543,10 @@ export class ItemResolvers {
             await prisma.keywords.createMany({
                 data: keywordCreateObject
             })
+
+            for(const key of product.keywords){
+                await ctx.redis.SREM(key.keyword, String(item_id))
+            }
             for(const key of keyword){
                 await ctx.redis.SADD(key, String(item_id))
             }
