@@ -20,12 +20,12 @@ uploadRouter.post("/api/upload/:token", async (req, res) => {
         return res.status(400).json({error: "No file uploaded"});
     }
     const image = req.files["image"] as UploadedFile
-    const uploadPath = path.join(process.cwd() + "/images/" + token + ".png")
+    const uploadPath = path.join(process.cwd() + "/images/" + token + path.extname(image.name))
     try{
         await image.mv(uploadPath)
     }catch (e) {
         return res.status(500).json({error: "Server Error"});
     }
 
-    return res.status(200).json({message: `/images/${token}.png`})
+    return res.status(200).json({message: `/images/${token}${path.extname(image.name)}`})
 });
