@@ -8,7 +8,7 @@ export class AddNewItemInput {
     name: string
 
     @Field()
-    @Length(10, 199)
+    @Length(10, 24999)
     description: string
 
     @Field(type => Float)

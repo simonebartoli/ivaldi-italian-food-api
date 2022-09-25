@@ -11,7 +11,7 @@ export class ModifyItemDetailsInput {
     name?: string
 
     @Field({nullable: true})
-    @Length(10, 199)
+    @Length(10, 24999)
     description?: string
 
     @Field(type => Float, {nullable: true})
