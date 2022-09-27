@@ -352,10 +352,12 @@ export class ItemResolvers {
             data: keywordCreateObject
         })
         for(const key of keyword){
-            await ctx.redis.SADD(key, String(item_id))
+            await ctx.redis.SADD(key.toLowerCase(), String(item_id))
         }
-        for(const name of resultDBItemAdded.name.split(" ").filter(_ => _.length > 2)){
-            await ctx.redis.SADD(name, String(item_id))
+
+        const nameArray = resultDBItemAdded.name.split(" ").filter(_ => _.length > 2)
+        for(const name of nameArray){
+            await ctx.redis.SADD(name.toLowerCase(), String(item_id))
         }
 
 
@@ -408,12 +410,13 @@ export class ItemResolvers {
             })
             if(result !== null) throw new DATA_ERROR("Name Already Used", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
             const arrayOfNamesToInsert = name.split(" ").filter(_ => _.length > 2)
+            const arrayProductName = product.name.split(" ").filter(_ => _.length > 2)
 
-            for(const name of product.name.split(" ").filter(_ => _.length > 2)){
+            for(const name of arrayProductName){
                 await ctx.redis.SREM(name, String(item_id))
             }
             for(const name of arrayOfNamesToInsert){
-                await ctx.redis.SADD(name, String(item_id))
+                await ctx.redis.SADD(name.toLowerCase(), String(item_id))
             }
         }
         if(vat !== undefined){
@@ -548,7 +551,7 @@ export class ItemResolvers {
                 await ctx.redis.SREM(key.keyword, String(item_id))
             }
             for(const key of keyword){
-                await ctx.redis.SADD(key, String(item_id))
+                await ctx.redis.SADD(key.toLowerCase(), String(item_id))
             }
         }
 
@@ -589,6 +592,13 @@ export class ItemResolvers {
                 item_id: item_id
             }
         })
+        try{
+            console.log(`${DOMAIN}/api/revalidate?secret=${REVALIDATE_TOKEN}&id=${item_id}`)
+            const response = await axios.get(`${DOMAIN}/api/revalidate?secret=${REVALIDATE_TOKEN}&id=${item_id}`)
+            console.log(response.data)
+        }catch (e) {
+            console.log((e as Error).message)
+        }
         return true
     }
 

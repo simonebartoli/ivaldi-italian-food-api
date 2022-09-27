@@ -152,7 +152,7 @@ export class AccessResolvers {
         const refreshTokenPayload = <TokenPayloadType> jose.decodeJwt(token)
         const refreshTokenHeader = <RefreshTokenHeaderType> jose.decodeProtectedHeader(token)
 
-        const accessTokenExp = DateTime.now().plus({seconds: 5}).toSeconds() //CHANGE HERE
+        const accessTokenExp = DateTime.now().plus({minutes: 15}).toSeconds() //CHANGE HERE
         const ip = req.socket.remoteAddress || req.ip
         const ua = req.get('User-Agent')
 
