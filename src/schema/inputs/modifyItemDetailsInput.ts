@@ -19,7 +19,7 @@ export class ModifyItemDetailsInput {
     price_total?: number
 
     @Field( {nullable: true})
-    @Length(0, 5)
+    @Length(0, 15)
     price_unit?: string
 
     @Field(type => Int, {nullable: true})

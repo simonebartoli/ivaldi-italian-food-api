@@ -16,7 +16,7 @@ export class AddNewItemInput {
     price_total: number
 
     @Field( )
-    @Length(0, 5)
+    @Length(0, 15)
     price_unit: string
 
     @Field(type => Int)
