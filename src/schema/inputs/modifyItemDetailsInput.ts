@@ -7,7 +7,7 @@ export class ModifyItemDetailsInput {
     item_id: number
 
     @Field({nullable: true})
-    @Length(3, 49)
+    @Length(3, 499)
     name?: string
 
     @Field({nullable: true})
