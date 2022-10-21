@@ -134,8 +134,29 @@ export class ItemResolvers {
         let products: SearchResult
 
         if(keywords !== "All Products"){
-            products = await searchProducts(keywords, ctx)
-            productsID = [...products.keys()]
+            let category = await prisma.categories.findFirst({
+                where: {
+                    OR: [
+                        {
+                            name: {
+                                mode: "insensitive",
+                                equals: keywords
+                            }
+                        }
+                    ]
+                }
+            })
+            if(category === null){
+                products = await searchProducts(keywords, ctx)
+                productsID = [...products.keys()]
+            }else{
+                const productsCategory = await prisma.categories_items.findMany({
+                    where: {
+                        category_id: category.category_id
+                    }
+                })
+                productsID = [...productsCategory.map(_ => _.item_id)]
+            }
         }
 
         const result = await prisma.items.findMany({
@@ -218,7 +239,6 @@ export class ItemResolvers {
                 throw new BAD_REQ_ERROR("Order Parameter Not Valid", BAD_REQ_ERROR_ENUM.INVALID_PARAMETER_VALUE)
         }
 
-        console.log(resultFormatted.length)
         return resultFormatted.slice(offset, limit)
     }
 
