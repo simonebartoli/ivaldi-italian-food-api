@@ -28,13 +28,11 @@ export class PaypalResolver {
     async createOrRetrievePaypalPaymentIntent(@UserInfo() user: User, @Ctx() ctx: Context, @CartInfo() cart: Cart[], @Arg("data") inputData: CreatePaymentIntentInput): Promise<string> {
         await checkForHolidays()
 
-        const {user_id} = ctx
         const {shipping_address, billing_address, phone_number, delivery_suggested} = inputData
-        const shipping_cost = 0
 
         let FOUND = false
 
-        const {total, vatTotal} = await calculateTotal(cart)
+        const {total} = await calculateTotal(cart)
         const hashToCheck = await checkAndHashInformation(ctx, inputData, cart, total, "PAYPAL")
         const resultHash = await prisma.payment_intents.findFirst({
             where: {
