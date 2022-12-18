@@ -34,6 +34,9 @@ export class Item {
     @Field(type => Boolean)
     priority: Boolean
 
+    @Field(type => Int)
+    weight: number
+
     @Field(type => [String])
     category?: string[]
 

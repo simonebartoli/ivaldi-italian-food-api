@@ -1,6 +1,23 @@
 import 'dotenv/config'
 
-export const MIN_ORDER_PRICE = 40
+export const MIN_ORDER_PRICE = 25
+export const SHIPPING_PRICE = [
+    {
+        min: 10,
+        max: 999,
+        price: 1.0
+    },
+    {
+        min: 1000,
+        max: 4999,
+        price: 3.0
+    },
+    {
+        min: 5000,
+        max: 9999,
+        price: 5.0
+    }
+]
 
 export const ENV = process.env["NODE_ENV"] as "development" | "production"
 export const DOMAIN = process.env["DOMAIN"] as string

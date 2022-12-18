@@ -10,6 +10,8 @@
 
 // import {createPublicPrivateKeys} from "./key-rotation";
 
+import {initWeight} from "./init_weight";
+
 function generateData () {
     // addDiscountsToItems()
     //     .then(() => console.log("Discount Items Finished"))
@@ -33,6 +35,10 @@ function generateData () {
     // createPublicPrivateKeys()
     //     .then(() => console.log("Key Rotation Finished"))
     //     .catch((e) => console.log(e))
+
+    initWeight()
+        .then(() => console.log("Weight Finished"))
+        .catch((e) => console.log(e))
 }
 
 generateData()

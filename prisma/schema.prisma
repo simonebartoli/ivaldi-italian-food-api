@@ -81,6 +81,7 @@ model items {
   entry_date           DateTime               @default(dbgenerated("(now())::timestamp without time zone")) @db.Timestamp(6)
   discount_id          Int?
   priority             Boolean                @default(false)
+  weight               Int                    @default(0)
   discounts            discounts?             @relation(fields: [discount_id], references: [discount_id], onDelete: Cascade, map: "fkitems605249")
   vat                  vat                    @relation(fields: [vat_id], references: [vat_id], map: "items_vat_vat_id_fk")
   bundles_items        bundles_items[]
@@ -101,23 +102,24 @@ model log_accesses {
 }
 
 model orders {
-  order_id        String           @id @db.VarChar
-  price_total     Float
-  shipping_cost   Float            @default(0)
-  datetime        DateTime         @db.Timestamp(6)
-  archive         String
-  status          order_status
-  user_id         Int
-  vat_total       Float
-  phone_number    String           @default("+44 77 2309 3701") @db.VarChar(63)
-  reference       String           @unique(map: "orders_reference_uindex") @db.VarChar
-  receipt_number  Int              @default(autoincrement())
-  type            String           @db.VarChar
-  delivered       Boolean          @default(false)
-  users           users            @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
-  orders_delivery orders_delivery?
-  payment_methods payment_methods?
-  refunds         refunds[]
+  order_id               String           @id @db.VarChar
+  price_total            Float
+  shipping_cost          Float            @default(0)
+  datetime               DateTime         @db.Timestamp(6)
+  archive                String
+  status                 order_status
+  user_id                Int
+  vat_total              Float
+  phone_number           String           @default("+44 77 2309 3701") @db.VarChar(63)
+  reference              String           @unique(map: "orders_reference_uindex") @db.VarChar
+  receipt_number         Int              @default(autoincrement())
+  type                   String           @db.VarChar
+  delivered              Boolean          @default(false)
+  shipping_cost_refunded Boolean          @default(false)
+  users                  users            @relation(fields: [user_id], references: [user_id], onDelete: SetNull, map: "fkorders458716")
+  orders_delivery        orders_delivery?
+  payment_methods        payment_methods?
+  refunds                refunds[]
 }
 
 model refresh_tokens {
@@ -282,6 +284,11 @@ model holidays {
   reason     String?  @db.VarChar
 
   @@id([start_date, end_date], map: "holidays_pk")
+}
+
+model shipping_costs {
+  max_weight Int   @id(map: "shipping_costs_pk")
+  price      Float
 }
 
 enum order_status {

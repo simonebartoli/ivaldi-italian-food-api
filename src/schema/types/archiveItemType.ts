@@ -25,4 +25,7 @@ export class ArchiveItem {
 
     @Field(type => Float)
     vat: number
+
+    @Field(type => Int)
+    weight: number
 }

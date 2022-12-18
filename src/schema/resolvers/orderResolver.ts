@@ -83,7 +83,6 @@ export class OrderResolver {
         return true
     }
 
-
     @Mutation(returns => Boolean)
     @RequireValidAccessToken()
     @RequireAdmin()
@@ -147,24 +146,40 @@ export class OrderResolver {
 
         if(result === null) throw new DATA_ERROR("Order Not Found", DATA_ERROR_ENUM.ORDER_NOT_FOUND)
         if(result.status === "REQUIRES_PAYMENT" || result.status === "CANCELLED") throw new DATA_ERROR("Order Not Valid", DATA_ERROR_ENUM.ORDER_NOT_VALID)
+        if(result.shipping_cost_refunded && inputData.shipping_cost) throw new DATA_ERROR("Order Not Valid", DATA_ERROR_ENUM.SHIPPING_COST_ALREADY_REFUNDED)
 
         const totalRefund = (() => {
             let total = 0
             archive.forEach(_ => {
                 total += _.price_total
             })
+            if(inputData.shipping_cost) {
+                total += result.shipping_cost
+            }
             return Number(total.toFixed(2))
         })()
 
         await prisma.$transaction(async prisma => {
-            await prisma.refunds.create({
-                data: {
-                    order_ref: reference,
-                    archive: JSON.stringify(archive),
-                    notes: notes,
-                    datetime: DateTime.now().toJSDate()
-                }
-            })
+            if(inputData.shipping_cost){
+                await prisma.orders.update({
+                    where: {
+                        reference: inputData.reference
+                    },
+                    data: {
+                        shipping_cost_refunded: true
+                    }
+                })
+            }
+            if(archive.length > 0){
+                await prisma.refunds.create({
+                    data: {
+                        order_ref: reference,
+                        archive: JSON.stringify(archive),
+                        notes: notes,
+                        datetime: DateTime.now().toJSDate()
+                    }
+                })
+            }
             await prisma.orders.update({
                 where: {
                     reference: reference
@@ -177,7 +192,7 @@ export class OrderResolver {
             if(result.payment_methods!.type === "CARD") {
                 await ctx.stripe.refunds.create({
                     payment_intent: result.order_id,
-                    amount: Number(totalRefund * 100)
+                    amount: Number((totalRefund * 100).toFixed(2))
                 })
             }else if(result.payment_methods!.type === "PAYPAL") {
                 await refundPayment(result.order_id, totalRefund.toFixed(2), notes)

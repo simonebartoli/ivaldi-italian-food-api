@@ -4,8 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Version 1.0.5 ~ Redis Fixes on Keywords">
+    <list default="true" id="f32437b4-8c07-4dd8-a0fd-58997c9f9057" name="Changes" comment="Version 1.1.1 ~ Category Search Fixed (Sub Category BUG)">
+      <change afterPath="$PROJECT_DIR$/src/schema/resolvers/shippingCostResolver.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schema/types/shippingCostType.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test-data/init_weight.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/01037140-606f-43a4-8153-1705ddcb3369.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bin/settings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bin/settings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/enums/DATA_ERROR_ENUM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/inputs/addNewItemInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/addNewItemInput.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/inputs/createRefundInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/inputs/createRefundInput.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/paymentLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/lib/receiptsLib.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/lib/receiptsLib.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/archiveFieldResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/field-resolvers/archiveFieldResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/itemResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/orderResolver.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paymentResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/payments/paypalResolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/payments/paypalResolver.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/resolvers/pdfResolvers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/resolvers/pdfResolvers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/archiveItemType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/archiveItemType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/itemType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/itemType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schema/types/orderType.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schema/types/orderType.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-data/test-data-generator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/test-data/test-data-generator.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +60,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Personal Project/ivaldi-italian-food-api/db&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Personal Project/ivaldi-italian-food-api/src/schema/resolvers&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -60,11 +82,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\resolvers" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\types" />
+      <recent name="E:\Personal Project\ivaldi-italian-food-api\test-data" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\db" />
       <recent name="E:\Personal Project\ivaldi-italian-food-api\images" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\inputs" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\REST" />
-      <recent name="E:\Personal Project\ivaldi-italian-food-api\src\schema\custom-decorator" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\Personal Project\ivaldi-italian-food-api\emails" />
@@ -78,12 +100,27 @@
       <recent name="C:\Users\simon\Documents\Personal Project\ivaldi-italian-food-api\src\schema\lib\tokenVerificationLib.ts" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Node.js.Unnamed">
     <configuration name="Unnamed" type="NodeJSConfigurationType" nameIsGenerated="true" working-dir="$PROJECT_DIR$">
       <method v="2">
         <option name="TypeScript.Before.Run" enabled="true" FAIL_ON_ERROR="true" CONFIG_PATH="E:\Personal Project\ivaldi-italian-food-api\tsconfig.json" />
       </method>
     </configuration>
+    <configuration name="generate-data" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="generate-data" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.generate-data" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -225,6 +262,22 @@
       <workItem from="1663718120921" duration="396000" />
       <workItem from="1663954945269" duration="4863000" />
       <workItem from="1664016445412" duration="1998000" />
+      <workItem from="1664105980123" duration="1465000" />
+      <workItem from="1664115611017" duration="1414000" />
+      <workItem from="1664306446152" duration="1207000" />
+      <workItem from="1664564889508" duration="2298000" />
+      <workItem from="1664571070921" duration="987000" />
+      <workItem from="1664654595366" duration="1240000" />
+      <workItem from="1664910665288" duration="685000" />
+      <workItem from="1664987977988" duration="1358000" />
+      <workItem from="1665001166210" duration="754000" />
+      <workItem from="1666377238444" duration="2404000" />
+      <workItem from="1668208562913" duration="958000" />
+      <workItem from="1668209550877" duration="549000" />
+      <workItem from="1671281069920" duration="2123000" />
+      <workItem from="1671283233722" duration="3536000" />
+      <workItem from="1671293393394" duration="1342000" />
+      <workItem from="1671307248999" duration="5525000" />
     </task>
     <task id="LOCAL-00001" summary="Configuration Ready">
       <created>1656087052315</created>
@@ -450,7 +503,49 @@
       <option name="project" value="LOCAL" />
       <updated>1663965945345</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Version 1.0.6 ~ Redis Fixes on Keywords">
+      <created>1664106235950</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1664106235950</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Version 1.0.7 ~ Image Fix">
+      <created>1664139036194</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1664139036194</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Version 1.0.8 ~ Keywords Fix">
+      <created>1664307489553</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1664307489553</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Version 1.0.9 ~ Name Length Fixed">
+      <created>1664988199240</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1664988199240</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Version 1.1.0 ~ Price Unit Length Fixed">
+      <created>1664988751338</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1664988751338</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Version 1.1.1 ~ Category Search Fixed (Sub Category BUG)">
+      <created>1666378968797</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1666378968798</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -468,12 +563,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Items Filters + Address + Cart" />
-    <MESSAGE value="Cart Finished + Update Prisma 4 + Order &amp; Receipt types + Order Data Generated" />
-    <MESSAGE value="Receipt Data Generated + Fetch Receipt OK + Fetch Order OK" />
-    <MESSAGE value="Keyword Search pt1 + Redis Implementation + Verification Email + Login Without Password" />
-    <MESSAGE value="Keyword Search pt2" />
-    <MESSAGE value="Email Verification + Login Without Password Email + Edit in User and Order + Payment pt1" />
     <MESSAGE value="Payment pt2 + Adds for Integration" />
     <MESSAGE value="DB Update" />
     <MESSAGE value="Address Resolvers + DB Updates (address) + Cart Update" />
@@ -493,7 +582,13 @@
     <MESSAGE value="Version 1.0.3 ~ Fix Domain Variable" />
     <MESSAGE value="Version 1.0.4 ~ Redis Fixes" />
     <MESSAGE value="Version 1.0.5 ~ Redis Fixes on Keywords" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 1.0.5 ~ Redis Fixes on Keywords" />
+    <MESSAGE value="Version 1.0.6 ~ Redis Fixes on Keywords" />
+    <MESSAGE value="Version 1.0.7 ~ Image Fix" />
+    <MESSAGE value="Version 1.0.8 ~ Keywords Fix" />
+    <MESSAGE value="Version 1.0.9 ~ Name Length Fixed" />
+    <MESSAGE value="Version 1.1.0 ~ Price Unit Length Fixed" />
+    <MESSAGE value="Version 1.1.1 ~ Category Search Fixed (Sub Category BUG)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 1.1.1 ~ Category Search Fixed (Sub Category BUG)" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

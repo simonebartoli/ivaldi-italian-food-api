@@ -18,6 +18,9 @@ export class Order {
     @Field(type => Float)
     shipping_cost: number
 
+    @Field(type => Boolean)
+    shipping_cost_refunded: boolean
+
     @Field(type => Float)
     vat_total: number
 

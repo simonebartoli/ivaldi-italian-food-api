@@ -46,18 +46,18 @@ export class PdfResolvers{
             }
         ]
     }
-    finalStatement(total: number, vat_total: number, refund_total: number) {
+    finalStatement(total: number, vat_total: number, refund_total: number, shipping_cost: number, shipping_cost_refunded: boolean) {
         return [
             {
                 columns: [
                     {
-                        text: "Total (No Vat): ",
+                        text: "Total (No Vat | No Shipping): ",
                         fontSize: 20,
                         width: "*",
                         alignment: "right"
                     },
                     {
-                        text: `£ ${(total - vat_total).toFixed(2)}`,
+                        text: `£ ${(total - vat_total - shipping_cost).toFixed(2)}`,
                         fontSize: 20,
                         width: "20%",
                         alignment: "right"
@@ -76,6 +76,24 @@ export class PdfResolvers{
                     },
                     {
                         text: `£ ${vat_total.toFixed(2)}`,
+                        fontSize: 20,
+                        width: "20%",
+                        alignment: "right"
+                    }
+                ],
+                margin: [0, 10],
+                columnGap: 10
+            },
+            {
+                columns: [
+                    {
+                        text: `Shipping Cost${shipping_cost_refunded ? " (REFUNDED)" : ""}: `,
+                        fontSize: 20,
+                        width: "*",
+                        alignment: "right"
+                    },
+                    {
+                        text: `£ ${shipping_cost.toFixed(2)}`,
                         fontSize: 20,
                         width: "20%",
                         alignment: "right"
@@ -355,7 +373,7 @@ export class PdfResolvers{
         console.log(resultHashed)
 
         if(fs.existsSync(process.cwd() + "/receipts-pdf/" + resultHashed)) return resultHashed
-        const {billingAddress, refunds, items, datetime, invoiceNumber, user, total, vat_total, shipping_cost, payment_method} = result
+        const {billingAddress, refunds, items, datetime, invoiceNumber, user, total, vat_total, shipping_cost, payment_method, shipping_cost_refunded} = result
         const formattedAddress = billingAddress.first_address + ", " +
                                     (billingAddress.second_address ? billingAddress.second_address + ", " : "") +
                                     billingAddress.postcode + ", " +
@@ -395,7 +413,8 @@ export class PdfResolvers{
                 }
             }
         }
-        console.log(refund_total)
+
+        if(shipping_cost_refunded) refund_total += shipping_cost
 
         const docDefinition = {
             pageMargins: [ 40, 60, 40, 60 ],
@@ -434,7 +453,7 @@ export class PdfResolvers{
                 ...this.total(invoiceNumber, order_ref, total),
                 ...this.mainInfo(datetime, user, formattedAddress, payment_method),
                 ...this.mainTable(formattedBody),
-                ...this.finalStatement(total, vat_total, refund_total),
+                ...this.finalStatement(total, vat_total, refund_total, shipping_cost, shipping_cost_refunded),
                 ...this.refundTable(refunds),
                 ...notices,
                 ...this.qrCode(order_ref)

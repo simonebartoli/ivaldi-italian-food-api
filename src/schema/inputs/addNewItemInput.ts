@@ -20,6 +20,10 @@ export class AddNewItemInput {
     price_unit: string
 
     @Field(type => Int)
+    @Min(1)
+    weight: number
+
+    @Field(type => Int)
     @Min(0)
     @Max(999)
     amount_available: number

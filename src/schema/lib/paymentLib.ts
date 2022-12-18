@@ -30,7 +30,8 @@ export type OrderArchiveType = {
         price_unit: string
         price_total: number
         photo_loc: string
-        vat: number
+        vat: number,
+        weight: number
     }[]
 }
 type CreateOrderArchiveType = {
@@ -94,7 +95,7 @@ export const verifyBillingAddress = async (address: BillingAddress, user_id: num
         throw new DATA_ERROR("The Billing Address Provided Does Not Exist", DATA_ERROR_ENUM.ADDRESS_NOT_EXISTING)
     }
 }
-export const calculateTotal = async (cart: Cart[]): Promise<{ total: number, vatTotal: number }> => {
+export const calculateTotal = async (cart: Cart[]): Promise<{ total: number, vatTotal: number , shippingTotal: number}> => {
     const cartFormatted = new Map<number, number>()
     for(const item of cart) cartFormatted.set(item.item_id, item.amount)
 
@@ -111,20 +112,40 @@ export const calculateTotal = async (cart: Cart[]): Promise<{ total: number, vat
 
     let total = 0
     let vatTotal = 0
+    let weightTotal = 0
 
     for(const item of items) {
         if(cartFormatted.has(item.item_id)) {
             total += item.price_total * cartFormatted.get(item.item_id)!
             vatTotal += item.price_total * cartFormatted.get(item.item_id)! * (item.vat.percentage / 100)
-        }else
+            weightTotal += item.weight * cartFormatted.get(item.item_id)!
+        }else {
             throw new DATA_ERROR("There are some changes in the cart, Check and Try Again", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
+        }
     }
 
     if(total < MIN_ORDER_PRICE) throw new DATA_ERROR(`Your order needs to be at least £${total.toFixed(2)}`, DATA_ERROR_ENUM.MIN_ORDER_NOT_RESPECTED)
+    const shippingCost = await (async () => {
+        const result = await prisma.shipping_costs.findFirst({
+            where: {
+                max_weight: {
+                    gte: weightTotal
+                }
+            },
+            orderBy: {
+                max_weight: "asc"
+            }
+
+        })
+        if(result === null) return 0
+        else return result.price
+    })()
+    total += shippingCost
 
     return {
         total: Number(total.toFixed(2)),
-        vatTotal: Number(vatTotal.toFixed(2))
+        vatTotal: Number(vatTotal.toFixed(2)),
+        shippingTotal: shippingCost
     }
 }
 export const createArchive = (data: CreateOrderArchiveType) => {
@@ -147,7 +168,8 @@ export const createArchive = (data: CreateOrderArchiveType) => {
                 price_unit: element.price_unit,
                 price_total: Number((element.price_total * cartFormatted.get(element.item_id)!).toFixed(2)),
                 photo_loc: element.photo_loc,
-                vat: element.vat.percentage
+                vat: element.vat.percentage,
+                weight: element.weight
             }
         }))
     }
@@ -286,7 +308,7 @@ export const createPendingOrder = async (ctx: Context, cart: Cart[], inputData: 
     })
     if(items === null) throw new DATA_ERROR("Your Cart Cannot Be Empty", DATA_ERROR_ENUM.ITEM_NOT_EXISTING)
 
-    const {total, vatTotal} = await calculateTotal(cart)
+    const {total, vatTotal, shippingTotal} = await calculateTotal(cart)
     const archive = createArchive({
         shipping_address: shipping_address,
         billing_address: billing_address,
@@ -294,7 +316,6 @@ export const createPendingOrder = async (ctx: Context, cart: Cart[], inputData: 
         items: items
     })
     // console.log(archive)
-    const shipping_cost = 0
     const status = ORDER_STATUS_ENUM.REQUIRES_PAYMENT
     const result = await prisma.orders.create({
         data: {
@@ -302,7 +323,7 @@ export const createPendingOrder = async (ctx: Context, cart: Cart[], inputData: 
             price_total: total,
             vat_total: vatTotal,
             datetime: datetime,
-            shipping_cost: shipping_cost,
+            shipping_cost: shippingTotal,
             phone_number: phone_number,
             status: status,
             user_id: user_id!,

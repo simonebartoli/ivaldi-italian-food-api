@@ -31,4 +31,7 @@ export class CreateRefundInput {
 
     @Field()
     notes: string
+
+    @Field(type => Boolean)
+    shipping_cost: boolean
 }

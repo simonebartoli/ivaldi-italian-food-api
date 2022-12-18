@@ -247,7 +247,7 @@ export class ItemResolvers {
     @RequireValidAccessToken()
     @RequireAdmin()
     async addNewItem(@Ctx() ctx: Context, @Arg("data", returns => AddNewItemInput) inputData: AddNewItemInput){
-        const {name, description, price_total, price_unit, amount_available, discount, vat, keyword, category, photo_loc} = inputData
+        const {name, description, price_total, price_unit, weight, amount_available, discount, vat, keyword, category, photo_loc} = inputData
 
         const categoryToAddRedis: string[] = []
 
@@ -328,6 +328,7 @@ export class ItemResolvers {
                 price_unit: price_unit,
                 amount_available: amount_available,
                 vat_id: vatID,
+                weight: weight,
                 entry_date: DateTime.now().toJSDate(),
                 discount_id: discountID,
                 photo_loc: photo_loc

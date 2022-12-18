@@ -63,6 +63,7 @@ export const retrieveOrderInfo = async (order_ref: string): Promise<InvoiceType>
             account: result.payment_methods!.account
         },
         shipping_cost: shippingCost,
+        shipping_cost_refunded: result.shipping_cost_refunded,
         total: total,
         vat_total: vatTotal
     }
@@ -96,4 +97,5 @@ type InvoiceType = {
     total: number
     vat_total: number
     shipping_cost: number
+    shipping_cost_refunded: boolean
 }

@@ -20,7 +20,8 @@ export class ArchiveFieldResolvers implements ResolverInterface<Archive>{
                 price_total: item.price_total,
                 photo_loc: item.photo_loc,
                 price_per_unit: item.price_per_unit,
-                price_unit: item.price_unit
+                price_unit: item.price_unit,
+                weight: item.weight,
             })
         }
         return result
