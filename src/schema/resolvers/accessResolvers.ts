@@ -24,7 +24,7 @@ import {RequireValidRecoverToken} from "../custom-decorator/requireValidRecoverT
 import {ChangeRecoverTokenStatusInputs} from "../inputs/changeRecoverTokenStatusInputs";
 import {AUTH_ERROR} from "../../errors/AUTH_ERROR";
 import {AUTH_ERROR_ENUM} from "../enums/AUTH_ERROR_ENUM";
-import {createEmail_LoginNoPassword} from "../lib/emailsLib";
+import {createEmail_EmailToVerify, createEmail_LoginNoPassword} from "../lib/emailsLib";
 import {RequireValidAccessToken} from "../custom-decorator/requireValidAccessToken";
 import {RequireAdmin} from "../custom-decorator/requireAdmin";
 import { v4 as uuidv4 } from 'uuid';
@@ -57,10 +57,19 @@ export class AccessResolvers {
         }
         if(user.email === null){
             const {user_id, email_to_verify} = user
-            await createRecoverToken(user_id, email_to_verify !== null, ctx)
+            const token = await createRecoverToken(user_id, true, ctx)
+            const security_code = makeRandomToken(6)
+            await createEmail_EmailToVerify({
+                to: email_to_verify || email,
+                name: user.name,
+                surname: user.surname,
+                security_code: security_code.toUpperCase(),
+                token: token,
+                expiry_datetime: DateTime.now().plus({hour: 1}).toLocaleString(DateTime.DATETIME_SHORT)
+            })
             throw new DATA_ERROR("Email Not Verified",
                 DATA_ERROR_ENUM.EMAIL_NOT_VERIFIED,
-                {sixDigitCode: makeRandomToken(6)})
+                {sixDigitCode: security_code})
         }
         await createRefreshToken(user.user_id, "standard", ctx)
         return true
