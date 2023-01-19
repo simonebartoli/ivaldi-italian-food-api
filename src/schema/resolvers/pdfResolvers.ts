@@ -220,11 +220,11 @@ export class PdfResolvers{
                                 bold: true,
                             },
                             {
-                                text: "More Info at ivaldiitalianfood.com",
+                                text: "More Info at ivaldi.uk",
                                 fontSize: 12,
                             },
                             {
-                                text: "Support at info@ivaldi.com",
+                                text: "Support at info@ivaldi.uk",
                                 fontSize: 12,
                             }
                         ],
