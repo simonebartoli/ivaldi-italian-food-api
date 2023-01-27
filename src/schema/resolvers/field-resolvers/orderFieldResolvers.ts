@@ -16,6 +16,7 @@ export class OrderFieldResolvers implements ResolverInterface<Order>{
         const result: [User] = await prisma.$queryRaw`
             SELECT u.* FROM users u
             INNER JOIN orders o on o.user_id = u.user_id
+            WHERE o.order_id = ${order.order_id}
         `
         return role === "client" ?
             result.filter((_) => _.user_id === user_id)[0]! :
